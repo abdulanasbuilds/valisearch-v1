@@ -9,9 +9,9 @@ interface SectionCardProps {
   style?: React.CSSProperties;
 }
 
-export function SectionCard({ title, description, children, className }: SectionCardProps) {
+export function SectionCard({ title, description, children, className, style }: SectionCardProps) {
   return (
-    <div className={cn("glass-card rounded-2xl p-6 opacity-0 animate-fade-in", className)}>
+    <div className={cn("glass-card rounded-2xl p-6 opacity-0 animate-fade-in", className)} style={style}>
       {title && (
         <div className="mb-4">
           <h3 className="text-base font-semibold">{title}</h3>
