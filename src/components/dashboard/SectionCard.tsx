@@ -11,11 +11,11 @@ interface SectionCardProps {
 
 export function SectionCard({ title, description, children, className, style }: SectionCardProps) {
   return (
-    <div className={cn("glass-card rounded-2xl p-6 opacity-0 animate-fade-in", className)} style={style}>
+    <div className={cn("card-surface rounded-xl p-5", className)} style={style}>
       {title && (
         <div className="mb-4">
-          <h3 className="text-base font-semibold">{title}</h3>
-          {description && <p className="mt-1 text-sm text-muted-foreground">{description}</p>}
+          <h3 className="text-[14px] font-semibold">{title}</h3>
+          {description && <p className="mt-1 text-[13px] text-muted-foreground">{description}</p>}
         </div>
       )}
       {children}

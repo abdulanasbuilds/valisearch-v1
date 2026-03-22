@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const analysisSteps = [
+const steps = [
   "Analyzing your idea…",
   "Scanning market trends…",
   "Identifying competitors…",
@@ -19,23 +18,11 @@ export default function Analyze() {
 
   useEffect(() => {
     const stepInterval = setInterval(() => {
-      setStep((s) => {
-        if (s >= analysisSteps.length - 1) {
-          clearInterval(stepInterval);
-          return s;
-        }
-        return s + 1;
-      });
+      setStep((s) => (s >= steps.length - 1 ? s : s + 1));
     }, 1800);
 
     const progressInterval = setInterval(() => {
-      setProgress((p) => {
-        if (p >= 100) {
-          clearInterval(progressInterval);
-          return 100;
-        }
-        return p + 1;
-      });
+      setProgress((p) => (p >= 100 ? 100 : p + 1));
     }, 72);
 
     const redirect = setTimeout(() => {
@@ -50,66 +37,52 @@ export default function Analyze() {
   }, [navigate, idea]);
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center px-4 gradient-bg">
-      {/* Glow orb */}
-      <div className="relative mb-12">
-        <div className="h-32 w-32 rounded-full gradient-primary opacity-20 animate-pulse-glow blur-xl absolute inset-0" />
-        <div className="h-32 w-32 rounded-full gradient-primary opacity-40 animate-pulse-glow flex items-center justify-center relative" style={{ animationDelay: "500ms" }}>
-          <div className="h-20 w-20 rounded-full bg-background/80 backdrop-blur-sm flex items-center justify-center">
-            <Zap className="h-8 w-8 text-primary animate-float" />
-          </div>
+    <div className="flex min-h-screen flex-col items-center justify-center px-5 bg-background">
+      {/* Pulsing indicator */}
+      <div className="relative mb-10">
+        <div className="h-20 w-20 rounded-full border border-primary/20 flex items-center justify-center">
+          <div className="h-10 w-10 rounded-full bg-primary/20 animate-pulse" />
+          <div className="absolute inset-0 rounded-full border border-primary/10 animate-ping" style={{ animationDuration: "2s" }} />
         </div>
-        {/* Orbiting dots */}
-        {[0, 1, 2].map((i) => (
-          <div
-            key={i}
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 animate-orbit"
-            style={{ animationDelay: `${i * 2.6}s`, animationDuration: `${6 + i}s` }}
-          >
-            <div className="h-2 w-2 rounded-full bg-primary/60" />
-          </div>
-        ))}
       </div>
 
-      {/* Step text */}
-      <p className="text-lg font-semibold text-foreground animate-count-up" key={step}>
-        {analysisSteps[step]}
+      <p className="text-[16px] font-semibold text-foreground" key={step}>
+        {steps[step]}
       </p>
-      <p className="mt-2 max-w-sm text-center text-sm text-muted-foreground">
+      <p className="mt-2 max-w-xs text-center text-[13px] text-muted-foreground">
         "{idea.slice(0, 80)}{idea.length > 80 ? "…" : ""}"
       </p>
 
-      {/* Progress bar */}
-      <div className="mt-8 w-full max-w-xs">
-        <div className="h-1.5 w-full rounded-full bg-secondary overflow-hidden">
+      {/* Progress */}
+      <div className="mt-8 w-full max-w-[280px]">
+        <div className="h-1 w-full rounded-full bg-secondary overflow-hidden">
           <div
-            className="h-full rounded-full gradient-primary transition-all duration-300 ease-out"
+            className="h-full rounded-full bg-primary transition-all duration-200 ease-out"
             style={{ width: `${progress}%` }}
           />
         </div>
-        <div className="mt-3 flex justify-between text-xs text-muted-foreground/60">
+        <div className="mt-2.5 flex justify-between text-[11px] text-muted-foreground/50">
           <span>{Math.round(progress)}%</span>
-          <span>Step {step + 1} of {analysisSteps.length}</span>
+          <span>Step {step + 1} of {steps.length}</span>
         </div>
       </div>
 
-      {/* Step indicators */}
-      <div className="mt-6 flex gap-2">
-        {analysisSteps.map((_, i) => (
+      {/* Step dots */}
+      <div className="mt-5 flex gap-1.5">
+        {steps.map((_, i) => (
           <div
             key={i}
-            className={`h-1.5 w-8 rounded-full transition-all duration-500 ${
-              i <= step ? "gradient-primary" : "bg-secondary"
+            className={`h-1 w-6 rounded-full transition-colors duration-300 ${
+              i <= step ? "bg-primary" : "bg-secondary"
             }`}
           />
         ))}
       </div>
 
-      {/* Skip */}
       <Button
         variant="ghost"
         size="sm"
-        className="mt-8 text-xs text-muted-foreground/50 hover:text-muted-foreground"
+        className="mt-8 text-[12px] text-muted-foreground/40 hover:text-muted-foreground h-7"
         onClick={() => navigate("/dashboard", { state: { idea } })}
       >
         Skip to results →

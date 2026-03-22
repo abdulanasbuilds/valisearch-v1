@@ -1,54 +1,62 @@
-import { Target, Swords, Layers, DollarSign } from "lucide-react";
+import { Target, Swords, Layers, DollarSign, TrendingUp, Palette } from "lucide-react";
 
 const features = [
   {
     icon: Target,
     title: "Validation Score",
-    description: "Get an instant viability score with market demand analysis, feasibility assessment, and risk identification.",
+    description: "Instant viability assessment with market demand, feasibility, and risk analysis.",
   },
   {
     icon: Swords,
     title: "Competitor Intelligence",
-    description: "Discover who's already in the space, their strengths, weaknesses, and the gaps you can exploit.",
+    description: "Who's already building this, their weaknesses, and the gaps you can exploit.",
   },
   {
     icon: Layers,
     title: "Product Roadmap",
-    description: "AI-generated MVP features, differentiation strategy, and premium feature recommendations.",
+    description: "MVP features, differentiators, and a premium feature path — prioritized.",
   },
   {
     icon: DollarSign,
     title: "Monetization Plan",
-    description: "Pricing models, revenue streams, and financial projections tailored to your specific market.",
+    description: "Pricing models, revenue streams, and projections for your specific market.",
+  },
+  {
+    icon: TrendingUp,
+    title: "Market Sizing",
+    description: "TAM, SAM, SOM with growth outlook and macro trend analysis.",
+  },
+  {
+    icon: Palette,
+    title: "Brand & Naming",
+    description: "Name suggestions, taglines, brand positioning, and voice guidelines.",
   },
 ];
 
 export function FeaturesPreview() {
   return (
-    <section id="features" className="py-24 sm:py-32 border-t border-white/[0.04]">
-      <div className="container mx-auto px-4">
-        <div className="mx-auto max-w-2xl text-center opacity-0 animate-fade-in">
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            Everything you need to{" "}
-            <span className="gradient-text">launch with confidence</span>
+    <section id="features" className="py-20 sm:py-28 border-t border-border/30">
+      <div className="container mx-auto px-5">
+        <div className="mx-auto max-w-md text-center mb-14">
+          <h2 className="text-2xl font-bold tracking-[-0.02em] sm:text-3xl">
+            A full startup blueprint, not a summary
           </h2>
-          <p className="mt-4 text-muted-foreground">
-            One prompt delivers a complete startup intelligence report — the kind that used to take consultants weeks.
+          <p className="mt-3 text-[14px] text-muted-foreground leading-relaxed">
+            Each analysis covers eight dimensions that investors and founders actually care about.
           </p>
         </div>
 
-        <div className="mt-16 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {features.map((f, i) => (
+        <div className="mx-auto max-w-4xl grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {features.map((f) => (
             <div
               key={f.title}
-              className="glass-card-hover group rounded-2xl p-6 opacity-0 animate-fade-in"
-              style={{ animationDelay: `${200 + i * 100}ms` }}
+              className="card-surface-hover group rounded-xl p-5"
             >
-              <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary/20">
-                <f.icon className="h-5 w-5" />
+              <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary/15">
+                <f.icon className="h-[18px] w-[18px]" />
               </div>
-              <h3 className="text-base font-semibold">{f.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{f.description}</p>
+              <h3 className="text-[14px] font-semibold">{f.title}</h3>
+              <p className="mt-1.5 text-[13px] leading-relaxed text-muted-foreground">{f.description}</p>
             </div>
           ))}
         </div>
