@@ -1,70 +1,56 @@
 import { mockAnalysisResult } from "@/data/mockData";
-import { SectionCard } from "@/components/dashboard/SectionCard";
-import { AlertTriangle, CheckCircle2, ShieldAlert } from "lucide-react";
+import { SectionCard } from "../SectionCard";
 
 export function ValidationSection() {
   const { validation } = mockAnalysisResult;
 
-  const severityConfig = {
-    high: { color: "bg-destructive/10 text-destructive border-destructive/20", icon: ShieldAlert },
-    medium: { color: "bg-warning/10 text-warning border-warning/20", icon: AlertTriangle },
-    low: { color: "bg-muted text-muted-foreground border-border", icon: AlertTriangle },
+  const severityStyle = {
+    high: "bg-[hsl(var(--destructive))]/10 text-[hsl(var(--destructive))] border-[hsl(var(--destructive))]/20",
+    medium: "bg-[hsl(var(--warning))]/10 text-[hsl(var(--warning))] border-[hsl(var(--warning))]/20",
+    low: "bg-[hsl(var(--success))]/10 text-[hsl(var(--success))] border-[hsl(var(--success))]/20",
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 max-w-4xl">
       <div>
-        <h2 className="text-2xl font-bold tracking-tight">Validation</h2>
-        <p className="mt-1 text-sm text-muted-foreground">Market demand, feasibility, and risk assessment</p>
+        <h2 className="text-xl font-bold tracking-tight">Validation</h2>
+        <p className="text-[13px] text-muted-foreground mt-1">Market demand, feasibility, and risk assessment</p>
       </div>
 
-      <div className="grid gap-6 sm:grid-cols-2">
-        <SectionCard title="Market Demand">
-          <div className="flex items-end gap-3">
-            <span className="text-4xl font-extrabold">{validation.marketDemand}%</span>
-            <span className="mb-1 text-sm text-muted-foreground">demand signal</span>
-          </div>
-          <div className="mt-3 h-2 w-full rounded-full bg-secondary overflow-hidden">
-            <div className="h-full rounded-full gradient-primary" style={{ width: `${validation.marketDemand}%` }} />
-          </div>
-        </SectionCard>
-
-        <SectionCard title="Technical Feasibility">
-          <div className="flex items-end gap-3">
-            <span className="text-4xl font-extrabold">{validation.feasibility}%</span>
-            <span className="mb-1 text-sm text-muted-foreground">feasible</span>
-          </div>
-          <div className="mt-3 h-2 w-full rounded-full bg-secondary overflow-hidden">
-            <div className="h-full rounded-full bg-info" style={{ width: `${validation.feasibility}%` }} />
-          </div>
-        </SectionCard>
+      <div className="grid gap-4 sm:grid-cols-3">
+        {[
+          { label: "Market Demand", value: validation.marketDemand },
+          { label: "Feasibility", value: validation.feasibility },
+          { label: "Innovation Score", value: validation.innovationScore },
+        ].map((m) => (
+          <SectionCard key={m.label}>
+            <div className="text-center">
+              <div className="text-2xl font-bold tabular-nums">{m.value}%</div>
+              <div className="text-[12px] text-muted-foreground mt-1">{m.label}</div>
+            </div>
+          </SectionCard>
+        ))}
       </div>
 
-      <SectionCard title="Risk Assessment">
-        <div className="space-y-3">
-          {validation.risks.map((risk, i) => {
-            const config = severityConfig[risk.severity];
-            const Icon = config.icon;
-            return (
-              <div key={i} className={`flex items-center gap-3 rounded-xl border px-4 py-3 ${config.color}`}>
-                <Icon className="h-4 w-4 shrink-0" />
-                <span className="text-sm">{risk.label}</span>
-                <span className="ml-auto text-xs font-medium uppercase tracking-wider opacity-70">{risk.severity}</span>
-              </div>
-            );
-          })}
+      <SectionCard title="Identified Risks">
+        <div className="flex flex-wrap gap-1.5">
+          {validation.risks.map((r) => (
+            <span key={r.label} className={`inline-block rounded-md border px-2.5 py-1 text-[11px] font-medium ${severityStyle[r.severity]}`}>
+              {r.label}
+            </span>
+          ))}
         </div>
       </SectionCard>
 
       <SectionCard title="Key Strengths">
-        <div className="grid gap-3 sm:grid-cols-2">
-          {validation.strengths.map((s, i) => (
-            <div key={i} className="flex items-start gap-2 rounded-xl bg-success/5 border border-success/10 px-4 py-3">
-              <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-success" />
-              <span className="text-sm text-muted-foreground">{s}</span>
-            </div>
+        <ul className="space-y-2">
+          {validation.strengths.map((s) => (
+            <li key={s} className="flex items-start gap-2 text-[13px] text-muted-foreground">
+              <span className="mt-1.5 h-1 w-1 rounded-full bg-[hsl(var(--success))] shrink-0" />
+              {s}
+            </li>
           ))}
-        </div>
+        </ul>
       </SectionCard>
     </div>
   );
