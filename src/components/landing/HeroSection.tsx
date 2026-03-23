@@ -3,35 +3,58 @@ import { useNavigate } from "react-router-dom";
 import { ArrowRight, CornerDownLeft } from "lucide-react";
 import { useAnalysisStore } from "@/store/useAnalysisStore";
 
-const REPORT_PREVIEW = {
+const REPORT = {
   idea: "AI-powered onboarding tool for B2B SaaS",
   score: 84,
-  sections: [
-    { label: "Market Opportunity", value: "Large · $4.2B TAM", positive: true },
-    { label: "Competition Level", value: "Moderate · 6 direct", positive: null },
-    { label: "Revenue Potential", value: "$1.2M ARR yr 2", positive: true },
-    { label: "Technical Risk", value: "Low · Proven stack", positive: true },
-    { label: "Time to Market", value: "Est. 4–6 months", positive: null },
+  rows: [
+    { label: "Market Opportunity", value: "Large · $4.2B TAM", tag: "green" },
+    { label: "Competition",        value: "Moderate · 6 direct", tag: "neutral" },
+    { label: "Revenue Potential",  value: "$1.2M ARR yr 2",    tag: "green" },
+    { label: "Technical Risk",     value: "Low · Proven stack",  tag: "green" },
+    { label: "Time to Market",     value: "Est. 4–6 months",    tag: "neutral" },
   ],
+  nav: ["Overview", "Market", "Competitors", "Monetization", "Product", "Branding", "Validation", "GTM"],
 };
 
 export function HeroSection() {
   const [idea, setIdea] = useState("");
   const [focused, setFocused] = useState(false);
+  const [scoreVisible, setScoreVisible] = useState(false);
   const navigate = useNavigate();
   const { setIdea: storeSetIdea, runAnalysis } = useAnalysisStore();
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const sectionRef = useRef<HTMLElement>(null);
+  const scoreRef = useRef<HTMLDivElement>(null);
 
+  /* ── text-clip reveals on mount ─────────────────────── */
   useEffect(() => {
-    const els = sectionRef.current?.querySelectorAll<HTMLElement>(".reveal") ?? [];
+    const timeout = setTimeout(() => {
+      document.querySelectorAll<HTMLElement>(".text-reveal").forEach((el) =>
+        el.classList.add("visible")
+      );
+    }, 60);
+    return () => clearTimeout(timeout);
+  }, []);
+
+  /* ── standard reveals (stats, card) ─────────────────── */
+  useEffect(() => {
+    const els = document.querySelectorAll<HTMLElement>(".hero-reveal");
     const observer = new IntersectionObserver(
       (entries) => entries.forEach((e) => {
         if (e.isIntersecting) (e.target as HTMLElement).classList.add("visible");
       }),
-      { threshold: 0.1 }
+      { threshold: 0.08 }
     );
     els.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+
+  /* ── score bar trigger ───────────────────────────────── */
+  useEffect(() => {
+    if (!scoreRef.current) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) setScoreVisible(true); },
+      { threshold: 0.5 }
+    );
+    observer.observe(scoreRef.current);
     return () => observer.disconnect();
   }, []);
 
@@ -44,211 +67,234 @@ export function HeroSection() {
   };
 
   return (
-    <section
-      ref={sectionRef}
-      className="relative min-h-screen flex flex-col overflow-hidden"
-    >
-      {/* Subtle grid background */}
-      <div className="absolute inset-0 grid-bg opacity-100 pointer-events-none" />
-
-      {/* Faint radial centre highlight */}
+    <section className="relative min-h-screen flex flex-col overflow-hidden">
+      {/* Grid background */}
+      <div className="absolute inset-0 grid-bg pointer-events-none" />
+      {/* Very subtle top vignette */}
       <div
         className="absolute inset-0 pointer-events-none"
-        style={{
-          background: "radial-gradient(ellipse 60% 50% at 50% -10%, rgba(99,102,241,0.07) 0%, transparent 70%)",
-        }}
+        style={{ background: "radial-gradient(ellipse 70% 40% at 50% -5%, rgba(100,100,255,0.06) 0%, transparent 70%)" }}
       />
 
-      {/* Main content */}
-      <div className="relative z-10 flex flex-col flex-1 max-w-6xl mx-auto w-full px-5 md:px-8">
-        {/* Hero text — takes the top 55% of the viewport */}
-        <div className="flex flex-col justify-center pt-40 pb-16">
-          {/* Kicker label */}
-          <div className="reveal flex items-center gap-2.5 mb-7">
-            <div className="h-px w-8 bg-white/20" />
-            <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-white/35">
-              Startup Validation · Powered by AI
-            </span>
+      <div className="relative z-10 flex flex-col max-w-6xl mx-auto w-full px-5 md:px-8">
+
+        {/* ─── Hero headline block ─────────────────────────── */}
+        <div className="pt-44 pb-20">
+          {/* Kicker */}
+          <div className="flex items-center gap-3 mb-8 overflow-hidden">
+            <div
+              className="text-reveal text-reveal-delay-1 flex items-center gap-2.5"
+              style={{ display: "flex" }}
+            >
+              <div className="h-px w-7 bg-white/20" />
+              <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/30">
+                Startup Validation · AI-Powered
+              </span>
+            </div>
           </div>
 
-          {/* Headline — mix of weights / styles */}
-          <h1 className="reveal reveal-delay-1 text-[clamp(2.6rem,6.5vw,5.2rem)] font-black text-white leading-[1.04] tracking-[-0.035em] max-w-[820px]">
-            Know if your idea<br />
-            is worth building—{" "}
-            <span className="font-serif-display font-normal text-white/55">
-              before you build it.
+          {/* H1 — two wrapped lines, each in its own mask */}
+          <h1 className="text-[clamp(3rem,7vw,5.8rem)] font-black text-white leading-[1.02] tracking-[-0.04em] mb-8">
+            <span className="text-reveal-wrap">
+              <span className="text-reveal text-reveal-delay-1">Know if your idea</span>
+            </span>
+            <span className="text-reveal-wrap">
+              <span className="text-reveal text-reveal-delay-2">is worth building—</span>
+            </span>
+            <span className="text-reveal-wrap">
+              <span className="text-reveal text-reveal-delay-3 font-serif-display font-normal text-white/50">
+                before you build it.
+              </span>
             </span>
           </h1>
 
-          <p className="reveal reveal-delay-2 mt-7 text-[16px] leading-[1.8] text-white/40 max-w-[500px]">
-            Paste your idea. Get a full market report in 30 seconds — competitor
-            analysis, market size, monetization strategy, and more.
-          </p>
+          {/* Sub */}
+          <div className="text-reveal-wrap mb-10 max-w-[480px]">
+            <p className="text-reveal text-reveal-delay-3 text-[16px] leading-[1.85] text-white/38">
+              Paste your idea. Get a full market report in 30 seconds — competitor
+              analysis, market size, monetization strategy, and more.
+            </p>
+          </div>
 
           {/* Input */}
-          <div className="reveal reveal-delay-3 mt-10 w-full max-w-[600px]">
-            <div
-              className={`relative rounded-xl border transition-all duration-200 ${
-                focused
-                  ? "border-white/20 bg-white/[0.04]"
-                  : "border-white/[0.08] bg-white/[0.02]"
-              }`}
-            >
-              <textarea
-                ref={textareaRef}
-                id="idea-input"
-                data-testid="input-idea"
-                value={idea}
-                onChange={(e) => setIdea(e.target.value)}
-                onFocus={() => setFocused(true)}
-                onBlur={() => setFocused(false)}
-                placeholder="Describe your startup idea…"
-                className="w-full resize-none bg-transparent px-5 py-4 pr-14 text-[15px] leading-relaxed text-white/90 placeholder:text-white/20 focus:outline-none min-h-[68px] max-h-[140px]"
-                rows={2}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault();
-                    handleSubmit();
-                  }
-                }}
-              />
-              <button
-                data-testid="button-validate"
-                onClick={handleSubmit}
-                disabled={!idea.trim()}
-                className="absolute bottom-3 right-3 flex items-center justify-center w-9 h-9 rounded-lg bg-white text-black disabled:opacity-25 disabled:cursor-not-allowed hover:bg-white/90 transition-all duration-150 active:scale-[0.96]"
-                title="Validate idea"
+          <div className="text-reveal-wrap">
+            <div className="text-reveal text-reveal-delay-4 w-full max-w-[580px]">
+              <div
+                className={`relative rounded-xl border transition-all duration-300 ${
+                  focused
+                    ? "border-white/25 bg-white/[0.045] shadow-[0_0_0_3px_rgba(255,255,255,0.04)]"
+                    : "border-white/[0.09] bg-white/[0.025] hover:border-white/15"
+                }`}
               >
-                <CornerDownLeft className="h-4 w-4" />
-              </button>
-            </div>
-            <div className="flex items-center justify-between mt-2.5 px-1">
-              <span className="text-[11.5px] text-white/20">
-                Press <kbd className="font-mono bg-white/[0.06] px-1.5 py-0.5 rounded text-[10px]">↵</kbd> to validate
-              </span>
-              <button
-                data-testid="button-get-started-hero"
-                onClick={handleSubmit}
-                disabled={!idea.trim()}
-                className="group flex items-center gap-1.5 text-[12px] font-medium text-white/30 hover:text-white/60 disabled:opacity-30 transition-colors duration-150"
-              >
-                Analyze idea
-                <ArrowRight className="h-3 w-3 transition-transform duration-200 group-hover:translate-x-0.5" />
-              </button>
+                <textarea
+                  id="idea-input"
+                  data-testid="input-idea"
+                  value={idea}
+                  onChange={(e) => setIdea(e.target.value)}
+                  onFocus={() => setFocused(true)}
+                  onBlur={() => setFocused(false)}
+                  placeholder="Describe your startup idea…"
+                  className="w-full resize-none bg-transparent px-5 py-4 pr-14 text-[15px] leading-relaxed text-white/90 placeholder:text-white/18 focus:outline-none min-h-[70px] max-h-[140px]"
+                  rows={2}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      handleSubmit();
+                    }
+                  }}
+                />
+                <button
+                  data-testid="button-validate"
+                  onClick={handleSubmit}
+                  disabled={!idea.trim()}
+                  className="absolute bottom-3 right-3 flex items-center justify-center w-9 h-9 rounded-lg bg-white text-black disabled:opacity-20 disabled:cursor-not-allowed hover:bg-white/90 transition-all duration-150 active:scale-[0.94]"
+                >
+                  <CornerDownLeft className="h-4 w-4" />
+                </button>
+              </div>
+              <div className="flex items-center justify-between mt-2.5 px-0.5">
+                <span className="text-[11.5px] text-white/20">
+                  Press{" "}
+                  <kbd className="font-mono bg-white/[0.07] border border-white/[0.08] px-1.5 py-0.5 rounded text-[10px]">↵</kbd>{" "}
+                  to validate
+                </span>
+                <button
+                  data-testid="button-get-started-hero"
+                  onClick={handleSubmit}
+                  disabled={!idea.trim()}
+                  className="group flex items-center gap-1.5 text-[12px] font-medium text-white/28 hover:text-white/55 disabled:opacity-0 transition-all duration-200"
+                >
+                  Analyze idea
+                  <ArrowRight className="h-3 w-3 transition-transform duration-200 group-hover:translate-x-0.5" />
+                </button>
+              </div>
             </div>
           </div>
 
-          {/* Stats strip */}
-          <div className="reveal reveal-delay-4 mt-14 flex flex-wrap items-center gap-x-10 gap-y-4">
+          {/* Stats */}
+          <div className="hero-reveal reveal mt-14 flex flex-wrap items-center gap-x-10 gap-y-4">
             {[
               { n: "12,847", label: "analyses run" },
-              { n: "4.9★", label: "avg. rating" },
-              { n: "~28s", label: "to results" },
-              { n: "8", label: "report sections" },
-            ].map(({ n, label }) => (
-              <div key={label} className="flex items-baseline gap-2">
-                <span className="text-[18px] font-bold text-white/80 tracking-tight">{n}</span>
+              { n: "4.9★",  label: "avg. rating" },
+              { n: "~28s",  label: "to results" },
+              { n: "8",     label: "report sections" },
+            ].map(({ n, label }, i) => (
+              <div
+                key={label}
+                className="stat-animate flex items-baseline gap-2"
+                style={{ animationDelay: `${0.45 + i * 0.08}s` }}
+              >
+                <span className="text-[19px] font-bold text-white/80 tracking-tight tabular-nums">{n}</span>
                 <span className="text-[12px] text-white/25">{label}</span>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Preview card — full width below hero text */}
-        <div className="reveal reveal-delay-5 w-full pb-24">
-          <div className="relative rounded-2xl border border-white/[0.07] bg-white/[0.02] overflow-hidden">
+        {/* ─── Product preview ─────────────────────────────── */}
+        <div className="hero-reveal reveal reveal-delay-5 w-full pb-24">
+          <div className="preview-border relative rounded-2xl overflow-hidden border border-white/[0.08] bg-[#0d0d0d] shadow-[0_32px_80px_rgba(0,0,0,0.5)]">
+
             {/* Browser chrome */}
-            <div className="flex items-center gap-2 px-5 h-10 border-b border-white/[0.06] bg-white/[0.015]">
+            <div className="flex items-center gap-2 h-10 px-5 border-b border-white/[0.06] bg-white/[0.01]">
               <div className="flex gap-1.5">
-                <div className="w-2.5 h-2.5 rounded-full bg-white/10" />
-                <div className="w-2.5 h-2.5 rounded-full bg-white/10" />
-                <div className="w-2.5 h-2.5 rounded-full bg-white/10" />
+                {["bg-white/10", "bg-white/10", "bg-white/10"].map((c, i) => (
+                  <div key={i} className={`w-2.5 h-2.5 rounded-full ${c}`} />
+                ))}
               </div>
-              <div className="flex-1 mx-3">
-                <div className="h-[22px] max-w-[260px] mx-auto rounded-md bg-white/[0.04] flex items-center px-3 gap-2">
-                  <div className="w-2 h-2 rounded-full bg-green-400/50" />
-                  <span className="text-[11px] text-white/20 font-mono">valisearch.app/dashboard</span>
+              <div className="flex-1 mx-3 flex justify-center">
+                <div className="h-[22px] w-[240px] rounded-md bg-white/[0.05] flex items-center px-3 gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-green-400/60" />
+                  <span className="text-[10.5px] text-white/20 font-mono">app.valisearch.io/report</span>
                 </div>
               </div>
             </div>
 
-            {/* Content: sidebar + main */}
-            <div className="grid grid-cols-[200px_1fr] min-h-0 h-[420px] md:h-[480px]">
+            {/* App layout */}
+            <div className="grid sm:grid-cols-[192px_1fr] h-[420px] md:h-[500px]">
+
               {/* Sidebar */}
-              <div className="border-r border-white/[0.05] p-5 flex flex-col gap-1 hidden sm:flex">
-                <div className="mb-4">
-                  <div className="text-[10px] font-semibold uppercase tracking-[0.1em] text-white/20 mb-2">Report</div>
-                  {["Overview", "Market", "Competitors", "Monetization", "Product", "Branding", "Validation", "Go-to-Market"].map((item, i) => (
+              <div className="hidden sm:flex flex-col border-r border-white/[0.05] p-4">
+                <div className="mb-4 px-1">
+                  <span className="text-[9.5px] font-semibold uppercase tracking-[0.12em] text-white/18">Report sections</span>
+                </div>
+                <nav className="flex flex-col gap-0.5">
+                  {REPORT.nav.map((item, i) => (
                     <div
                       key={item}
-                      className={`flex items-center gap-2 px-2.5 py-1.5 rounded-md mb-0.5 cursor-default transition-colors ${
-                        i === 0 ? "bg-white/[0.06] text-white/80" : "text-white/30 hover:text-white/50"
+                      className={`flex items-center gap-2.5 px-2.5 py-2 rounded-lg cursor-default select-none transition-colors ${
+                        i === 0
+                          ? "bg-white/[0.07] text-white/85"
+                          : "text-white/28 hover:text-white/45 hover:bg-white/[0.03]"
                       }`}
                     >
-                      <div className={`w-1 h-1 rounded-full ${i === 0 ? "bg-indigo-400" : "bg-white/20"}`} />
+                      <div className={`w-[5px] h-[5px] rounded-full shrink-0 ${
+                        i === 0 ? "bg-indigo-400" : "bg-white/15"
+                      }`} />
                       <span className="text-[12px] font-medium">{item}</span>
                     </div>
                   ))}
-                </div>
-                <div className="mt-auto pt-4 border-t border-white/[0.05]">
-                  <div className="text-[10px] text-white/20 font-mono">Score</div>
-                  <div className="text-[32px] font-black text-white/90 leading-none mt-1">
-                    {REPORT_PREVIEW.score}
-                    <span className="text-[14px] font-medium text-white/30">/100</span>
+                </nav>
+
+                {/* Score */}
+                <div ref={scoreRef} className="mt-auto pt-4 border-t border-white/[0.05]">
+                  <div className="text-[9.5px] font-semibold uppercase tracking-[0.1em] text-white/20 mb-1.5">
+                    Validation Score
                   </div>
-                  <div className="mt-2 h-1 rounded-full bg-white/[0.08]">
+                  <div className="flex items-baseline gap-1 mb-2">
+                    <span className="text-[34px] font-black text-white/90 leading-none">{REPORT.score}</span>
+                    <span className="text-[13px] text-white/25 font-medium">/100</span>
+                  </div>
+                  <div className="h-[3px] w-full rounded-full bg-white/[0.07] overflow-hidden">
                     <div
-                      className="h-full rounded-full bg-indigo-400"
-                      style={{ width: `${REPORT_PREVIEW.score}%` }}
+                      className="score-bar h-full rounded-full bg-white/70"
+                      style={{ width: scoreVisible ? `${REPORT.score}%` : "0%" }}
                     />
                   </div>
+                  <div className="mt-1.5 text-[10px] text-white/20">Strong · Recommended to build</div>
                 </div>
               </div>
 
-              {/* Main panel */}
-              <div className="p-6 md:p-8 flex flex-col gap-6 overflow-hidden">
-                {/* Idea heading */}
+              {/* Main */}
+              <div className="p-6 md:p-8 flex flex-col gap-5 overflow-hidden">
+                {/* Idea */}
                 <div>
-                  <div className="text-[10px] font-semibold uppercase tracking-[0.1em] text-white/20 mb-1.5">Idea</div>
-                  <h2 className="text-[15px] font-semibold text-white/85 leading-snug">
-                    {REPORT_PREVIEW.idea}
-                  </h2>
+                  <div className="text-[9.5px] font-semibold uppercase tracking-[0.12em] text-white/20 mb-1.5">Idea</div>
+                  <p className="text-[15px] font-semibold text-white/82 leading-snug">{REPORT.idea}</p>
                 </div>
 
-                {/* Metrics table */}
-                <div>
-                  <div className="text-[10px] font-semibold uppercase tracking-[0.1em] text-white/20 mb-3">Key Findings</div>
-                  <div className="space-y-2">
-                    {REPORT_PREVIEW.sections.map((s) => (
-                      <div
-                        key={s.label}
-                        className="flex items-center justify-between py-2.5 px-0 border-b border-white/[0.04] last:border-0"
-                      >
-                        <span className="text-[13px] text-white/40">{s.label}</span>
+                {/* Key findings table */}
+                <div className="flex-1">
+                  <div className="text-[9.5px] font-semibold uppercase tracking-[0.12em] text-white/20 mb-3">Key Findings</div>
+                  <div className="divide-y divide-white/[0.045]">
+                    {REPORT.rows.map((row) => (
+                      <div key={row.label} className="flex items-center justify-between py-2.5">
+                        <span className="text-[13px] text-white/38">{row.label}</span>
                         <span className={`text-[13px] font-medium ${
-                          s.positive === true ? "text-white/80" : s.positive === false ? "text-red-400/70" : "text-white/55"
+                          row.tag === "green" ? "text-white/78" : "text-white/50"
                         }`}>
-                          {s.value}
+                          {row.value}
                         </span>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                {/* Summary blurb */}
-                <div className="rounded-xl border border-white/[0.05] bg-white/[0.02] p-4">
-                  <div className="text-[10px] font-semibold uppercase tracking-[0.1em] text-white/20 mb-2">AI Summary</div>
-                  <p className="text-[12.5px] leading-[1.7] text-white/35">
-                    Strong opportunity in a high-growth segment with measurable demand signals. 
-                    Existing solutions lack modern UX and AI-native features, creating a clear 
-                    wedge. Recommended: target mid-market SaaS teams (50–500 seats) at $49/mo.
+                {/* AI summary */}
+                <div className="rounded-xl border border-white/[0.06] bg-white/[0.025] p-4 mt-auto">
+                  <div className="text-[9.5px] font-semibold uppercase tracking-[0.12em] text-white/20 mb-2">AI Summary</div>
+                  <p className="text-[12.5px] leading-[1.75] text-white/32">
+                    Strong opportunity in a growing segment with measurable demand signals. Existing solutions
+                    lack modern UX and AI-native features, creating a clear wedge.
+                    Target mid-market SaaS teams (50–500 seats) at $49/mo.
                   </p>
                 </div>
               </div>
             </div>
           </div>
-          <p className="mt-3 text-center text-[11.5px] text-white/20">
-            Sample analysis output · Your real results will vary based on your idea
+
+          <p className="mt-3 text-center text-[11.5px] text-white/18">
+            Sample output · Your results will vary based on your idea
           </p>
         </div>
       </div>
