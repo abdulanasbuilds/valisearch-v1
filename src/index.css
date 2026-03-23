@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,44 +6,44 @@
 
 @layer base {
   :root {
-    --background: 217 33% 3%;
+    --background: 240 10% 3.5%;
     --foreground: 0 0% 98%;
 
-    --card: 217 28% 5%;
+    --card: 240 8% 5%;
     --card-foreground: 0 0% 98%;
 
-    --popover: 217 28% 5%;
+    --popover: 240 8% 5%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 217 91% 60%;
+    --primary: 263 70% 58%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 217 20% 10%;
+    --secondary: 240 6% 10%;
     --secondary-foreground: 0 0% 90%;
 
-    --muted: 217 20% 10%;
-    --muted-foreground: 217 10% 55%;
+    --muted: 240 6% 10%;
+    --muted-foreground: 240 5% 55%;
 
-    --accent: 217 20% 12%;
+    --accent: 240 6% 12%;
     --accent-foreground: 0 0% 98%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 217 20% 12%;
-    --input: 217 20% 12%;
-    --ring: 217 91% 60%;
+    --border: 240 6% 12%;
+    --input: 240 6% 12%;
+    --ring: 263 70% 58%;
 
-    --radius: 1rem;
+    --radius: 0.75rem;
 
-    --sidebar-background: 217 33% 3%;
+    --sidebar-background: 240 10% 3.5%;
     --sidebar-foreground: 0 0% 75%;
-    --sidebar-primary: 217 91% 60%;
+    --sidebar-primary: 263 70% 58%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 217 20% 10%;
+    --sidebar-accent: 240 6% 10%;
     --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 217 20% 12%;
-    --sidebar-ring: 217 91% 60%;
+    --sidebar-border: 240 6% 12%;
+    --sidebar-ring: 263 70% 58%;
 
     --success: 152 60% 42%;
     --success-foreground: 0 0% 100%;
@@ -64,6 +64,7 @@
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background-color: hsl(240, 10%, 3.5%);
   }
 
   html {
@@ -71,72 +72,217 @@
   }
 }
 
-@layer utilities {
-  .card-surface {
-    @apply bg-card border border-border/60 shadow-sm;
-  }
-
-  .card-surface-hover {
-    @apply card-surface transition-all duration-200 ease-out;
-  }
-
-  .card-surface-hover:hover {
-    @apply border-border bg-accent shadow-md;
-  }
-
-  .glass-card {
-    @apply bg-white/[0.02] backdrop-blur-xl border border-white/[0.08] shadow-2xl;
-  }
-
-  .glass-card-hover {
-    @apply glass-card transition-all duration-300 ease-out;
-  }
-
-  .glass-card-hover:hover {
-    @apply bg-white/[0.04] border-white/[0.12] scale-[1.02] shadow-[0_0_40px_rgba(59,130,246,0.15)];
-  }
-
-  .dot-grid {
-    background-image: radial-gradient(circle, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-    background-size: 24px 24px;
-  }
-
-  .glow-beam {
-    position: absolute;
-    width: 2px;
-    height: 100%;
-    background: linear-gradient(
-      to bottom,
-      transparent 0%,
-      rgba(59, 130, 246, 0.8) 20%,
-      rgba(147, 51, 234, 0.8) 50%,
-      rgba(59, 130, 246, 0.8) 80%,
-      transparent 100%
-    );
-    filter: blur(8px);
-    animation: glow-pulse 3s ease-in-out infinite;
-  }
-
-  .glow-beam::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -8px;
-    width: 18px;
-    height: 100%;
-    background: linear-gradient(
-      to bottom,
-      transparent 0%,
-      rgba(59, 130, 246, 0.4) 20%,
-      rgba(147, 51, 234, 0.4) 50%,
-      rgba(59, 130, 246, 0.4) 80%,
-      transparent 100%
-    );
-    filter: blur(16px);
-  }
+/* ─── Gradient text ─────────────────────────────────────────────────────── */
+.gradient-text {
+  background: linear-gradient(135deg, #c084fc 0%, #818cf8 40%, #38bdf8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-/* Hide Lovable badge */
+.gradient-text-warm {
+  background: linear-gradient(135deg, #f472b6 0%, #a78bfa 50%, #60a5fa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ─── Background orbs ───────────────────────────────────────────────────── */
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+}
+
+.orb-purple {
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.35) 0%, transparent 70%);
+}
+
+.orb-blue {
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.25) 0%, transparent 70%);
+}
+
+.orb-pink {
+  background: radial-gradient(circle, rgba(236, 72, 153, 0.2) 0%, transparent 70%);
+}
+
+.orb-cyan {
+  background: radial-gradient(circle, rgba(34, 211, 238, 0.2) 0%, transparent 70%);
+}
+
+/* ─── Dot grid ──────────────────────────────────────────────────────────── */
+.dot-grid {
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+/* ─── Glass card ────────────────────────────────────────────────────────── */
+.glass-card {
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+/* ─── Gradient border card ──────────────────────────────────────────────── */
+.grad-border {
+  position: relative;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  transition: all 0.3s ease;
+}
+
+.grad-border::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.4), rgba(59, 130, 246, 0.2), rgba(236, 72, 153, 0.2));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.grad-border:hover::before {
+  opacity: 1;
+}
+
+.grad-border:hover {
+  background: rgba(255, 255, 255, 0.05);
+  transform: translateY(-2px);
+}
+
+/* ─── Glow button ───────────────────────────────────────────────────────── */
+.glow-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.glow-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.glow-btn:hover::after {
+  opacity: 1;
+}
+
+/* ─── Marquee ───────────────────────────────────────────────────────────── */
+.marquee-track {
+  display: flex;
+  gap: 3rem;
+  animation: marquee 28s linear infinite;
+  white-space: nowrap;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ─── Scroll reveal ─────────────────────────────────────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+.reveal-delay-5 { transition-delay: 0.5s; }
+.reveal-delay-6 { transition-delay: 0.6s; }
+
+/* ─── Hero beam / shimmer ───────────────────────────────────────────────── */
+.beam {
+  position: absolute;
+  width: 1px;
+  background: linear-gradient(to bottom, transparent 0%, rgba(139, 92, 246, 0.9) 40%, rgba(59, 130, 246, 0.7) 70%, transparent 100%);
+  animation: beam-fall 6s ease-in-out infinite;
+}
+
+@keyframes beam-fall {
+  0%, 100% { opacity: 0; transform: translateY(-20%); }
+  20%, 80%  { opacity: 1; }
+  50%       { opacity: 0.8; transform: translateY(5%); }
+}
+
+/* ─── Float animation ───────────────────────────────────────────────────── */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-12px); }
+}
+
+.animate-float {
+  animation: float 5s ease-in-out infinite;
+}
+
+/* ─── Pulse glow ────────────────────────────────────────────────────────── */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(139, 92, 246, 0.3); }
+  50%       { box-shadow: 0 0 50px rgba(139, 92, 246, 0.6), 0 0 80px rgba(59, 130, 246, 0.3); }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+/* ─── Spin slow ─────────────────────────────────────────────────────────── */
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 20s linear infinite;
+}
+
+/* ─── Card surface ──────────────────────────────────────────────────────── */
+.card-surface {
+  @apply bg-card border border-border/60 shadow-sm;
+}
+
+.card-surface-hover {
+  @apply card-surface transition-all duration-200 ease-out;
+}
+
+.card-surface-hover:hover {
+  @apply border-border bg-accent shadow-md;
+}
+
+/* ─── Counter digits animation ──────────────────────────────────────────── */
+@keyframes count-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-count {
+  animation: count-up 0.6s ease forwards;
+}
+
+/* ─── Hide Lovable badge ────────────────────────────────────────────────── */
 #lovable-badge {
   display: none !important;
 }
