@@ -6,44 +6,44 @@
 
 @layer base {
   :root {
-    --background: 220 20% 4%;
-    --foreground: 0 0% 95%;
+    --background: 217 33% 3%;
+    --foreground: 0 0% 98%;
 
-    --card: 220 16% 7%;
-    --card-foreground: 0 0% 95%;
+    --card: 217 28% 5%;
+    --card-foreground: 0 0% 98%;
 
-    --popover: 220 16% 7%;
-    --popover-foreground: 0 0% 95%;
+    --popover: 217 28% 5%;
+    --popover-foreground: 0 0% 98%;
 
-    --primary: 225 80% 56%;
+    --primary: 217 91% 60%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 14% 11%;
-    --secondary-foreground: 0 0% 85%;
+    --secondary: 217 20% 10%;
+    --secondary-foreground: 0 0% 90%;
 
-    --muted: 220 14% 11%;
-    --muted-foreground: 220 10% 50%;
+    --muted: 217 20% 10%;
+    --muted-foreground: 217 10% 55%;
 
-    --accent: 220 14% 14%;
-    --accent-foreground: 0 0% 95%;
+    --accent: 217 20% 12%;
+    --accent-foreground: 0 0% 98%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 14% 12%;
-    --input: 220 14% 12%;
-    --ring: 225 80% 56%;
+    --border: 217 20% 12%;
+    --input: 217 20% 12%;
+    --ring: 217 91% 60%;
 
-    --radius: 0.75rem;
+    --radius: 1rem;
 
-    --sidebar-background: 220 20% 5%;
+    --sidebar-background: 217 33% 3%;
     --sidebar-foreground: 0 0% 75%;
-    --sidebar-primary: 225 80% 56%;
+    --sidebar-primary: 217 91% 60%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 220 14% 10%;
-    --sidebar-accent-foreground: 0 0% 95%;
-    --sidebar-border: 220 14% 12%;
-    --sidebar-ring: 225 80% 56%;
+    --sidebar-accent: 217 20% 10%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 217 20% 12%;
+    --sidebar-ring: 217 91% 60%;
 
     --success: 152 60% 42%;
     --success-foreground: 0 0% 100%;
@@ -82,6 +82,57 @@
 
   .card-surface-hover:hover {
     @apply border-border bg-accent shadow-md;
+  }
+
+  .glass-card {
+    @apply bg-white/[0.02] backdrop-blur-xl border border-white/[0.08] shadow-2xl;
+  }
+
+  .glass-card-hover {
+    @apply glass-card transition-all duration-300 ease-out;
+  }
+
+  .glass-card-hover:hover {
+    @apply bg-white/[0.04] border-white/[0.12] scale-[1.02] shadow-[0_0_40px_rgba(59,130,246,0.15)];
+  }
+
+  .dot-grid {
+    background-image: radial-gradient(circle, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  .glow-beam {
+    position: absolute;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(59, 130, 246, 0.8) 20%,
+      rgba(147, 51, 234, 0.8) 50%,
+      rgba(59, 130, 246, 0.8) 80%,
+      transparent 100%
+    );
+    filter: blur(8px);
+    animation: glow-pulse 3s ease-in-out infinite;
+  }
+
+  .glow-beam::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -8px;
+    width: 18px;
+    height: 100%;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(59, 130, 246, 0.4) 20%,
+      rgba(147, 51, 234, 0.4) 50%,
+      rgba(59, 130, 246, 0.4) 80%,
+      transparent 100%
+    );
+    filter: blur(16px);
   }
 }
 

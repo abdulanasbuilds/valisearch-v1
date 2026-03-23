@@ -108,6 +108,10 @@ export default {
           "0%, 100%": { opacity: "0.4", transform: "scale(1)" },
           "50%": { opacity: "0.8", transform: "scale(1.05)" },
         },
+        "glow-pulse": {
+          "0%, 100%": { opacity: "0.6", filter: "blur(8px)" },
+          "50%": { opacity: "1", filter: "blur(12px)" },
+        },
         "orbit": {
           "0%": { transform: "rotate(0deg) translateX(60px) rotate(0deg)" },
           "100%": { transform: "rotate(360deg) translateX(60px) rotate(-360deg)" },
@@ -133,6 +137,7 @@ export default {
         "fade-in-right": "fade-in-right 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards",
         "scale-in": "scale-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards",
         "pulse-glow": "pulse-glow 3s ease-in-out infinite",
+        "glow-pulse": "glow-pulse 3s ease-in-out infinite",
         "orbit": "orbit 8s linear infinite",
         "float": "float 4s ease-in-out infinite",
         "count-up": "count-up 0.5s ease-out forwards",

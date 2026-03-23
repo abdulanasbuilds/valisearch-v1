@@ -18,33 +18,40 @@ export function HeroSection() {
   };
 
   return (
-    <section className="relative flex flex-col items-center justify-center pt-32 pb-20 sm:pt-40 sm:pb-28 overflow-hidden">
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] rounded-full bg-primary/[0.06] blur-[140px] pointer-events-none" />
+    <section className="relative flex flex-col items-center justify-center pt-40 pb-24 sm:pt-48 sm:pb-32 overflow-hidden min-h-[90vh]">
+      {/* Dot Grid Background */}
+      <div className="absolute inset-0 dot-grid opacity-40" />
 
-      <div className="container relative z-10 mx-auto px-5">
-        <div className="mx-auto max-w-[680px] text-center">
+      {/* Animated Glow Beam */}
+      <div className="absolute top-0 right-[20%] h-full glow-beam" style={{ animationDelay: "0s" }} />
+      <div className="absolute top-0 right-[22%] h-full glow-beam opacity-50" style={{ animationDelay: "1s" }} />
+
+      <div className="container relative z-10 mx-auto px-6">
+        <div className="mx-auto max-w-[900px] text-center">
           <h1
-            className="text-[clamp(2rem,5.5vw,3.5rem)] font-extrabold leading-[1.08] tracking-[-0.035em] text-foreground"
+            className="text-[clamp(3rem,8vw,5.5rem)] font-black leading-[1.05] tracking-[-0.04em] text-white"
             style={{ textWrap: "balance" }}
           >
-            Validate your startup idea before writing a single line of code
+            Everything App
+            <br />
+            for your teams
           </h1>
 
           <p
-            className="mx-auto mt-5 max-w-[480px] text-[15px] leading-[1.65] text-muted-foreground"
+            className="mx-auto mt-7 max-w-[580px] text-[17px] leading-[1.7] text-muted-foreground/80"
             style={{ textWrap: "pretty" }}
           >
             Market research, competitor analysis, product strategy, and monetization plan — generated in seconds, not weeks.
           </p>
         </div>
 
-        <div className="mx-auto mt-10 max-w-[560px]">
-          <div className="rounded-xl border border-border/60 bg-card p-1.5">
+        <div className="mx-auto mt-12 max-w-[640px]">
+          <div className="glass-card rounded-[24px] p-2">
             <textarea
               value={idea}
               onChange={(e) => setIdea(e.target.value)}
               placeholder="Describe your startup idea…"
-              className="w-full resize-none rounded-lg bg-transparent px-4 py-3 text-[14px] leading-relaxed placeholder:text-muted-foreground/50 focus:outline-none min-h-[48px] max-h-[120px]"
+              className="w-full resize-none rounded-[20px] bg-white/[0.03] px-6 py-4 text-[15px] leading-relaxed placeholder:text-muted-foreground/40 focus:outline-none focus:bg-white/[0.05] transition-colors min-h-[64px] max-h-[140px] border border-white/[0.05]"
               rows={2}
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
@@ -53,32 +60,49 @@ export function HeroSection() {
                 }
               }}
             />
-            <div className="flex items-center justify-between pt-1 px-1">
-              <span className="text-[11px] text-muted-foreground/40 pl-2">Press Enter to submit</span>
+            <div className="flex items-center justify-between pt-2 px-2">
+              <span className="text-[12px] text-muted-foreground/35 pl-3">Press Enter to submit</span>
               <Button
                 onClick={handleAnalyze}
                 disabled={!idea.trim()}
-                className="bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-5 rounded-lg text-[13px] font-medium active:scale-[0.97] transition-transform disabled:opacity-30"
+                className="bg-primary text-primary-foreground hover:bg-primary/90 hover:scale-[1.02] h-11 px-7 rounded-[16px] text-[14px] font-semibold transition-all disabled:opacity-30 disabled:scale-100 shadow-lg shadow-primary/20"
               >
                 Validate Idea
-                <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+                <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </div>
           </div>
-          <p className="mt-3 text-center text-[12px] text-muted-foreground/40">
+          <p className="mt-4 text-center text-[13px] text-muted-foreground/35">
             No signup required · Results in under 30 seconds
           </p>
         </div>
 
-        <div className="mx-auto mt-16 flex flex-wrap items-center justify-center gap-x-10 gap-y-4">
+        {/* Floating Mockup Preview */}
+        <div className="mx-auto mt-20 max-w-[900px]">
+          <div className="glass-card rounded-[32px] p-4 hover:scale-[1.01] transition-transform duration-500">
+            <div className="rounded-[24px] bg-gradient-to-br from-primary/10 via-purple-500/5 to-primary/10 p-8 aspect-video flex items-center justify-center border border-white/[0.05]">
+              <div className="text-center space-y-3">
+                <div className="w-16 h-16 mx-auto rounded-[16px] bg-primary/20 border border-primary/30 flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-lg bg-primary/40 border border-primary/50" />
+                </div>
+                <div className="space-y-2">
+                  <div className="h-3 w-48 mx-auto rounded-full bg-white/[0.05]" />
+                  <div className="h-3 w-36 mx-auto rounded-full bg-white/[0.05]" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="mx-auto mt-20 flex flex-wrap items-center justify-center gap-x-14 gap-y-6">
           {[
             { value: "12,847", label: "ideas validated" },
             { value: "4.8/5", label: "founder rating" },
             { value: "< 30s", label: "avg. analysis time" },
           ].map((stat) => (
             <div key={stat.label} className="text-center">
-              <div className="text-lg font-semibold tracking-tight text-foreground">{stat.value}</div>
-              <div className="text-[11px] text-muted-foreground/50 mt-0.5">{stat.label}</div>
+              <div className="text-2xl font-bold tracking-tight text-white">{stat.value}</div>
+              <div className="text-[12px] text-muted-foreground/45 mt-1">{stat.label}</div>
             </div>
           ))}
         </div>
