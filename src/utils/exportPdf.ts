@@ -1,11 +1,11 @@
-import { mockAnalysisResult } from "@/data/mockData";
-
 /**
- * Generates a simple text-based "PDF" report as a downloadable .txt file.
- * In production, this would use a real PDF library or server-side generation.
- * For now, we create a clean formatted text document.
+ * Export analysis as a downloadable text report.
+ * Works with the ValiSearchAnalysis type from the store.
  */
-export function downloadReport(data = mockAnalysisResult) {
+
+import type { ValiSearchAnalysis } from "@/types/analysis";
+
+export function downloadReport(data: ValiSearchAnalysis) {
   const lines: string[] = [];
   const hr = "─".repeat(60);
 
@@ -16,37 +16,39 @@ export function downloadReport(data = mockAnalysisResult) {
   // Overview
   lines.push("1. OVERVIEW");
   lines.push(hr);
-  lines.push(`Score: ${data.idea_analysis.score}/10 — Verdict: ${data.idea_analysis.verdict}`);
+  lines.push(`Score: ${data.final_verdict.score}/100 — Verdict: ${data.final_verdict.verdict}`);
   lines.push("");
   lines.push(data.idea_analysis.summary);
   lines.push("");
-  lines.push("Key Insights:");
-  data.idea_analysis.quickInsights.forEach((q) => lines.push(`  • ${q}`));
+  lines.push(`One-liner: ${data.idea_analysis.one_liner}`);
+  lines.push("");
+
+  // Scoring Pillars
+  lines.push("SCORING BREAKDOWN:");
+  Object.entries(data.scoring.pillars).forEach(([key, pillar]) => {
+    lines.push(`  ${key.replace(/_/g, " ").toUpperCase()}: ${pillar.score}/10 — ${pillar.explanation}`);
+  });
+  lines.push(`  WEIGHTED FINAL: ${data.scoring.weighted_final_score}/100`);
   lines.push("");
 
   // Validation
   lines.push("2. VALIDATION");
   lines.push(hr);
-  lines.push(`Market Demand: ${data.validation.marketDemand}%`);
-  lines.push(`Feasibility: ${data.validation.feasibility}%`);
-  lines.push(`Innovation Score: ${data.validation.innovationScore}%`);
+  lines.push(`Market Demand: ${data.validation.market_demand}`);
+  lines.push(`Feasibility: ${data.validation.feasibility}`);
   lines.push("");
   lines.push("Risks:");
-  data.validation.risks.forEach((r) => lines.push(`  [${r.severity.toUpperCase()}] ${r.label}`));
-  lines.push("");
-  lines.push("Strengths:");
-  data.validation.strengths.forEach((s) => lines.push(`  • ${s}`));
+  data.validation.risks.forEach((r) => lines.push(`  ⚠ ${r}`));
   lines.push("");
 
   // Market
   lines.push("3. MARKET RESEARCH");
   lines.push(hr);
-  lines.push(`TAM: ${data.market_research.tam} — ${data.market_research.tamDescription}`);
-  lines.push(`SAM: ${data.market_research.sam} — ${data.market_research.samDescription}`);
-  lines.push(`SOM: ${data.market_research.som} — ${data.market_research.somDescription}`);
-  lines.push(`Growth Rate: ${data.market_research.growthRate} CAGR`);
+  lines.push(`TAM: ${data.market_research.tam_sam_som.tam}`);
+  lines.push(`SAM: ${data.market_research.tam_sam_som.sam}`);
+  lines.push(`SOM: ${data.market_research.tam_sam_som.som}`);
   lines.push("");
-  lines.push(data.market_research.growthOutlook);
+  lines.push(data.market_research.growth_outlook);
   lines.push("");
   lines.push("Trends:");
   data.market_research.trends.forEach((t) => lines.push(`  • ${t}`));
@@ -55,70 +57,81 @@ export function downloadReport(data = mockAnalysisResult) {
   // Competitors
   lines.push("4. COMPETITOR ANALYSIS");
   lines.push(hr);
-  data.competitor_analysis.forEach((c) => {
-    lines.push(`${c.name}: ${c.description}`);
+  lines.push(data.competitor_analysis.summary);
+  lines.push("");
+  data.competitor_analysis.competitors.forEach((c) => {
+    lines.push(`${c.name}`);
     lines.push(`  Strengths: ${c.strengths.join(", ")}`);
     lines.push(`  Weaknesses: ${c.weaknesses.join(", ")}`);
     lines.push("");
   });
+  lines.push("Differentiation Strategy:");
+  lines.push(`  ${data.competitor_analysis.differentiation_strategy}`);
+  lines.push("");
 
   // Product
   lines.push("5. PRODUCT STRATEGY");
   lines.push(hr);
   lines.push("MVP Features:");
-  data.product_strategy.mvpFeatures.forEach((f) => lines.push(`  ✓ ${f.feature}`));
+  data.product_strategy.mvp_features.forEach((f) => lines.push(`  ✓ ${f}`));
   lines.push("");
   lines.push("Differentiators:");
-  data.product_strategy.differentiationFeatures.forEach((f) => lines.push(`  ◆ ${f.feature}`));
+  data.product_strategy.differentiation_features.forEach((f) => lines.push(`  ◆ ${f}`));
   lines.push("");
   lines.push("Premium Features:");
-  data.product_strategy.premiumFeatures.forEach((f) => lines.push(`  ★ ${f.feature}`));
+  data.product_strategy.premium_features.forEach((f) => lines.push(`  ★ ${f}`));
   lines.push("");
 
   // Branding
   lines.push("6. BRANDING");
   lines.push(hr);
-  lines.push(`Name Suggestions: ${data.branding.namesSuggestions.join(", ")}`);
-  lines.push(`Tagline: ${data.branding.tagline}`);
+  lines.push(`Name Suggestions: ${data.branding.name_suggestions.join(", ")}`);
+  lines.push(`Taglines: ${data.branding.taglines.join(" | ")}`);
   lines.push("");
-  lines.push(`Positioning: ${data.branding.positioning}`);
-  lines.push("");
-  lines.push(`Brand Voice: ${data.branding.brandVoice}`);
+  lines.push(`Positioning: ${data.branding.brand_positioning}`);
   lines.push("");
 
   // Monetization
   lines.push("7. MONETIZATION");
   lines.push(hr);
-  lines.push(`Model: ${data.monetization.pricingModel}`);
+  lines.push(`Model: ${data.monetization.pricing_model}`);
+  lines.push(`Strategy: ${data.monetization.strategy}`);
   lines.push("");
-  data.monetization.tiers.forEach((t) => {
-    lines.push(`${t.name} (${t.price})`);
-    t.features.forEach((f) => lines.push(`  • ${f}`));
-    lines.push("");
+  data.monetization.pricing_tiers.forEach((t) => {
+    lines.push(`${t.name} (${t.price_hint}) — ${t.reasoning}`);
   });
+  lines.push("");
   lines.push("Revenue Streams:");
-  data.monetization.revenueStreams.forEach((r) => lines.push(`  • ${r}`));
+  data.monetization.revenue_streams.forEach((r) => lines.push(`  • ${r}`));
   lines.push("");
 
   // GTM
   lines.push("8. GO-TO-MARKET");
   lines.push(hr);
   lines.push("Channels:");
-  data.go_to_market.channels.forEach((c) => lines.push(`  • ${c.name}: ${c.description}`));
+  data.go_to_market.channels.forEach((c) => lines.push(`  • ${c}`));
   lines.push("");
-  lines.push("Launch Strategy:");
-  data.go_to_market.launchStrategy.forEach((s) => lines.push(`  ${s}`));
+  lines.push("Launch Plan:");
+  data.go_to_market.launch_plan.forEach((s) => lines.push(`  ${s}`));
   lines.push("");
   lines.push("Growth Strategies:");
-  data.go_to_market.growthStrategies.forEach((g) => lines.push(`  • ${g}`));
+  data.go_to_market.growth_strategies.forEach((g) => lines.push(`  • ${g}`));
+  lines.push("");
+
+  // Idea Evolution
+  lines.push("9. IDEA EVOLUTION");
+  lines.push(hr);
+  lines.push(data.idea_evolution.improved_idea);
+  lines.push("");
+  lines.push("Key Changes:");
+  data.idea_evolution.key_changes.forEach((k) => lines.push(`  • ${k}`));
   lines.push("");
 
   // Verdict
   lines.push("FINAL VERDICT");
   lines.push(hr);
-  lines.push(`Recommendation: ${data.final_verdict.recommendation} (${data.final_verdict.confidence}% confidence)`);
-  lines.push("");
-  lines.push(data.final_verdict.summary);
+  lines.push(`${data.final_verdict.verdict} (${data.final_verdict.score}/100)`);
+  lines.push(data.final_verdict.quick_summary);
   lines.push("");
   lines.push(hr);
   lines.push("Generated by ValiSearch — valisearch.com");

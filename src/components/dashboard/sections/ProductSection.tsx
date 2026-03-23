@@ -1,9 +1,12 @@
-import { mockAnalysisResult } from "@/data/mockData";
+import { useAnalysisStore } from "@/store/useAnalysisStore";
 import { SectionCard } from "../SectionCard";
 import { Check, Diamond, Lock } from "lucide-react";
 
 export function ProductSection() {
-  const { product_strategy } = mockAnalysisResult;
+  const analysis = useAnalysisStore((s) => s.analysis);
+  if (!analysis) return null;
+
+  const { product_strategy } = analysis;
 
   return (
     <div className="space-y-4 max-w-4xl">
@@ -14,10 +17,10 @@ export function ProductSection() {
 
       <SectionCard title="MVP Features" description="Must-have features for initial launch">
         <ul className="space-y-2">
-          {product_strategy.mvpFeatures.map((f) => (
-            <li key={f.feature} className="flex items-center gap-2.5 text-[13px]">
+          {product_strategy.mvp_features.map((f) => (
+            <li key={f} className="flex items-center gap-2.5 text-[13px]">
               <Check className="h-3.5 w-3.5 text-[hsl(var(--success))] shrink-0" />
-              {f.feature}
+              {f}
             </li>
           ))}
         </ul>
@@ -25,10 +28,10 @@ export function ProductSection() {
 
       <SectionCard title="Differentiators" description="Features that set you apart">
         <ul className="space-y-2">
-          {product_strategy.differentiationFeatures.map((f) => (
-            <li key={f.feature} className="flex items-center gap-2.5 text-[13px]">
+          {product_strategy.differentiation_features.map((f) => (
+            <li key={f} className="flex items-center gap-2.5 text-[13px]">
               <Diamond className="h-3.5 w-3.5 text-primary shrink-0" />
-              {f.feature}
+              {f}
             </li>
           ))}
         </ul>
@@ -37,10 +40,10 @@ export function ProductSection() {
       <div className="relative">
         <SectionCard title="Premium Features" description="Advanced capabilities for power users" className="opacity-50 blur-[1px]">
           <ul className="space-y-2">
-            {product_strategy.premiumFeatures.map((f) => (
-              <li key={f.feature} className="flex items-center gap-2.5 text-[13px]">
+            {product_strategy.premium_features.map((f) => (
+              <li key={f} className="flex items-center gap-2.5 text-[13px]">
                 <Lock className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-                {f.feature}
+                {f}
               </li>
             ))}
           </ul>
@@ -53,6 +56,10 @@ export function ProductSection() {
           </div>
         </div>
       </div>
+
+      <SectionCard title="System Architecture">
+        <p className="text-[13px] leading-relaxed text-muted-foreground">{product_strategy.system_architecture_overview}</p>
+      </SectionCard>
     </div>
   );
 }

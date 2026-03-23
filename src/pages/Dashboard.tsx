@@ -1,4 +1,5 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { useEffect } from "react";
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import { Download } from "lucide-react";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
@@ -12,8 +13,22 @@ import { BrandingSection } from "@/components/dashboard/sections/BrandingSection
 import { MonetizationSection } from "@/components/dashboard/sections/MonetizationSection";
 import { GoToMarketSection } from "@/components/dashboard/sections/GoToMarketSection";
 import { downloadReport } from "@/utils/exportPdf";
+import { useAnalysisStore } from "@/store/useAnalysisStore";
+import { getMockAnalysis } from "@/services/analysis.service";
 
 export default function Dashboard() {
+  const navigate = useNavigate();
+  const { analysis, idea, setAnalysis, dataSource } = useAnalysisStore();
+
+  // If no analysis exists (e.g. direct navigation), load mock data
+  useEffect(() => {
+    if (!analysis) {
+      setAnalysis(getMockAnalysis(idea || "AI-powered productivity tool"));
+    }
+  }, [analysis, idea, setAnalysis]);
+
+  if (!analysis) return null;
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
@@ -23,12 +38,21 @@ export default function Dashboard() {
             <div className="flex items-center gap-3">
               <SidebarTrigger className="text-muted-foreground" />
               <span className="text-[13px] font-medium text-muted-foreground">Startup Analysis</span>
+              {dataSource && (
+                <span className={`text-[10px] px-1.5 py-0.5 rounded-md ${
+                  dataSource === "ai"
+                    ? "bg-[hsl(var(--success))]/10 text-[hsl(var(--success))]"
+                    : "bg-accent text-muted-foreground"
+                }`}>
+                  {dataSource === "ai" ? "AI-powered" : "Mock data"}
+                </span>
+              )}
             </div>
             <Button
               variant="outline"
               size="sm"
               className="h-7 text-[12px] gap-1.5 border-border/60"
-              onClick={() => downloadReport()}
+              onClick={() => downloadReport(analysis)}
             >
               <Download className="h-3.5 w-3.5" />
               Export Report

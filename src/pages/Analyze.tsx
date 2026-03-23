@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useAnalysisStore } from "@/store/useAnalysisStore";
 import { Button } from "@/components/ui/button";
 
 const steps = [
@@ -11,8 +12,24 @@ const steps = [
 
 export default function Analyze() {
   const navigate = useNavigate();
-  const location = useLocation();
-  const idea = (location.state as { idea?: string })?.idea || "Your startup idea";
+  const { idea, isAnalyzing, analysis, error, runAnalysis } = useAnalysisStore();
+
+  // Start analysis on mount if we have an idea
+  useEffect(() => {
+    if (idea && !analysis && !isAnalyzing) {
+      runAnalysis(idea);
+    }
+  }, []);
+
+  // Navigate to dashboard when analysis is complete
+  useEffect(() => {
+    if (analysis && !isAnalyzing) {
+      const timer = setTimeout(() => navigate("/dashboard"), 800);
+      return () => clearTimeout(timer);
+    }
+  }, [analysis, isAnalyzing, navigate]);
+
+  // Animated step index
   const [step, setStep] = useState(0);
   const [progress, setProgress] = useState(0);
 
@@ -22,19 +39,41 @@ export default function Analyze() {
     }, 1800);
 
     const progressInterval = setInterval(() => {
-      setProgress((p) => (p >= 100 ? 100 : p + 1));
+      setProgress((p) => {
+        // If analysis is done, jump to 100
+        if (analysis) return 100;
+        // Otherwise cap at 90 until done
+        return p >= 90 ? 90 : p + 1;
+      });
     }, 72);
-
-    const redirect = setTimeout(() => {
-      navigate("/dashboard", { state: { idea } });
-    }, 7500);
 
     return () => {
       clearInterval(stepInterval);
       clearInterval(progressInterval);
-      clearTimeout(redirect);
     };
-  }, [navigate, idea]);
+  }, [analysis]);
+
+  if (error) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center px-5 bg-background">
+        <div className="max-w-md text-center">
+          <div className="h-16 w-16 rounded-full bg-[hsl(var(--destructive))]/10 flex items-center justify-center mx-auto mb-4">
+            <span className="text-2xl">⚠</span>
+          </div>
+          <h2 className="text-lg font-semibold mb-2">Analysis Failed</h2>
+          <p className="text-[13px] text-muted-foreground mb-6">{error}</p>
+          <div className="flex gap-3 justify-center">
+            <Button variant="outline" onClick={() => navigate("/")}>
+              Back to Home
+            </Button>
+            <Button onClick={() => runAnalysis(idea)}>
+              Try Again
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center px-5 bg-background">
@@ -83,7 +122,7 @@ export default function Analyze() {
         variant="ghost"
         size="sm"
         className="mt-8 text-[12px] text-muted-foreground/40 hover:text-muted-foreground h-7"
-        onClick={() => navigate("/dashboard", { state: { idea } })}
+        onClick={() => navigate("/dashboard")}
       >
         Skip to results →
       </Button>

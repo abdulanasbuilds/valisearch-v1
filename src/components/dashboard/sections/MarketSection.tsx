@@ -1,8 +1,11 @@
-import { mockAnalysisResult } from "@/data/mockData";
+import { useAnalysisStore } from "@/store/useAnalysisStore";
 import { SectionCard } from "../SectionCard";
 
 export function MarketSection() {
-  const { market_research } = mockAnalysisResult;
+  const analysis = useAnalysisStore((s) => s.analysis);
+  if (!analysis) return null;
+
+  const { market_research } = analysis;
 
   return (
     <div className="space-y-4 max-w-4xl">
@@ -13,24 +16,19 @@ export function MarketSection() {
 
       <div className="grid gap-4 sm:grid-cols-3">
         {[
-          { label: "TAM", value: market_research.tam, desc: market_research.tamDescription },
-          { label: "SAM", value: market_research.sam, desc: market_research.samDescription },
-          { label: "SOM", value: market_research.som, desc: market_research.somDescription },
+          { label: "TAM", value: market_research.tam_sam_som.tam },
+          { label: "SAM", value: market_research.tam_sam_som.sam },
+          { label: "SOM", value: market_research.tam_sam_som.som },
         ].map((m) => (
           <SectionCard key={m.label}>
             <div className="text-[11px] font-mono font-medium text-primary/70 tracking-wide">{m.label}</div>
             <div className="text-xl font-bold mt-1">{m.value}</div>
-            <div className="text-[12px] text-muted-foreground mt-1">{m.desc}</div>
           </SectionCard>
         ))}
       </div>
 
       <SectionCard title="Growth Outlook">
-        <div className="flex items-center gap-3 mb-3">
-          <span className="text-lg font-bold text-[hsl(var(--success))]">{market_research.growthRate}</span>
-          <span className="text-[12px] text-muted-foreground">CAGR through 2030</span>
-        </div>
-        <p className="text-[13px] leading-relaxed text-muted-foreground">{market_research.growthOutlook}</p>
+        <p className="text-[13px] leading-relaxed text-muted-foreground">{market_research.growth_outlook}</p>
       </SectionCard>
 
       <SectionCard title="Key Trends">

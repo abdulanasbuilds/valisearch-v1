@@ -2,20 +2,23 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAnalysisStore } from "@/store/useAnalysisStore";
 
 export function HeroSection() {
   const [idea, setIdea] = useState("");
   const navigate = useNavigate();
+  const { setIdea: storeSetIdea, runAnalysis } = useAnalysisStore();
 
   const handleAnalyze = () => {
     if (idea.trim()) {
-      navigate("/analyze", { state: { idea: idea.trim() } });
+      storeSetIdea(idea.trim());
+      runAnalysis(idea.trim());
+      navigate("/analyze");
     }
   };
 
   return (
     <section className="relative flex flex-col items-center justify-center pt-32 pb-20 sm:pt-40 sm:pb-28 overflow-hidden">
-      {/* Subtle radial glow — just one, understated */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] rounded-full bg-primary/[0.06] blur-[140px] pointer-events-none" />
 
       <div className="container relative z-10 mx-auto px-5">
@@ -35,7 +38,6 @@ export function HeroSection() {
           </p>
         </div>
 
-        {/* Input area */}
         <div className="mx-auto mt-10 max-w-[560px]">
           <div className="rounded-xl border border-border/60 bg-card p-1.5">
             <textarea
@@ -68,7 +70,6 @@ export function HeroSection() {
           </p>
         </div>
 
-        {/* Stats row — social proof embedded in hero */}
         <div className="mx-auto mt-16 flex flex-wrap items-center justify-center gap-x-10 gap-y-4">
           {[
             { value: "12,847", label: "ideas validated" },

@@ -1,8 +1,11 @@
-import { mockAnalysisResult } from "@/data/mockData";
+import { useAnalysisStore } from "@/store/useAnalysisStore";
 import { SectionCard } from "../SectionCard";
 
 export function BrandingSection() {
-  const { branding } = mockAnalysisResult;
+  const analysis = useAnalysisStore((s) => s.analysis);
+  if (!analysis) return null;
+
+  const { branding } = analysis;
 
   return (
     <div className="space-y-4 max-w-4xl">
@@ -13,7 +16,7 @@ export function BrandingSection() {
 
       <SectionCard title="Name Suggestions">
         <div className="flex flex-wrap gap-2">
-          {branding.namesSuggestions.map((n) => (
+          {branding.name_suggestions.map((n) => (
             <span key={n} className="rounded-lg border border-border/60 bg-accent px-3 py-1.5 text-[13px] font-medium">
               {n}
             </span>
@@ -21,16 +24,16 @@ export function BrandingSection() {
         </div>
       </SectionCard>
 
-      <SectionCard title="Tagline">
-        <p className="text-[15px] font-medium italic text-foreground/80">"{branding.tagline}"</p>
+      <SectionCard title="Taglines">
+        <div className="space-y-2">
+          {branding.taglines.map((t) => (
+            <p key={t} className="text-[15px] font-medium italic text-foreground/80">"{t}"</p>
+          ))}
+        </div>
       </SectionCard>
 
       <SectionCard title="Brand Positioning">
-        <p className="text-[13px] leading-relaxed text-muted-foreground">{branding.positioning}</p>
-      </SectionCard>
-
-      <SectionCard title="Brand Voice">
-        <p className="text-[13px] leading-relaxed text-muted-foreground">{branding.brandVoice}</p>
+        <p className="text-[13px] leading-relaxed text-muted-foreground">{branding.brand_positioning}</p>
       </SectionCard>
     </div>
   );
