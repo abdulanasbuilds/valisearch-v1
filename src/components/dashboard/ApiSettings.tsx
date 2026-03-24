@@ -46,15 +46,19 @@ function KeyInput({
           {current.slice(0, 6)}{"•".repeat(20)}{current.slice(-4)}
         </div>
       )}
-      <div className="flex gap-2">
+      <form
+        className="flex gap-2"
+        onSubmit={(e) => { e.preventDefault(); handleSave(); }}
+        autoComplete="off"
+      >
         <div className="relative flex-1">
           <input
             type={show ? "text" : "password"}
+            autoComplete="new-password"
             value={value}
             onChange={(e) => setValue(e.target.value)}
             placeholder={placeholder}
             className="w-full bg-white/[0.03] border border-white/[0.09] rounded-lg px-3 py-2.5 text-[13px] text-white/80 placeholder:text-white/20 focus:outline-none focus:border-white/20 pr-9"
-            onKeyDown={(e) => e.key === "Enter" && handleSave()}
           />
           <button
             type="button"
@@ -65,14 +69,14 @@ function KeyInput({
           </button>
         </div>
         <Button
+          type="submit"
           size="sm"
-          onClick={handleSave}
           disabled={!value.trim()}
           className="shrink-0"
         >
           {saved ? "Saved!" : "Save"}
         </Button>
-      </div>
+      </form>
     </div>
   );
 }
