@@ -1,6 +1,6 @@
 import { Navbar } from "@/components/landing/Navbar";
 import { HeroSection } from "@/components/landing/HeroSection";
-import { SocialProof } from "@/components/landing/SocialProof";
+import { TrustSection } from "@/components/landing/TrustSection";
 import { HowItWorks } from "@/components/landing/HowItWorks";
 import { FeaturesPreview } from "@/components/landing/FeaturesPreview";
 import { CTASection } from "@/components/landing/CTASection";
@@ -10,7 +10,7 @@ const Index = () => (
   <div className="min-h-screen bg-background relative overflow-x-hidden">
     <Navbar />
     <HeroSection />
-    <SocialProof />
+    <TrustSection />
     <HowItWorks />
     <FeaturesPreview />
     <CTASection />
