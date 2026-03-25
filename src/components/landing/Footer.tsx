@@ -49,17 +49,32 @@ export function Footer() {
 
         {/* Bottom bar */}
         <div className="border-t border-white/[0.05] py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-[11.5px] text-white/20 font-medium">
-            © {new Date().getFullYear()} ValiSearch, Inc.
-          </p>
-          <div className="flex items-center gap-6">
-            {["X (Twitter)", "GitHub", "Discord"].map((s) => (
+          <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-3">
+            <p className="text-[11.5px] text-white/20 font-medium">
+              © {new Date().getFullYear()} ValiSearch, Inc.
+            </p>
+            <span className="hidden sm:inline text-white/10">·</span>
+            <p className="text-[11.5px] text-white/20 font-medium">
+              Built by <a href="https://x.com/abdulanasbuilds" target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-white/60 transition-colors">Abdul Anas</a>
+            </p>
+          </div>
+          <div className="flex items-center gap-5">
+            {[
+              { name: "X", url: "https://x.com/abdulanasbuilds" },
+              { name: "GitHub", url: "https://github.com/abdulanasbuilds" },
+              { name: "LinkedIn", url: "https://linkedin.com/in/abdulanasbuilds" },
+              { name: "Instagram", url: "https://instagram.com/abdulanasbuilds" },
+              { name: "YouTube", url: "https://youtube.com/@abdulanasbuilds" },
+              { name: "TikTok", url: "https://tiktok.com/@abdulanasbuilds" },
+            ].map((s) => (
               <a
-                key={s}
-                href="#"
+                key={s.name}
+                href={s.url}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-[11.5px] text-white/20 hover:text-white/45 transition-colors duration-150"
               >
-                {s}
+                {s.name}
               </a>
             ))}
           </div>
