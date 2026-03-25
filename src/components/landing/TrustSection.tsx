@@ -49,23 +49,34 @@ export function TrustSection() {
         </div>
       </section>
 
-      {/* Powered-by grid */}
-      <section className="border-t border-border py-16 px-6">
+      {/* Powered-by marquee */}
+      <section className="border-t border-border py-16 px-0">
         <p className="text-center text-[10.5px] font-semibold uppercase tracking-[0.18em] text-muted-foreground mb-10">
           Powered by
         </p>
-        <div className="max-w-3xl mx-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
-          {POWERED_BY.map((tool) => (
-            <div
-              key={tool.name}
-              className="group flex flex-col items-center justify-center rounded-lg border border-border bg-card/60 backdrop-blur-sm px-3 py-4 transition-all duration-300 hover:border-primary/30 hover:bg-primary/[0.04] hover:scale-[1.04]"
-            >
-              <span className="text-[12.5px] font-semibold text-foreground/80 group-hover:text-foreground transition-colors">
-                {tool.name}
-              </span>
-              <span className="text-[10px] text-muted-foreground mt-0.5">{tool.desc}</span>
+
+        <div className="powered-marquee-wrapper group/marquee relative">
+          {/* Fade edges */}
+          <div className="absolute left-0 top-0 bottom-0 w-16 md:w-24 z-10 pointer-events-none bg-gradient-to-r from-background to-transparent" />
+          <div className="absolute right-0 top-0 bottom-0 w-16 md:w-24 z-10 pointer-events-none bg-gradient-to-l from-background to-transparent" />
+
+          <div className="overflow-hidden">
+            <div className="powered-marquee-track">
+              {[...POWERED_BY, ...POWERED_BY].map((tool, i) => (
+                <div
+                  key={`${tool.name}-${i}`}
+                  className="powered-marquee-item group/item shrink-0 flex flex-col items-center justify-center rounded-lg border border-border bg-card/60 backdrop-blur-sm px-5 py-4 mx-2 transition-all duration-300 hover:border-primary/30 hover:bg-primary/[0.04] hover:scale-[1.06] hover:shadow-[0_0_20px_hsl(248_84%_67%/0.12)] cursor-default"
+                >
+                  <span className="text-[12.5px] font-semibold text-foreground/50 group-hover/item:text-foreground transition-colors duration-300 whitespace-nowrap">
+                    {tool.name}
+                  </span>
+                  <span className="text-[10px] text-muted-foreground/60 group-hover/item:text-muted-foreground mt-0.5 transition-colors duration-300 whitespace-nowrap">
+                    {tool.desc}
+                  </span>
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
       </section>
 

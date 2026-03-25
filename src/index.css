@@ -238,5 +238,27 @@
   z-index: -1;
 }
 
+/* ─── Powered-by marquee ─────────────────────────────────────────────────── */
+@keyframes powered-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.powered-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: powered-scroll 30s linear infinite;
+}
+
+.powered-marquee-wrapper:hover .powered-marquee-track {
+  animation-play-state: paused;
+}
+
+@media (max-width: 640px) {
+  .powered-marquee-track {
+    animation-duration: 20s;
+  }
+}
+
 /* ─── Hide Lovable badge ─────────────────────────────────────────────────── */
 #lovable-badge { display: none !important; }
