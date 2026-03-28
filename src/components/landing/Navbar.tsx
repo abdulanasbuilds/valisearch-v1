@@ -31,9 +31,7 @@ export function Navbar() {
 
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2.5 shrink-0" data-testid="link-logo">
-          <div className="flex items-center justify-center w-[28px] h-[28px] rounded-[7px] bg-white shadow-sm">
-            <span className="text-[10.5px] font-black text-black leading-none tracking-[-0.05em]">VS</span>
-          </div>
+          <img src={logoImg} alt="ValiSearch" className="h-7 w-auto" />
           <span className="text-[14.5px] font-semibold text-white/85 tracking-[-0.025em]">ValiSearch</span>
         </Link>
 
