@@ -37,8 +37,7 @@ const BUILD_SECTIONS = [
 export function DashboardSidebar() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { credits, idea } = useAnalysisStore();
-  const hasKey = hasAnyApiKey();
+  const { idea } = useAnalysisStore();
 
   const isActive = (path: string) => location.pathname.includes(path);
 
