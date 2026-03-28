@@ -81,11 +81,16 @@ function marketTrendData(trends: string[]): { subject: string; score: number }[]
   });
 }
 
-function growthData(): { month: string; demand: number; risk: number }[] {
+function seededRand(seed: number, i: number): number {
+  const x = Math.sin(seed + i * 9301 + 49297) * 233280;
+  return Math.abs(x - Math.floor(x));
+}
+
+function growthData(seed: number): { month: string; demand: number; risk: number }[] {
   return Array.from({ length: 12 }, (_, i) => ({
     month: `M${i + 1}`,
-    demand: Math.min(100, 40 + i * 5 + Math.round(Math.random() * 8)),
-    risk: Math.max(10, 55 - i * 3 + Math.round(Math.random() * 6)),
+    demand: Math.min(100, 40 + i * 5 + Math.round(seededRand(seed, i) * 8)),
+    risk: Math.max(10, 55 - i * 3 + Math.round(seededRand(seed + 1, i) * 6)),
   }));
 }
 
@@ -107,7 +112,8 @@ export function MarketFeasibilitySection() {
   const { scoring, market_research, validation } = analysis;
   const demandScore = scoring.pillars.market_demand.score * 10;
   const radarData = marketTrendData(market_research.trends);
-  const growth = growthData();
+  const growthSeed = scoring.weighted_final_score + scoring.pillars.market_demand.score;
+  const growth = growthData(growthSeed);
 
   return (
     <div className="space-y-4 max-w-5xl">

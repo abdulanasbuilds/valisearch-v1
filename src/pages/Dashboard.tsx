@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
-import { Download, ChevronDown, FileText, Braces, FileCode } from "lucide-react";
+import { Download, ChevronDown, FileText, Braces, FileCode, FileImage } from "lucide-react";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
 import { Button } from "@/components/ui/button";
@@ -22,7 +22,7 @@ import { MarketFeasibilitySection } from "@/components/dashboard/sections/Market
 import { RevenueIntelligenceSection } from "@/components/dashboard/sections/RevenueIntelligenceSection";
 import { IdeBridgeSection } from "@/components/dashboard/sections/IdeBridgeSection";
 import { ApiSettings } from "@/components/dashboard/ApiSettings";
-import { downloadReport, downloadReportJson, downloadReportMarkdown } from "@/utils/exportPdf";
+import { downloadReport, downloadReportJson, downloadReportMarkdown, downloadReportPdf } from "@/utils/exportPdf";
 import { useAnalysisStore } from "@/store/useAnalysisStore";
 import { getMockAnalysis } from "@/services/analysis.service";
 
@@ -56,9 +56,10 @@ function ExportMenu({ onExport }: { onExport: (format: string) => void }) {
           onMouseLeave={() => setOpen(false)}
         >
           {[
-            { label: "Text report (.txt)", icon: FileText, format: "txt" },
-            { label: "JSON data (.json)",  icon: Braces,   format: "json" },
-            { label: "Markdown (.md)",     icon: FileCode,  format: "md" },
+            { label: "Text report (.txt)", icon: FileText,   format: "txt" },
+            { label: "JSON data (.json)",  icon: Braces,     format: "json" },
+            { label: "Markdown (.md)",     icon: FileCode,   format: "md" },
+            { label: "PDF report",         icon: FileImage,  format: "pdf" },
           ].map(({ label, icon: Icon, format }) => (
             <button
               key={format}
@@ -90,6 +91,7 @@ export default function Dashboard() {
   const handleExport = (format: string) => {
     if (format === "json") return downloadReportJson(analysis);
     if (format === "md")   return downloadReportMarkdown(analysis);
+    if (format === "pdf")  return downloadReportPdf(analysis);
     return downloadReport(analysis);
   };
 

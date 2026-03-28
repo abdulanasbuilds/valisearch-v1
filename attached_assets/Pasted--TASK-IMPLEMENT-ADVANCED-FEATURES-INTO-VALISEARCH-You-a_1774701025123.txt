@@ -1,0 +1,176 @@
+# 🚀 TASK: IMPLEMENT ADVANCED FEATURES INTO VALISEARCH
+
+You are upgrading ValiSearch into a full AI Startup Operating System.
+
+Your goal is to implement advanced, interactive, and visual features while maintaining performance, modularity, and API reliability.
+
+---
+
+# 🧠 FEATURES TO IMPLEMENT
+
+---
+
+## 1. VISUAL PRODUCT FLOW GENERATOR
+
+* Generate user flow diagram from AI output
+* Represent as nodes and edges
+* Include:
+
+  * Landing Page
+  * Dashboard
+  * Core features
+
+---
+
+## 2. INTERACTIVE FLOW EDITOR
+
+* Allow editing of nodes and connections
+* On update:
+
+  * re-generate feature list
+  * update technical requirements
+
+---
+
+## 3. AI SPRINT PLANNER (KANBAN)
+
+* Convert features into tasks
+* Create Kanban board:
+
+  * Backlog
+  * In Progress
+  * Completed
+
+Each task must include:
+
+* title
+* description
+* priority
+* effort estimate
+
+---
+
+## 4. TECH STACK ENGINE
+
+* Generate:
+
+  * MVP stack
+  * scalable stack
+* Based on:
+
+  * complexity
+  * budget
+
+---
+
+## 5. REVENUE INTELLIGENCE
+
+* Generate pricing tiers
+* Include reasoning
+* Compare with competitors
+
+---
+
+## 6. MARKET FEASIBILITY ENGINE
+
+* Analyze trends
+* Output:
+
+  * demand score
+  * risk factors
+
+---
+
+## 7. BUILD MODE ENGINE
+
+* Generate:
+
+  * project structure
+  * folder layout
+  * coding instructions
+
+---
+
+## 8. IDE BRIDGE SYSTEM
+
+* Prepare export format for:
+
+  * Cursor
+  * VS Code
+
+* Sync:
+
+  * tasks
+  * project structure
+
+---
+
+## 9. NO-CODE BUILDER INTEGRATION
+
+* Generate prompts for:
+
+  * Lovable
+  * Bolt.new
+
+* Output:
+
+  * ready-to-use builder prompts
+
+---
+
+## 10. EXPORT SYSTEM
+
+* Allow exporting:
+
+  * full dashboard as PDF
+  * structured JSON
+  * markdown document
+
+---
+
+# 🔌 API & INTEGRATION RULES
+
+---
+
+* Use environment variables for ALL APIs
+* Handle API failures gracefully
+* Implement fallback system:
+
+  1. OpenRouter
+  2. Groq
+  3. Gemini
+
+---
+
+# ⚙️ PERFORMANCE RULES
+
+---
+
+* Cache results in database
+* Avoid duplicate API calls
+* Optimize for low-cost usage
+
+---
+
+# 🎨 UI RULES
+
+---
+
+* Maintain dark premium design
+* Add interactive visual components
+* Smooth animations for flows and Kanban
+
+---
+
+# 🧠 FINAL OUTPUT
+
+System must:
+
+* be interactive
+* be visual
+* be execution-focused
+* work for non-technical users
+
+---
+
+# 🚀 END TASK

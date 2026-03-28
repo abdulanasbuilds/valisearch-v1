@@ -6,6 +6,13 @@ import {
 } from "recharts";
 import type { PricingTier } from "@/types/analysis";
 
+/* ─── Deterministic hash for stable random-looking values ── */
+function hashStr(s: string): number {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = (Math.imul(31, h) + s.charCodeAt(i)) | 0;
+  return Math.abs(h);
+}
+
 /* ─── Parse price from hint string ─────────────────────── */
 function parseLowestPrice(hint: string): number {
   const matches = hint.match(/\$(\d+)/g);
@@ -176,7 +183,7 @@ export function RevenueIntelligenceSection() {
                 <div className="text-right">
                   <div className="text-[11px] text-muted-foreground/40">Est. range</div>
                   <div className="text-[12px] text-white/50">
-                    ${Math.floor(Math.random() * 60 + 20)}–{Math.floor(Math.random() * 100 + 80)}/mo
+                    ${hashStr(comp.name) % 60 + 20}–{(hashStr(comp.name + "hi") % 100) + 80}/mo
                   </div>
                 </div>
               </div>
