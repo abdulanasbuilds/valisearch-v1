@@ -90,7 +90,24 @@ export default function Dashboard() {
     }
   }, [analysis, idea, setAnalysis]);
 
-  if (!analysis) return null;
+  if (!analysis) {
+    return (
+      <SidebarProvider>
+        <div className="min-h-screen flex w-full">
+          <DashboardSidebar />
+          <div className="flex-1 flex flex-col min-w-0">
+            <header className="h-12 flex items-center border-b border-border/40 px-4 shrink-0">
+              <SidebarTrigger className="text-muted-foreground" />
+              <span className="ml-3 text-[13px] font-medium text-muted-foreground">Loading…</span>
+            </header>
+            <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
+              <DashboardSkeleton />
+            </main>
+          </div>
+        </div>
+      </SidebarProvider>
+    );
+  }
 
   const handleExport = (format: string) => {
     if (format === "json") return downloadReportJson(analysis);
