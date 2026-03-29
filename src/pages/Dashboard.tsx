@@ -152,7 +152,8 @@ export default function Dashboard() {
               <Route path="tech-stack"        element={<TechStackSection />} />
               <Route path="build-mode"        element={<BuildModeSection />} />
               <Route path="ide-bridge"        element={<IdeBridgeSection />} />
-              <Route path="settings"          element={<ApiSettings />} />
+              {isAdmin && <Route path="settings" element={<ApiSettings />} />}
+              <Route path="settings" element={<Navigate to="/dashboard/overview" replace />} />
             </Routes>
           </main>
         </div>
