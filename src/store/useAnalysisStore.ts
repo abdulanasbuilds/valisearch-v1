@@ -28,7 +28,7 @@ export const useAnalysisStore = create<AnalysisState>((set) => ({
   activeSection: "overview",
   dataSource: null,
   error: null,
-  credits: getCredits(),
+  credits: useCreditStore.getState().credits,
 
   setIdea: (idea) => set({ idea }),
   setAnalysis: (analysis) => set({ analysis }),
