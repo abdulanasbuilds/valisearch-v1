@@ -22,8 +22,10 @@ import { MarketFeasibilitySection } from "@/components/dashboard/sections/Market
 import { RevenueIntelligenceSection } from "@/components/dashboard/sections/RevenueIntelligenceSection";
 import { IdeBridgeSection } from "@/components/dashboard/sections/IdeBridgeSection";
 import { ApiSettings } from "@/components/dashboard/ApiSettings";
+import { UpgradeModal } from "@/components/dashboard/UpgradeModal";
 import { downloadReport, downloadReportJson, downloadReportMarkdown, downloadReportPdf } from "@/utils/exportPdf";
 import { useAnalysisStore } from "@/store/useAnalysisStore";
+import { useCreditStore } from "@/store/useCreditStore";
 import { getMockAnalysis } from "@/services/analysis.service";
 
 function ExportMenu({ onExport }: { onExport: (format: string) => void }) {
