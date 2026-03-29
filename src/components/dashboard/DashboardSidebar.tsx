@@ -107,14 +107,31 @@ export function DashboardSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="px-4 py-3 border-t border-border/40">
-        <SidebarMenuButton
-          onClick={() => navigate("/dashboard/settings")}
-          className="text-muted-foreground hover:text-foreground w-full"
-        >
-          <Settings className="h-4 w-4" />
-          <span className="text-[13px]">API Settings</span>
-        </SidebarMenuButton>
+      <SidebarFooter className="px-4 py-3 border-t border-border/40 space-y-3">
+        {/* Credit display */}
+        <div className="space-y-1.5">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-medium text-muted-foreground flex items-center gap-1">
+              <Zap className="h-3 w-3 text-primary" />
+              Credits
+            </span>
+            <span className="text-[11px] font-semibold text-foreground/80">
+              {credits} / {maxCredits}
+            </span>
+          </div>
+          <Progress value={(credits / maxCredits) * 100} className="h-1.5" />
+        </div>
+
+        {/* Admin-only settings link */}
+        {isAdmin && (
+          <SidebarMenuButton
+            onClick={() => navigate("/dashboard/settings")}
+            className="text-muted-foreground hover:text-foreground w-full"
+          >
+            <Settings className="h-4 w-4" />
+            <span className="text-[13px]">API Settings</span>
+          </SidebarMenuButton>
+        )}
       </SidebarFooter>
     </Sidebar>
   );
