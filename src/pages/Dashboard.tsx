@@ -81,6 +81,7 @@ function ExportMenu({ onExport }: { onExport: (format: string) => void }) {
 export default function Dashboard() {
   const navigate = useNavigate();
   const { analysis, idea, setAnalysis, dataSource } = useAnalysisStore();
+  const { showUpgradeModal, setShowUpgradeModal, isAdmin } = useCreditStore();
 
   useEffect(() => {
     if (!analysis) {
