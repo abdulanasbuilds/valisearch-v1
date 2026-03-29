@@ -38,10 +38,17 @@ export const useAnalysisStore = create<AnalysisState>((set) => ({
   refreshCredits: () => set({ credits: useCreditStore.getState().credits }),
 
   runAnalysis: async (idea: string) => {
+    // Check credits before running
+    const canProceed = useCreditStore.getState().deductCredit();
+    if (!canProceed) {
+      set({ error: "No credits remaining. Upgrade to continue." });
+      return;
+    }
+
     set({ idea, isAnalyzing: true, error: null, analysis: null, dataSource: null });
     try {
       const { result, source } = await analyzeIdea(idea);
-      set({ analysis: result, dataSource: source, isAnalyzing: false, credits: getCredits() });
+      set({ analysis: result, dataSource: source, isAnalyzing: false, credits: useCreditStore.getState().credits });
     } catch (e) {
       const message = e instanceof Error ? e.message : "Analysis failed";
       set({ error: message, isAnalyzing: false });

@@ -156,6 +156,7 @@ export default function Dashboard() {
               <Route path="settings" element={<Navigate to="/dashboard/overview" replace />} />
             </Routes>
           </main>
+          <UpgradeModal open={showUpgradeModal} onClose={() => setShowUpgradeModal(false)} />
         </div>
       </div>
     </SidebarProvider>
