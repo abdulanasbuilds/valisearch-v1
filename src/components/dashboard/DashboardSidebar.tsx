@@ -2,13 +2,15 @@ import { useNavigate, useLocation } from "react-router-dom";
 import {
   LayoutDashboard, ShieldCheck, BarChart3, Swords, Layers, Palette,
   DollarSign, Rocket, GitBranch, Cpu, Map, Terminal, Lightbulb, Settings,
-  TrendingUp, Activity, Code2, Pencil,
+  TrendingUp, Activity, Code2, Pencil, Zap,
 } from "lucide-react";
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarMenu,
   SidebarMenuItem, SidebarMenuButton, SidebarHeader, SidebarFooter
 } from "@/components/ui/sidebar";
 import { useAnalysisStore } from "@/store/useAnalysisStore";
+import { useCreditStore } from "@/store/useCreditStore";
+import { Progress } from "@/components/ui/progress";
 import logoImg from "@/assets/logo.png";
 
 const MAIN_SECTIONS = [
