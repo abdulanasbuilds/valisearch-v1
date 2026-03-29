@@ -22,8 +22,10 @@ import { MarketFeasibilitySection } from "@/components/dashboard/sections/Market
 import { RevenueIntelligenceSection } from "@/components/dashboard/sections/RevenueIntelligenceSection";
 import { IdeBridgeSection } from "@/components/dashboard/sections/IdeBridgeSection";
 import { ApiSettings } from "@/components/dashboard/ApiSettings";
+import { UpgradeModal } from "@/components/dashboard/UpgradeModal";
 import { downloadReport, downloadReportJson, downloadReportMarkdown, downloadReportPdf } from "@/utils/exportPdf";
 import { useAnalysisStore } from "@/store/useAnalysisStore";
+import { useCreditStore } from "@/store/useCreditStore";
 import { getMockAnalysis } from "@/services/analysis.service";
 
 function ExportMenu({ onExport }: { onExport: (format: string) => void }) {
@@ -79,6 +81,7 @@ function ExportMenu({ onExport }: { onExport: (format: string) => void }) {
 export default function Dashboard() {
   const navigate = useNavigate();
   const { analysis, idea, setAnalysis, dataSource } = useAnalysisStore();
+  const { showUpgradeModal, setShowUpgradeModal, isAdmin } = useCreditStore();
 
   useEffect(() => {
     if (!analysis) {
@@ -149,9 +152,11 @@ export default function Dashboard() {
               <Route path="tech-stack"        element={<TechStackSection />} />
               <Route path="build-mode"        element={<BuildModeSection />} />
               <Route path="ide-bridge"        element={<IdeBridgeSection />} />
-              <Route path="settings"          element={<ApiSettings />} />
+              {isAdmin && <Route path="settings" element={<ApiSettings />} />}
+              <Route path="settings" element={<Navigate to="/dashboard/overview" replace />} />
             </Routes>
           </main>
+          <UpgradeModal open={showUpgradeModal} onClose={() => setShowUpgradeModal(false)} />
         </div>
       </div>
     </SidebarProvider>

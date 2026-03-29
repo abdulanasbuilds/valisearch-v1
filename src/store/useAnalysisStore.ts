@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import type { ValiSearchAnalysis } from "@/types/analysis";
-import { analyzeIdea, getCredits, hasAnyApiKey } from "@/services/api";
+import { analyzeIdea } from "@/services/api";
+import { useCreditStore } from "@/store/useCreditStore";
 
 type AnalysisState = {
   idea: string;
@@ -27,20 +28,27 @@ export const useAnalysisStore = create<AnalysisState>((set) => ({
   activeSection: "overview",
   dataSource: null,
   error: null,
-  credits: getCredits(),
+  credits: useCreditStore.getState().credits,
 
   setIdea: (idea) => set({ idea }),
   setAnalysis: (analysis) => set({ analysis }),
   setAnalyzing: (isAnalyzing) => set({ isAnalyzing }),
   setActiveSection: (activeSection) => set({ activeSection }),
   clearError: () => set({ error: null }),
-  refreshCredits: () => set({ credits: getCredits() }),
+  refreshCredits: () => set({ credits: useCreditStore.getState().credits }),
 
   runAnalysis: async (idea: string) => {
+    // Check credits before running
+    const canProceed = useCreditStore.getState().deductCredit();
+    if (!canProceed) {
+      set({ error: "No credits remaining. Upgrade to continue." });
+      return;
+    }
+
     set({ idea, isAnalyzing: true, error: null, analysis: null, dataSource: null });
     try {
       const { result, source } = await analyzeIdea(idea);
-      set({ analysis: result, dataSource: source, isAnalyzing: false, credits: getCredits() });
+      set({ analysis: result, dataSource: source, isAnalyzing: false, credits: useCreditStore.getState().credits });
     } catch (e) {
       const message = e instanceof Error ? e.message : "Analysis failed";
       set({ error: message, isAnalyzing: false });

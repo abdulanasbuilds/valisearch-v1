@@ -1,7 +1,7 @@
 /**
- * Frontend API service — AI calls direct from browser.
- * Provider chain: OpenRouter → Groq → Gemini → mock fallback
- * Keys: localStorage (user-set) → VITE_ env vars
+ * Frontend API service — centralized AI proxy pattern.
+ * All AI calls route through a single internal proxy concept.
+ * Keys: VITE_ env vars (platform-managed, never user-facing)
  * Caching: localStorage per-idea hash (avoids duplicate API calls)
  */
 
@@ -14,25 +14,24 @@ const MAX_TOKENS = 8192;
 const TEMP = 0.35;
 const CACHE_TTL_MS = 1000 * 60 * 60 * 6; // 6 hours
 
-/* ── Key resolution ─────────────────────────────────────── */
+/* ── Key resolution (env vars only — no localStorage) ──── */
 export function getOpenRouterKey(): string | null {
-  return localStorage.getItem("vs_openrouter_key") || import.meta.env.VITE_OPENROUTER_API_KEY || null;
+  return import.meta.env.VITE_OPENROUTER_API_KEY || null;
 }
 export function getGroqKey(): string | null {
-  return localStorage.getItem("vs_groq_key") || import.meta.env.VITE_GROQ_API_KEY || null;
+  return import.meta.env.VITE_GROQ_API_KEY || null;
 }
 export function getGeminiKey(): string | null {
-  return localStorage.getItem("vs_gemini_key") || import.meta.env.VITE_GEMINI_API_KEY || null;
+  return import.meta.env.VITE_GEMINI_API_KEY || null;
 }
 export function hasAnyApiKey(): boolean {
   return !!(getOpenRouterKey() || getGroqKey() || getGeminiKey());
 }
-export function saveApiKey(provider: "openrouter" | "groq" | "gemini", key: string) {
-  localStorage.setItem(`vs_${provider}_key`, key.trim());
-}
-export function clearApiKeys() {
-  ["openrouter", "groq", "gemini"].forEach((p) => localStorage.removeItem(`vs_${p}_key`));
-}
+
+/** @deprecated No-op — keys are now platform-managed */
+export function saveApiKey(_provider: string, _key: string) {}
+/** @deprecated No-op — keys are now platform-managed */
+export function clearApiKeys() {}
 
 /* ── Result caching ─────────────────────────────────────── */
 function cacheKey(idea: string): string {
@@ -62,13 +61,11 @@ export function clearAllCache() {
   Object.keys(localStorage).filter((k) => k.startsWith("vs_cache__")).forEach((k) => localStorage.removeItem(k));
 }
 
-/* ── Credits (unlimited — no restrictions) ──────────────── */
+/* ── Credits (managed by useCreditStore) ────────────────── */
 export function getCredits(): number {
-  return 999;
+  return 999; // Legacy compat — real credits in useCreditStore
 }
-export function deductCredit() {
-  // No-op — unlimited usage
-}
+export function deductCredit() {}
 export function hasCredits(): boolean {
   return true;
 }
