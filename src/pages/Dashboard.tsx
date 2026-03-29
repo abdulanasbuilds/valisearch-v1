@@ -121,30 +121,31 @@ export default function Dashboard() {
       <div className="min-h-screen flex w-full">
         <DashboardSidebar />
         <div className="flex-1 flex flex-col min-w-0">
-          <header className="h-12 flex items-center justify-between gap-3 border-b border-border/40 px-4 shrink-0">
-            <div className="flex items-center gap-3">
-              <SidebarTrigger className="text-muted-foreground" />
-              <span className="text-[13px] font-medium text-muted-foreground">
+          <header className="h-12 flex items-center justify-between gap-2 border-b border-border/40 px-3 sm:px-4 shrink-0 overflow-x-auto">
+            <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+              <SidebarTrigger className="text-muted-foreground shrink-0" />
+              <span className="text-[13px] font-medium text-muted-foreground truncate hidden sm:inline">
                 Startup Analysis
               </span>
               {dataSource && (
-                <span className={`text-[10px] px-1.5 py-0.5 rounded-md font-medium ${
+                <span className={`text-[10px] px-1.5 py-0.5 rounded-md font-medium shrink-0 ${
                   dataSource === "ai"
                     ? "bg-[hsl(var(--success))]/10 text-[hsl(var(--success))]"
                     : "bg-accent text-muted-foreground"
                 }`}>
-                  {dataSource === "ai" ? "✦ AI-powered" : "Demo data"}
+                  {dataSource === "ai" ? "✦ AI" : "Demo"}
                 </span>
               )}
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-7 text-[12px] text-muted-foreground hover:text-foreground"
+                className="h-8 min-w-[44px] text-[12px] text-muted-foreground hover:text-foreground px-2 sm:px-3"
                 onClick={() => navigate("/")}
               >
-                + New analysis
+                <span className="hidden sm:inline">+ New analysis</span>
+                <span className="sm:hidden">+ New</span>
               </Button>
               <ExportMenu onExport={handleExport} />
             </div>
