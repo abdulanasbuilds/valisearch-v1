@@ -64,14 +64,15 @@ function pickIcons(text: string, count = 3): { Icon: LucideIcon; label: string }
 export function BrandingSection() {
   const analysis = useAnalysisStore((s) => s.analysis);
   const idea = useAnalysisStore((s) => s.idea);
+
+  const suggestedIcons = useMemo(
+    () => pickIcons(`${idea} ${analysis?.branding?.brand_positioning ?? ""} ${analysis?.branding?.name_suggestions?.join(" ") ?? ""}`),
+    [idea, analysis?.branding],
+  );
+
   if (!analysis) return null;
 
   const { branding } = analysis;
-
-  const suggestedIcons = useMemo(
-    () => pickIcons(`${idea} ${branding.brand_positioning} ${branding.name_suggestions.join(" ")}`),
-    [idea, branding],
-  );
 
   return (
     <div className="space-y-4 max-w-4xl">

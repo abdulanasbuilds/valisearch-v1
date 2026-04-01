@@ -34,6 +34,7 @@ const BUILD_SECTIONS = [
   { title: "Tech Stack",      icon: Cpu,        path: "tech-stack" },
   { title: "Build Mode",      icon: Terminal,   path: "build-mode" },
   { title: "IDE Bridge",      icon: Code2,      path: "ide-bridge" },
+  { title: "Launch Center",   icon: Zap,        path: "launch-center" },
 ];
 
 export function DashboardSidebar() {
