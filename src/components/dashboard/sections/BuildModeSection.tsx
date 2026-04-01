@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAnalysisStore } from "@/store/useAnalysisStore";
 import { SectionCard } from "../SectionCard";
-import { Copy, Check, Download } from "lucide-react";
+import { Copy, Check, Download, Zap, Globe } from "lucide-react";
 
 function CodeBlock({ content }: { content: string }) {
   const [copied, setCopied] = useState(false);
@@ -96,6 +96,17 @@ export function BuildModeSection() {
   const lovablePrompt = `Build a SaaS application for: ${idea}\n\nMVP Features:\n- ${mvpFeatures}\n\nTech Stack:\n${stack}\n\n${build_mode.notes_for_ai_coding_tools}`;
   const cursorPrompt = `# Project: ${idea}\n\n## Architecture\n${build_mode.project_structure}\n\n## Folder Structure\n${build_mode.suggested_folder_structure}\n\n## Modules\n${build_mode.modules.join(", ")}\n\n## Notes\n${build_mode.notes_for_ai_coding_tools}`;
 
+  const launchOnLovable = () => {
+    const prompt = `Build a SaaS app: "${analysis.branding.name_suggestions[0]}"\n\n${idea}\n\nMVP Features:\n- ${mvpFeatures}\n\nTech Stack:\n${stack}\n\n${build_mode.notes_for_ai_coding_tools}`;
+    window.open(`https://lovable.dev/projects/new?prompt=${encodeURIComponent(prompt)}`, "_blank");
+  };
+
+  const copyFor10Web = () => {
+    const text = `Name: ${analysis.branding.name_suggestions[0]}\nTagline: ${analysis.branding.taglines[0]}\n\n${analysis.idea_analysis.summary}\n\nFeatures:\n- ${mvpFeatures}`;
+    navigator.clipboard.writeText(text);
+    window.open("https://10web.io", "_blank");
+  };
+
   return (
     <div className="space-y-4 max-w-4xl">
       <div>
@@ -103,6 +114,30 @@ export function BuildModeSection() {
         <p className="text-[13px] text-muted-foreground mt-1">
           Project structure, folder layout, and AI coding tool prompts
         </p>
+      </div>
+
+      {/* Quick Launch Actions */}
+      <div className="grid sm:grid-cols-2 gap-3">
+        <button
+          onClick={launchOnLovable}
+          className="flex items-center gap-3 p-4 rounded-xl border border-violet-500/20 bg-violet-500/5 hover:border-violet-500/40 transition-all text-left"
+        >
+          <Zap className="h-5 w-5 text-violet-400 shrink-0" />
+          <div>
+            <div className="text-[13px] font-semibold">Launch MVP on Lovable</div>
+            <div className="text-[11px] text-muted-foreground mt-0.5">Generate a full-stack app from your specs</div>
+          </div>
+        </button>
+        <button
+          onClick={copyFor10Web}
+          className="flex items-center gap-3 p-4 rounded-xl border border-emerald-500/20 bg-emerald-500/5 hover:border-emerald-500/40 transition-all text-left"
+        >
+          <Globe className="h-5 w-5 text-emerald-400 shrink-0" />
+          <div>
+            <div className="text-[13px] font-semibold">Launch Landing Page</div>
+            <div className="text-[11px] text-muted-foreground mt-0.5">Copy branding specs &amp; open 10Web</div>
+          </div>
+        </button>
       </div>
 
       <div className="grid md:grid-cols-2 gap-4">
