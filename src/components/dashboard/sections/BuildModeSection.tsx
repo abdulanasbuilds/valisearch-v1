@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAnalysisStore } from "@/store/useAnalysisStore";
 import { SectionCard } from "../SectionCard";
-import { Copy, Check, Download } from "lucide-react";
+import { Copy, Check, Download, Zap, Globe } from "lucide-react";
 
 function CodeBlock({ content }: { content: string }) {
   const [copied, setCopied] = useState(false);
