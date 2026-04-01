@@ -22,6 +22,7 @@ import { FlowEditorSection } from "@/components/dashboard/sections/FlowEditorSec
 import { MarketFeasibilitySection } from "@/components/dashboard/sections/MarketFeasibilitySection";
 import { RevenueIntelligenceSection } from "@/components/dashboard/sections/RevenueIntelligenceSection";
 import { IdeBridgeSection } from "@/components/dashboard/sections/IdeBridgeSection";
+import { LaunchCenterSection } from "@/components/dashboard/sections/LaunchCenterSection";
 import { ApiSettings } from "@/components/dashboard/ApiSettings";
 import { UpgradeModal } from "@/components/dashboard/UpgradeModal";
 import { downloadReport, downloadReportJson, downloadReportMarkdown, downloadReportPdf } from "@/utils/exportPdf";
