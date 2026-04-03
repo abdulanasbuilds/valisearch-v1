@@ -10,9 +10,19 @@ import {
   Sparkles,
   Download,
   Info,
+  FileText,
+  FileJson,
+  Copy,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { buildExportPayload, downloadPayloadJSON } from "@/lib/data-serializer";
+import {
+  buildExportPayload,
+  downloadPayloadJSON,
+  downloadPayloadTXT,
+  buildClipboardSpecs,
+  trackExportEvent,
+} from "@/lib/data-serializer";
+import { toast } from "sonner";
 
 type BuilderType = "lovable" | "10web" | "bubble";
 
@@ -28,7 +38,7 @@ const BUILDERS = [
     badge: "AI App Builder",
     primary: true,
     description:
-      "Convert your validated features into a working full-stack React app — your entire blueprint is pre-loaded via deep link.",
+      "Convert your validated features into a working full-stack React app — blueprint is auto-copied to clipboard.",
   },
   {
     id: "10web" as BuilderType,
@@ -41,7 +51,7 @@ const BUILDERS = [
     badge: "Website Builder",
     primary: false,
     description:
-      "Generate a professional landing page with your branding, features list, and go-to-market strategy.",
+      "Generate a professional landing page with your branding, features, and go-to-market strategy.",
   },
   {
     id: "bubble" as BuilderType,
@@ -73,9 +83,23 @@ export function LaunchCenterSection() {
     setModalOpen(true);
   };
 
-  const handleDownloadAll = () => {
-    const payload = buildExportPayload(idea, analysis);
+  const payload = buildExportPayload(idea, analysis);
+
+  const handleDownloadJSON = () => {
     downloadPayloadJSON(payload);
+    trackExportEvent("direct", "download_json");
+  };
+
+  const handleDownloadTXT = () => {
+    downloadPayloadTXT(payload);
+    trackExportEvent("direct", "download_txt");
+  };
+
+  const handleCopyAll = async () => {
+    const text = buildClipboardSpecs(payload);
+    await navigator.clipboard.writeText(text);
+    trackExportEvent("direct", "copy");
+    toast.success("Full blueprint prompt copied to clipboard!");
   };
 
   return (
@@ -87,7 +111,7 @@ export function LaunchCenterSection() {
           <h2 className="text-xl font-bold tracking-tight">Launch Center</h2>
         </div>
         <p className="text-[13px] text-muted-foreground mt-1">
-          Export your validated blueprint to external builders — zero data loss, full deep-link integration
+          Export your validated blueprint to external builders — clipboard-first, zero data loss
         </p>
       </div>
 
@@ -177,11 +201,19 @@ export function LaunchCenterSection() {
           </div>
         </div>
 
-        {/* Download fallback */}
-        <div className="mt-4 pt-4 border-t border-white/[0.06]">
-          <Button variant="ghost" size="sm" className="gap-2 text-[11px] text-muted-foreground" onClick={handleDownloadAll}>
-            <Download className="h-3.5 w-3.5" />
-            Download Full Blueprint (JSON)
+        {/* Export actions */}
+        <div className="mt-4 pt-4 border-t border-white/[0.06] flex flex-wrap gap-2">
+          <Button variant="ghost" size="sm" className="gap-1.5 text-[11px] text-muted-foreground" onClick={handleCopyAll}>
+            <Copy className="h-3.5 w-3.5" />
+            Copy Full Prompt
+          </Button>
+          <Button variant="ghost" size="sm" className="gap-1.5 text-[11px] text-muted-foreground" onClick={handleDownloadTXT}>
+            <FileText className="h-3.5 w-3.5" />
+            Download TXT
+          </Button>
+          <Button variant="ghost" size="sm" className="gap-1.5 text-[11px] text-muted-foreground" onClick={handleDownloadJSON}>
+            <FileJson className="h-3.5 w-3.5" />
+            Download JSON
           </Button>
         </div>
       </SectionCard>
@@ -192,7 +224,6 @@ export function LaunchCenterSection() {
         <p className="text-[11px] text-muted-foreground/50">
           <span className="font-semibold text-muted-foreground/70">Affiliate Disclosure:</span>{" "}
           We may earn a commission when you sign up through our builder links. No personal data or emails are shared.
-          Your privacy is always respected.
         </p>
       </div>
 
