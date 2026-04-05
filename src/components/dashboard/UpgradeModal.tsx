@@ -1,6 +1,9 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Sparkles } from "lucide-react";
+import { Sparkles, Loader2, ExternalLink } from "lucide-react";
+import { getSupabase } from "@/lib/supabase";
+import { isStripeConfigured } from "@/config/env";
+import { useState } from "react";
 
 interface UpgradeModalProps {
   open: boolean;
@@ -8,6 +11,37 @@ interface UpgradeModalProps {
 }
 
 export function UpgradeModal({ open, onClose }: UpgradeModalProps) {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleCheckout = async () => {
+    const supabase = getSupabase();
+    if (!supabase) {
+      setError("Payment system not configured yet.");
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const { data, error: fnError } = await supabase.functions.invoke("create-checkout", {
+        body: { priceId: "price_pro_monthly" }, // Replace with actual Stripe price ID
+      });
+
+      if (fnError) throw new Error(fnError.message);
+      if (data?.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error("No checkout URL returned");
+      }
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Failed to start checkout");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
       <DialogContent className="bg-background/80 backdrop-blur-xl border border-border/40 shadow-2xl max-w-md">
@@ -26,7 +60,7 @@ export function UpgradeModal({ open, onClose }: UpgradeModalProps) {
         <div className="space-y-3 mt-4">
           <div className="rounded-xl border border-border/40 bg-muted/30 p-4 space-y-2">
             {[
-              "Unlimited AI-powered analyses",
+              "50 additional AI-powered analyses",
               "Priority model access (GPT-4, Claude)",
               "Advanced competitor & market reports",
               "PDF & JSON export",
@@ -38,9 +72,26 @@ export function UpgradeModal({ open, onClose }: UpgradeModalProps) {
             ))}
           </div>
 
-          <Button className="w-full" size="lg" onClick={onClose}>
-            Coming Soon
+          {error && (
+            <div className="rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-2 text-xs text-red-400">
+              {error}
+            </div>
+          )}
+
+          <Button
+            className="w-full"
+            size="lg"
+            onClick={handleCheckout}
+            disabled={loading}
+          >
+            {loading ? (
+              <Loader2 className="h-4 w-4 animate-spin mr-2" />
+            ) : (
+              <ExternalLink className="h-4 w-4 mr-2" />
+            )}
+            {loading ? "Redirecting…" : "Upgrade — $29/mo"}
           </Button>
+
           <button
             onClick={onClose}
             className="block w-full text-center text-xs text-muted-foreground hover:text-foreground transition-colors"

@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react";
+import { useUserStore } from "@/store/useUserStore";
+import { isSupabaseConfigured } from "@/config/env";
 import logoImg from "@/assets/logo.png";
 
 const NAV_LINKS = [
-  { label: "Features",    href: "#features" },
+  { label: "Features", href: "#features" },
   { label: "How it works", href: "#how-it-works" },
 ];
 
@@ -12,6 +14,7 @@ export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
+  const { isAuthenticated } = useUserStore();
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 16);
@@ -28,14 +31,11 @@ export function Navbar() {
       }`}
     >
       <div className="mx-auto flex h-[58px] max-w-6xl items-center justify-between px-5 md:px-8">
-
-        {/* Logo */}
         <Link to="/" className="flex items-center gap-2.5 shrink-0" data-testid="link-logo">
           <img src={logoImg} alt="ValiSearch" className="h-7 w-auto" />
           <span className="text-[14.5px] font-semibold text-white/85 tracking-[-0.025em]">ValiSearch</span>
         </Link>
 
-        {/* Center nav */}
         <nav className="hidden md:flex items-center">
           {NAV_LINKS.map((link) => (
             <a
@@ -48,18 +48,35 @@ export function Navbar() {
           ))}
         </nav>
 
-        {/* Right */}
-        <div className="hidden md:flex items-center gap-1">
-          <button
-            data-testid="button-get-started-nav"
-            onClick={() => navigate("/")}
-            className="ml-1 flex items-center gap-1.5 px-4 py-[7px] text-[13.5px] font-semibold text-black bg-white rounded-[8px] hover:bg-white/90 transition-all duration-150 active:scale-[0.97]"
-          >
-            Try it free
-          </button>
+        <div className="hidden md:flex items-center gap-3">
+          {isAuthenticated ? (
+            <button
+              onClick={() => navigate("/dashboard")}
+              className="flex items-center gap-1.5 px-4 py-[7px] text-[13.5px] font-semibold text-black bg-white rounded-[8px] hover:bg-white/90 transition-all duration-150 active:scale-[0.97]"
+            >
+              Dashboard
+            </button>
+          ) : (
+            <>
+              {isSupabaseConfigured() && (
+                <Link
+                  to="/login"
+                  className="px-3.5 py-[7px] text-[13.5px] font-medium text-white/38 hover:text-white/72 transition-colors"
+                >
+                  Sign in
+                </Link>
+              )}
+              <button
+                data-testid="button-get-started-nav"
+                onClick={() => navigate("/")}
+                className="flex items-center gap-1.5 px-4 py-[7px] text-[13.5px] font-semibold text-black bg-white rounded-[8px] hover:bg-white/90 transition-all duration-150 active:scale-[0.97]"
+              >
+                Try it free
+              </button>
+            </>
+          )}
         </div>
 
-        {/* Mobile toggle */}
         <button
           className="md:hidden p-1.5 text-white/35 hover:text-white/65 transition-colors"
           onClick={() => setMobileOpen(!mobileOpen)}
@@ -68,7 +85,6 @@ export function Navbar() {
         </button>
       </div>
 
-      {/* Mobile dropdown */}
       {mobileOpen && (
         <div
           className="border-t border-white/[0.055] bg-[#0A0A0A]/95 backdrop-blur-2xl md:hidden"
@@ -85,13 +101,33 @@ export function Navbar() {
                 {link.label}
               </a>
             ))}
-            <div className="pt-2 mt-1 border-t border-white/[0.055]">
-              <button
-                onClick={() => { navigate("/"); setMobileOpen(false); }}
-                className="w-full py-2.5 rounded-lg text-[14px] font-semibold text-black bg-white hover:bg-white/90 transition-all"
-              >
-                Try it free
-              </button>
+            <div className="pt-2 mt-1 border-t border-white/[0.055] space-y-2">
+              {isAuthenticated ? (
+                <button
+                  onClick={() => { navigate("/dashboard"); setMobileOpen(false); }}
+                  className="w-full py-2.5 rounded-lg text-[14px] font-semibold text-black bg-white hover:bg-white/90 transition-all"
+                >
+                  Dashboard
+                </button>
+              ) : (
+                <>
+                  {isSupabaseConfigured() && (
+                    <Link
+                      to="/login"
+                      onClick={() => setMobileOpen(false)}
+                      className="block w-full py-2.5 rounded-lg text-center text-[14px] font-medium text-white/50 hover:text-white/75 transition-colors"
+                    >
+                      Sign in
+                    </Link>
+                  )}
+                  <button
+                    onClick={() => { navigate("/"); setMobileOpen(false); }}
+                    className="w-full py-2.5 rounded-lg text-[14px] font-semibold text-black bg-white hover:bg-white/90 transition-all"
+                  >
+                    Try it free
+                  </button>
+                </>
+              )}
             </div>
           </div>
         </div>

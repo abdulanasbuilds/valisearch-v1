@@ -2,6 +2,9 @@ import { create } from "zustand";
 import type { ValiSearchAnalysis } from "@/types/analysis";
 import { analyzeIdea } from "@/services/api";
 import { useCreditStore } from "@/store/useCreditStore";
+import { useUserStore } from "@/store/useUserStore";
+import { saveAnalysis } from "@/services/database.service";
+import { canAttemptAnalysis, recordAnalysisAttempt, getRemainingAttempts, getTimeUntilNextAttempt } from "@/lib/rate-limit";
 
 type AnalysisState = {
   idea: string;
@@ -38,17 +41,43 @@ export const useAnalysisStore = create<AnalysisState>((set) => ({
   refreshCredits: () => set({ credits: useCreditStore.getState().credits }),
 
   runAnalysis: async (idea: string) => {
-    // Check credits before running
+    // Client-side rate limit check
+    if (!canAttemptAnalysis()) {
+      const waitMs = getTimeUntilNextAttempt();
+      const waitMin = Math.ceil(waitMs / 60000);
+      set({
+        error: `Rate limit reached. You have ${getRemainingAttempts()} attempts remaining. Try again in ${waitMin} minute${waitMin !== 1 ? "s" : ""}.`,
+      });
+      return;
+    }
+
+    // Check credits
     const canProceed = useCreditStore.getState().deductCredit();
     if (!canProceed) {
       set({ error: "No credits remaining. Upgrade to continue." });
       return;
     }
 
+    // Record attempt for rate limiting
+    recordAnalysisAttempt();
+
     set({ idea, isAnalyzing: true, error: null, analysis: null, dataSource: null });
     try {
       const { result, source } = await analyzeIdea(idea);
-      set({ analysis: result, dataSource: source, isAnalyzing: false, credits: useCreditStore.getState().credits });
+      set({
+        analysis: result,
+        dataSource: source,
+        isAnalyzing: false,
+        credits: useCreditStore.getState().credits,
+      });
+
+      // Persist to database if user is logged in
+      const user = useUserStore.getState().user;
+      if (user) {
+        saveAnalysis(user.id, idea, result, source).catch((e) =>
+          console.warn("[store] Failed to persist analysis:", e)
+        );
+      }
     } catch (e) {
       const message = e instanceof Error ? e.message : "Analysis failed";
       set({ error: message, isAnalyzing: false });
