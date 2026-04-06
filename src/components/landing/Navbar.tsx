@@ -8,6 +8,7 @@ import logoImg from "@/assets/logo.png";
 const NAV_LINKS = [
   { label: "Features", href: "#features" },
   { label: "How it works", href: "#how-it-works" },
+  { label: "Pricing", href: "#pricing" },
 ];
 
 export function Navbar() {
@@ -17,42 +18,48 @@ export function Navbar() {
   const { isAuthenticated } = useUserStore();
 
   useEffect(() => {
-    const handler = () => setScrolled(window.scrollY > 16);
+    const handler = () => setScrolled(window.scrollY > 8);
     window.addEventListener("scroll", handler, { passive: true });
     return () => window.removeEventListener("scroll", handler);
   }, []);
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ease-out ${
         scrolled
-          ? "border-b border-white/[0.055] bg-[#0A0A0A]/88 backdrop-blur-2xl"
+          ? "bg-[#060606]/80 backdrop-blur-2xl backdrop-saturate-150 border-b border-white/[0.04]"
           : "bg-transparent"
       }`}
     >
-      <div className="mx-auto flex h-[58px] max-w-6xl items-center justify-between px-5 md:px-8">
-        <Link to="/" className="flex items-center gap-2.5 shrink-0" data-testid="link-logo">
-          <img src={logoImg} alt="ValiSearch" className="h-7 w-auto" />
-          <span className="text-[14.5px] font-semibold text-white/85 tracking-[-0.025em]">ValiSearch</span>
+      <div className="mx-auto flex h-14 max-w-[1120px] items-center justify-between px-5 md:px-6">
+        <Link to="/" className="flex items-center gap-2 shrink-0 group" data-testid="link-logo">
+          <img
+            src={logoImg}
+            alt="ValiSearch"
+            className="h-[22px] w-auto transition-transform duration-300 group-hover:scale-105"
+          />
+          <span className="text-[13.5px] font-semibold text-white/80 tracking-[-0.02em]">
+            ValiSearch
+          </span>
         </Link>
 
-        <nav className="hidden md:flex items-center">
+        <nav className="hidden md:flex items-center gap-1">
           {NAV_LINKS.map((link) => (
             <a
               key={link.label}
               href={link.href}
-              className="nav-pill relative px-3.5 py-2 text-[13.5px] font-medium text-white/38 transition-colors duration-200 hover:text-white/72"
+              className="relative px-3 py-1.5 text-[13px] font-medium text-white/35 transition-colors duration-200 hover:text-white/70 rounded-md"
             >
               {link.label}
             </a>
           ))}
         </nav>
 
-        <div className="hidden md:flex items-center gap-3">
+        <div className="hidden md:flex items-center gap-2.5">
           {isAuthenticated ? (
             <button
               onClick={() => navigate("/dashboard")}
-              className="flex items-center gap-1.5 px-4 py-[7px] text-[13.5px] font-semibold text-black bg-white rounded-[8px] hover:bg-white/90 transition-all duration-150 active:scale-[0.97]"
+              className="h-8 px-4 text-[12.5px] font-semibold text-background bg-foreground rounded-md hover:bg-foreground/90 transition-all duration-200 active:scale-[0.97]"
             >
               Dashboard
             </button>
@@ -61,17 +68,23 @@ export function Navbar() {
               {isSupabaseConfigured() && (
                 <Link
                   to="/login"
-                  className="px-3.5 py-[7px] text-[13.5px] font-medium text-white/38 hover:text-white/72 transition-colors"
+                  className="h-8 flex items-center px-3 text-[12.5px] font-medium text-white/40 hover:text-white/70 transition-colors duration-200"
                 >
-                  Sign in
+                  Log in
                 </Link>
               )}
               <button
                 data-testid="button-get-started-nav"
-                onClick={() => navigate("/")}
-                className="flex items-center gap-1.5 px-4 py-[7px] text-[13.5px] font-semibold text-black bg-white rounded-[8px] hover:bg-white/90 transition-all duration-150 active:scale-[0.97]"
+                onClick={() => {
+                  const el = document.getElementById("idea-input");
+                  if (el) {
+                    el.scrollIntoView({ behavior: "smooth", block: "center" });
+                    setTimeout(() => el.focus(), 500);
+                  }
+                }}
+                className="h-8 px-4 text-[12.5px] font-semibold text-background bg-foreground rounded-md hover:bg-foreground/90 transition-all duration-200 active:scale-[0.97]"
               >
-                Try it free
+                Get started
               </button>
             </>
           )}
@@ -80,32 +93,31 @@ export function Navbar() {
         <button
           className="md:hidden p-1.5 text-white/35 hover:text-white/65 transition-colors"
           onClick={() => setMobileOpen(!mobileOpen)}
+          aria-label="Toggle menu"
         >
           {mobileOpen ? <X className="h-[18px] w-[18px]" /> : <Menu className="h-[18px] w-[18px]" />}
         </button>
       </div>
 
+      {/* Mobile menu */}
       {mobileOpen && (
-        <div
-          className="border-t border-white/[0.055] bg-[#0A0A0A]/95 backdrop-blur-2xl md:hidden"
-          style={{ animation: "fadeDown 0.2s cubic-bezier(0.16,1,0.3,1) both" }}
-        >
-          <div className="flex flex-col p-3 gap-0.5 max-w-6xl mx-auto px-5">
+        <div className="border-t border-white/[0.04] bg-[#060606]/95 backdrop-blur-2xl md:hidden animate-fade-in">
+          <div className="flex flex-col p-4 gap-0.5 max-w-[1120px] mx-auto">
             {NAV_LINKS.map((link) => (
               <a
                 key={link.label}
                 href={link.href}
-                className="px-3 py-2.5 text-[14px] font-medium text-white/45 rounded-lg hover:text-white/75 hover:bg-white/[0.04] transition-colors"
+                className="px-3 py-2.5 text-[14px] font-medium text-white/40 rounded-lg hover:text-white/70 hover:bg-white/[0.03] transition-colors"
                 onClick={() => setMobileOpen(false)}
               >
                 {link.label}
               </a>
             ))}
-            <div className="pt-2 mt-1 border-t border-white/[0.055] space-y-2">
+            <div className="pt-3 mt-2 border-t border-white/[0.04] flex flex-col gap-2">
               {isAuthenticated ? (
                 <button
                   onClick={() => { navigate("/dashboard"); setMobileOpen(false); }}
-                  className="w-full py-2.5 rounded-lg text-[14px] font-semibold text-black bg-white hover:bg-white/90 transition-all"
+                  className="w-full py-2.5 rounded-lg text-[14px] font-semibold text-background bg-foreground hover:bg-foreground/90 transition-all"
                 >
                   Dashboard
                 </button>
@@ -115,16 +127,23 @@ export function Navbar() {
                     <Link
                       to="/login"
                       onClick={() => setMobileOpen(false)}
-                      className="block w-full py-2.5 rounded-lg text-center text-[14px] font-medium text-white/50 hover:text-white/75 transition-colors"
+                      className="block w-full py-2.5 rounded-lg text-center text-[14px] font-medium text-white/45 hover:text-white/70 transition-colors"
                     >
-                      Sign in
+                      Log in
                     </Link>
                   )}
                   <button
-                    onClick={() => { navigate("/"); setMobileOpen(false); }}
-                    className="w-full py-2.5 rounded-lg text-[14px] font-semibold text-black bg-white hover:bg-white/90 transition-all"
+                    onClick={() => {
+                      setMobileOpen(false);
+                      const el = document.getElementById("idea-input");
+                      if (el) {
+                        el.scrollIntoView({ behavior: "smooth", block: "center" });
+                        setTimeout(() => el.focus(), 500);
+                      }
+                    }}
+                    className="w-full py-2.5 rounded-lg text-[14px] font-semibold text-background bg-foreground hover:bg-foreground/90 transition-all"
                   >
-                    Try it free
+                    Get started
                   </button>
                 </>
               )}
@@ -132,13 +151,6 @@ export function Navbar() {
           </div>
         </div>
       )}
-
-      <style>{`
-        @keyframes fadeDown {
-          from { opacity: 0; transform: translateY(-6px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
     </header>
   );
 }

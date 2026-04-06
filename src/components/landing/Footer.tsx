@@ -2,40 +2,37 @@ import { Link } from "react-router-dom";
 import logoImg from "@/assets/logo.png";
 
 const LINKS = {
-  Product: ["Features", "How it works", "Changelog", "Roadmap"],
-  Company: ["About", "Blog", "Careers"],
-  Legal: ["Privacy", "Terms", "Cookies"],
+  Product: ["Features", "How it works", "Changelog"],
+  Company: ["About", "Blog"],
+  Legal: ["Privacy", "Terms"],
 };
 
 export function Footer() {
   return (
-    <footer className="border-t border-white/[0.05]">
-      <div className="max-w-6xl mx-auto px-5 md:px-8">
-        {/* Top row */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 py-14">
-          {/* Brand */}
+    <footer className="border-t border-white/[0.04]">
+      <div className="max-w-[1120px] mx-auto px-5 md:px-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 py-12">
           <div className="col-span-2 md:col-span-1">
-            <Link to="/" className="flex items-center gap-2 mb-4 w-fit">
-              <img src={logoImg} alt="ValiSearch" className="h-6 w-auto" />
-              <span className="text-[14px] font-semibold text-white/70 tracking-[-0.02em]">ValiSearch</span>
+            <Link to="/" className="flex items-center gap-2 mb-3 w-fit">
+              <img src={logoImg} alt="ValiSearch" className="h-5 w-auto" />
+              <span className="text-[13px] font-semibold text-white/60 tracking-[-0.02em]">ValiSearch</span>
             </Link>
-            <p className="text-[12.5px] leading-[1.7] text-white/25 max-w-[180px]">
+            <p className="text-[11.5px] leading-[1.7] text-white/18 max-w-[170px]">
               AI-powered startup validation for founders who move fast.
             </p>
           </div>
 
-          {/* Link columns */}
           {Object.entries(LINKS).map(([group, links]) => (
             <div key={group}>
-              <h4 className="text-[11px] font-semibold uppercase tracking-[0.1em] text-white/20 mb-4">
+              <h4 className="text-[10px] font-semibold uppercase tracking-[0.12em] text-white/15 mb-3.5">
                 {group}
               </h4>
-              <ul className="space-y-2.5">
+              <ul className="space-y-2">
                 {links.map((link) => (
                   <li key={link}>
                     <a
                       href="#"
-                      className="hover-underline text-[13px] text-white/30 hover:text-white/55 transition-colors duration-150"
+                      className="text-[12px] text-white/22 hover:text-white/45 transition-colors duration-200"
                     >
                       {link}
                     </a>
@@ -46,32 +43,36 @@ export function Footer() {
           ))}
         </div>
 
-        {/* Bottom bar */}
-        <div className="border-t border-white/[0.05] py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-3">
-            <p className="text-[11.5px] text-white/20 font-medium">
-              © {new Date().getFullYear()} ValiSearch, Inc.
+        <div className="border-t border-white/[0.04] py-5 flex flex-col sm:flex-row items-center justify-between gap-2.5">
+          <div className="flex items-center gap-2">
+            <p className="text-[10.5px] text-white/15">
+              © {new Date().getFullYear()} ValiSearch
             </p>
-            <span className="hidden sm:inline text-white/10">·</span>
-            <p className="text-[11.5px] text-white/20 font-medium">
-              Built by <a href="https://x.com/abdulanasbuilds" target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-white/60 transition-colors">Abdul Anas</a>
+            <span className="text-white/8">·</span>
+            <p className="text-[10.5px] text-white/15">
+              Built by{" "}
+              <a
+                href="https://x.com/abdulanasbuilds"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-white/30 hover:text-white/50 transition-colors"
+              >
+                Abdul Anas
+              </a>
             </p>
           </div>
-          <div className="flex items-center gap-5">
+          <div className="flex items-center gap-4">
             {[
               { name: "X", url: "https://x.com/abdulanasbuilds" },
               { name: "GitHub", url: "https://github.com/abdulanasbuilds" },
               { name: "LinkedIn", url: "https://linkedin.com/in/abdulanasbuilds" },
-              { name: "Instagram", url: "https://instagram.com/abdulanasbuilds" },
-              { name: "YouTube", url: "https://youtube.com/@abdulanasbuilds" },
-              { name: "TikTok", url: "https://tiktok.com/@abdulanasbuilds" },
             ].map((s) => (
               <a
                 key={s.name}
                 href={s.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[11.5px] text-white/20 hover:text-white/45 transition-colors duration-150"
+                className="text-[10.5px] text-white/15 hover:text-white/35 transition-colors duration-200"
               >
                 {s.name}
               </a>
