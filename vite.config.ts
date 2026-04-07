@@ -84,11 +84,20 @@ export default defineConfig(({ mode }) => ({
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ["react", "react-dom"],
-          router: ["react-router-dom"],
-          ui: ["@radix-ui/react-dialog", "@radix-ui/react-tooltip", "@radix-ui/react-tabs"],
+          vendor: ["react", "react-dom", "react-router-dom"],
+          ui: ["@radix-ui/react-dialog", "@radix-ui/react-tooltip", "@radix-ui/react-tabs", "@radix-ui/react-toast"],
+          charts: ["recharts"],
+          dnd: ["@dnd-kit/core", "@dnd-kit/sortable"],
+          flow: ["@xyflow/react"],
+          zustand: ["zustand"],
+          supabase: ["@supabase/supabase-js"],
+          query: ["@tanstack/react-query"],
         },
       },
     },
+    chunkSizeWarningLimit: 1000,
+  },
+  optimizeDeps: {
+    exclude: ["mermaid"],
   },
 }));
