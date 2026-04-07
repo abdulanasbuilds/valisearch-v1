@@ -1,36 +1,29 @@
 import { Navbar } from "@/components/landing/Navbar";
+import { AnnouncementBar } from "@/components/landing/AnnouncementBar";
 import { HeroSection } from "@/components/landing/HeroSection";
-import { TrustSection } from "@/components/landing/TrustSection";
-import { SocialProof } from "@/components/landing/SocialProof";
+import { StatsBar } from "@/components/landing/StatsBar";
 import { HowItWorks } from "@/components/landing/HowItWorks";
-import { FeaturesPreview } from "@/components/landing/FeaturesPreview";
-import { CTASection } from "@/components/landing/CTASection";
+import { Features } from "@/components/landing/Features";
+import { Integrations } from "@/components/landing/Integrations";
+import { ProductPreview } from "@/components/landing/ProductPreview";
+import { Pricing } from "@/components/landing/Pricing";
+import { TrustPrivacy } from "@/components/landing/TrustPrivacy";
+import { FinalCTA } from "@/components/landing/FinalCTA";
 import { Footer } from "@/components/landing/Footer";
 
-const Divider = () => (
-  <div className="relative h-20 md:h-28">
-    <div
-      className="absolute inset-0 pointer-events-none"
-      style={{
-        background:
-          "radial-gradient(ellipse 55% 100% at 50% 50%, hsl(248 84% 67% / 0.04) 0%, transparent 70%)",
-      }}
-    />
-  </div>
-);
-
 const Index = () => (
-  <div className="min-h-screen bg-background relative overflow-x-hidden">
+  <div className="min-h-screen bg-[#0A0A0A] relative overflow-x-hidden">
     <Navbar />
+    <AnnouncementBar />
     <HeroSection />
-    <SocialProof />
-    <TrustSection />
-    <Divider />
+    <StatsBar />
     <HowItWorks />
-    <Divider />
-    <FeaturesPreview />
-    <Divider />
-    <CTASection />
+    <Features />
+    <Integrations />
+    <ProductPreview />
+    <Pricing />
+    <TrustPrivacy />
+    <FinalCTA />
     <Footer />
   </div>
 );
