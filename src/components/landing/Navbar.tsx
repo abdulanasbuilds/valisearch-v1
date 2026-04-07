@@ -31,12 +31,14 @@ export function Navbar() {
           : "bg-transparent"
       }`}
     >
-      <div className="mx-auto flex h-16 max-w-[1200px] items-center justify-between px-6 lg:px-8">
-        <Link to="/" className="flex items-center gap-2.5 shrink-0 group" data-testid="link-logo">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#818cf8] to-[#6366f1] flex items-center justify-center">
-            <span className="text-white font-bold text-sm">V</span>
-          </div>
-          <span className="text-[15px] font-semibold text-white/90 tracking-tight">
+      <div className="mx-auto flex h-14 max-w-[1120px] items-center justify-between px-5 md:px-6">
+        <Link to="/" className="flex items-center gap-2 shrink-0 group" data-testid="link-logo">
+          <img
+            src={logoImg}
+            alt="ValiSearch"
+            className="h-[22px] w-auto transition-transform duration-300 group-hover:scale-105"
+          />
+          <span className="text-[13.5px] font-semibold text-white/80 tracking-[-0.02em]">
             ValiSearch
           </span>
         </Link>
@@ -46,18 +48,18 @@ export function Navbar() {
             <a
               key={link.label}
               href={link.href}
-              className="relative px-4 py-2 text-[14px] font-medium text-white/50 transition-all duration-200 hover:text-white/90 rounded-lg hover:bg-white/[0.04]"
+              className="relative px-3 py-1.5 text-[13px] font-medium text-white/35 transition-colors duration-200 hover:text-white/70 rounded-md"
             >
               {link.label}
             </a>
           ))}
         </nav>
 
-        <div className="hidden md:flex items-center gap-3">
+        <div className="hidden md:flex items-center gap-2.5">
           {isAuthenticated ? (
             <button
               onClick={() => navigate("/dashboard")}
-              className="h-9 px-5 text-[14px] font-medium text-white bg-white/[0.08] border border-white/[0.08] rounded-lg hover:bg-white/[0.12] hover:border-white/[0.12] transition-all duration-200 active:scale-[0.97]"
+              className="h-8 px-4 text-[12.5px] font-semibold text-background bg-foreground rounded-md hover:bg-foreground/90 transition-all duration-200 active:scale-[0.97]"
             >
               Dashboard
             </button>
@@ -66,7 +68,7 @@ export function Navbar() {
               {isSupabaseConfigured() && (
                 <Link
                   to="/login"
-                  className="h-9 flex items-center px-4 text-[14px] font-medium text-white/60 hover:text-white/90 transition-colors duration-200"
+                  className="h-8 flex items-center px-3 text-[12.5px] font-medium text-white/40 hover:text-white/70 transition-colors duration-200"
                 >
                   Log in
                 </Link>
@@ -80,7 +82,7 @@ export function Navbar() {
                     setTimeout(() => el.focus(), 500);
                   }
                 }}
-                className="h-9 px-5 text-[14px] font-medium text-white bg-gradient-to-r from-[#818cf8] to-[#6366f1] rounded-lg hover:from-[#6366f1] hover:to-[#4f46e5] transition-all duration-200 active:scale-[0.97] shadow-lg shadow-indigo-500/20"
+                className="h-8 px-4 text-[12.5px] font-semibold text-background bg-foreground rounded-md hover:bg-foreground/90 transition-all duration-200 active:scale-[0.97]"
               >
                 Get started
               </button>

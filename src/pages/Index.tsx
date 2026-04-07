@@ -9,7 +9,6 @@ import { ProductPreview } from "@/components/landing/ProductPreview";
 import { Pricing } from "@/components/landing/Pricing";
 import { TrustPrivacy } from "@/components/landing/TrustPrivacy";
 import { FinalCTA } from "@/components/landing/FinalCTA";
-import { BuiltBy } from "@/components/landing/BuiltBy";
 import { Footer } from "@/components/landing/Footer";
 
 const Index = () => (
@@ -25,7 +24,6 @@ const Index = () => (
     <Pricing />
     <TrustPrivacy />
     <FinalCTA />
-    <BuiltBy />
     <Footer />
   </div>
 );

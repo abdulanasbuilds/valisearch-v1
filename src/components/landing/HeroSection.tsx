@@ -52,90 +52,80 @@ export function HeroSection() {
 
   return (
     <section className="relative min-h-screen flex flex-col overflow-hidden">
-      {/* Linear-style ambient glow */}
+      {/* Ambient background */}
       <div className="absolute inset-0 pointer-events-none">
         <div
           className="absolute inset-0"
           style={{
-            background: `
-              radial-gradient(ellipse 80% 50% at 50% -20%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
-              radial-gradient(ellipse 60% 40% at 80% 60%, rgba(139, 92, 246, 0.08) 0%, transparent 40%),
-              radial-gradient(ellipse 50% 30% at 20% 80%, rgba(99, 102, 241, 0.05) 0%, transparent 30%)
-            `,
+            background: "radial-gradient(ellipse 80% 50% at 50% -10%, hsl(248 84% 67% / 0.06) 0%, transparent 60%)",
           }}
         />
-        {/* Grid pattern */}
-        <div 
-          className="absolute inset-0 opacity-[0.02]"
-          style={{
-            backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
-            backgroundSize: '60px 60px',
-          }}
-        />
+        <div className="absolute inset-0 grid-bg opacity-40" />
       </div>
 
       <div className="relative z-10 flex flex-col max-w-[1120px] mx-auto w-full px-5 md:px-6">
         <div className="pt-32 md:pt-40 lg:pt-48 pb-16 md:pb-24">
 
-          {/* Kicker badge */
+          {/* Kicker */}
           <div
-            className={`mb-8 transition-all duration-700 delay-100 ${
-              loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+            className={`mb-6 transition-all duration-700 delay-100 ${
+              loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
             }`}
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/[0.06] backdrop-blur-sm">
-              <Sparkles className="w-3.5 h-3.5 text-[#818cf8]" />
-              <span className="text-xs font-medium text-white/60">
-                AI-Powered Startup Validation
+            <div className="inline-flex items-center gap-2">
+              <div className="h-px w-5 bg-white/15" />
+              <span className="text-[10.5px] font-medium uppercase tracking-[0.18em] text-white/25">
+                Startup validation · AI-powered
               </span>
             </div>
           </div>
 
-          {/* Headline - Linear style large typography */
-          <h1 className="mb-8 max-w-[900px]">
+          {/* Headline */}
+          <h1 className="mb-7 max-w-[720px]">
             <span
-              className={`block text-[clamp(2.8rem,7vw,5.5rem)] font-bold text-white leading-[1.05] tracking-[-0.04em] transition-all duration-700 delay-150 ${
-                loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+              className={`block text-[clamp(2.5rem,6.5vw,5.2rem)] font-black text-white leading-[1.04] tracking-[-0.045em] transition-all duration-700 delay-150 ${
+                loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
               }`}
             >
-              Validate your startup idea
+              Know if your idea
             </span>
             <span
-              className={`block text-[clamp(2.8rem,7vw,5.5rem)] font-bold leading-[1.05] tracking-[-0.04em] transition-all duration-700 delay-200 ${
-                loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+              className={`block text-[clamp(2.5rem,6.5vw,5.2rem)] font-black text-white leading-[1.04] tracking-[-0.045em] transition-all duration-700 delay-200 ${
+                loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
               }`}
-              style={{
-                background: 'linear-gradient(135deg, #ffffff 0%, #818cf8 50%, #c084fc 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-              }}
+            >
+              is worth building—
+            </span>
+            <span
+              className={`block text-[clamp(2.5rem,6.5vw,5.2rem)] font-serif-display font-normal text-white/40 leading-[1.1] tracking-[-0.03em] transition-all duration-700 delay-[250ms] ${
+                loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+              }`}
             >
               before you build it.
             </span>
           </h1>
 
-          {/* Subtext */
+          {/* Subtext */}
           <p
-            className={`text-lg leading-relaxed text-white/50 max-w-[520px] mb-10 transition-all duration-700 delay-300 ${
-              loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+            className={`text-[15px] leading-[1.8] text-white/30 max-w-[440px] mb-9 transition-all duration-700 delay-300 ${
+              loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
             }`}
           >
-            Get a complete intelligence report in 30 seconds — market analysis, 
-            competitor research, monetization strategy, and sprint-ready execution plan.
+            Paste your idea. Get a full market report in 30 seconds —
+            competitor analysis, market size, monetization strategy, and more.
           </p>
 
-          {/* Input - Glassmorphism style */
+          {/* Input */}
           <div
-            className={`w-full max-w-[600px] transition-all duration-700 delay-[350ms] ${
-              loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+            className={`w-full max-w-[560px] transition-all duration-700 delay-[350ms] ${
+              loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
             }`}
           >
             <div
-              className={`relative rounded-2xl border transition-all duration-300 backdrop-blur-xl ${
+              className={`relative rounded-xl border transition-all duration-300 ${
                 focused
-                  ? "border-[#818cf8]/30 bg-white/[0.05] shadow-[0_0_40px_-10px_rgba(99,102,241,0.3)]"
-                  : "border-white/[0.08] bg-white/[0.02] hover:border-white/[0.12] hover:bg-white/[0.03]"
+                  ? "border-white/20 bg-white/[0.04] shadow-[0_0_0_3px_rgba(255,255,255,0.03)]"
+                  : "border-white/[0.08] bg-white/[0.02] hover:border-white/12"
               }`}
             >
               <textarea
@@ -145,9 +135,9 @@ export function HeroSection() {
                 onChange={(e) => setIdea(e.target.value.slice(0, MAX_IDEA_LEN))}
                 onFocus={() => setFocused(true)}
                 onBlur={() => setFocused(false)}
-                placeholder="Describe your startup idea in a few sentences..."
-                className="w-full resize-none bg-transparent px-6 py-5 pr-16 text-[15px] leading-relaxed text-white/90 placeholder:text-white/20 focus:outline-none min-h-[80px] max-h-[160px]"
-                rows={3}
+                placeholder="Describe your startup idea…"
+                className="w-full resize-none bg-transparent px-5 py-4 pr-14 text-[14.5px] leading-relaxed text-white/85 placeholder:text-white/15 focus:outline-none min-h-[64px] max-h-[130px]"
+                rows={2}
                 maxLength={MAX_IDEA_LEN}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && !e.shiftKey) {
@@ -160,20 +150,21 @@ export function HeroSection() {
                 data-testid="button-validate"
                 onClick={handleSubmit}
                 disabled={!idea.trim()}
-                className="absolute bottom-4 right-4 flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-[#818cf8] to-[#6366f1] text-white disabled:opacity-20 disabled:cursor-not-allowed hover:from-[#6366f1] hover:to-[#4f46e5] transition-all duration-200 active:scale-[0.95] shadow-lg shadow-indigo-500/20"
+                className="absolute bottom-3 right-3 flex items-center justify-center w-8 h-8 rounded-lg bg-white text-black disabled:opacity-15 disabled:cursor-not-allowed hover:bg-white/90 transition-all duration-150 active:scale-[0.94]"
               >
-                <CornerDownLeft className="h-4 w-4" />
+                <CornerDownLeft className="h-3.5 w-3.5" />
               </button>
             </div>
 
-            <div className="flex items-center justify-between mt-3 px-1">
-              <span className="text-xs text-white/30 flex items-center gap-2">
-                <kbd className="font-mono bg-white/[0.05] border border-white/[0.08] px-2 py-0.5 rounded text-[10px]">
+            <div className="flex items-center justify-between mt-2 px-0.5">
+              <span className="text-[11px] text-white/15">
+                Press{" "}
+                <kbd className="font-mono bg-white/[0.05] border border-white/[0.06] px-1.5 py-0.5 rounded text-[10px]">
                   ↵
-                </kbd>
-                to analyze
+                </kbd>{" "}
+                to validate
                 {idea.length >= MAX_IDEA_LEN * 0.85 && (
-                  <span className={`${idea.length >= MAX_IDEA_LEN ? "text-red-400/80" : "text-white/40"}`}>
+                  <span className={`ml-2 ${idea.length >= MAX_IDEA_LEN ? "text-destructive/60" : "text-white/25"}`}>
                     {idea.length}/{MAX_IDEA_LEN}
                   </span>
                 )}
@@ -182,119 +173,116 @@ export function HeroSection() {
                 data-testid="button-get-started-hero"
                 onClick={handleSubmit}
                 disabled={!idea.trim()}
-                className="group flex items-center gap-1.5 text-sm font-medium text-white/40 hover:text-[#818cf8] disabled:opacity-0 transition-all duration-200"
+                className="group flex items-center gap-1 text-[11.5px] font-medium text-white/20 hover:text-white/50 disabled:opacity-0 transition-all duration-200"
               >
-                Start Analysis
-                <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
+                Analyze
+                <ArrowRight className="h-3 w-3 transition-transform duration-200 group-hover:translate-x-0.5" />
               </button>
             </div>
           </div>
 
-          {/* Stats - Clean minimal style */
+          {/* Stats strip */}
           <div
-            className={`mt-14 flex flex-wrap items-center gap-10 transition-all duration-700 delay-[450ms] ${
-              loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+            className={`mt-12 flex flex-wrap items-center gap-x-8 gap-y-3 transition-all duration-700 delay-[450ms] ${
+              loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
             }`}
           >
             {[
-              { n: "10,000+", label: "Ideas validated" },
-              { n: "~30s", label: "To full report" },
-              { n: "18", label: "Data dimensions" },
+              { n: "10,000+", label: "ideas validated" },
+              { n: "~30s", label: "to full report" },
+              { n: "18", label: "intelligence sections" },
             ].map(({ n, label }) => (
-              <div key={label} className="flex flex-col">
-                <span className="text-2xl font-bold text-white/80 tracking-tight tabular-nums">{n}</span>
-                <span className="text-xs text-white/35 font-medium uppercase tracking-wide">{label}</span>
+              <div key={label} className="flex items-baseline gap-1.5">
+                <span className="text-[16px] font-bold text-white/65 tracking-tight tabular-nums">{n}</span>
+                <span className="text-[11px] text-white/20">{label}</span>
               </div>
             ))}
           </div>
         </div>
 
-          {/* Product preview - Glass card */
+        {/* Product preview */}
         <div
-          className={`w-full pb-24 transition-all duration-1000 delay-500 ${
-            loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          className={`w-full pb-20 transition-all duration-1000 delay-500 ${
+            loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
           }`}
         >
-          <div className="relative rounded-2xl overflow-hidden border border-white/[0.08] bg-[#0a0a0a]/80 backdrop-blur-xl shadow-[0_0_80px_-20px_rgba(99,102,241,0.15)]">
-            {/* Browser chrome */}
-            <div className="flex items-center gap-3 h-12 px-4 border-b border-white/[0.06] bg-white/[0.02]">
-              <div className="flex gap-2">
-                {["#ef4444", "#eab308", "#22c55e"].map((color, i) => (
-                  <div key={i} className="w-3 h-3 rounded-full" style={{ backgroundColor: `${color}40` }} />
+          <div className="preview-border relative rounded-2xl overflow-hidden border border-white/[0.06] bg-[#0c0c0c] shadow-[0_40px_100px_-20px_rgba(0,0,0,0.6)]">
+            {/* Chrome */}
+            <div className="flex items-center gap-2 h-9 px-4 border-b border-white/[0.04] bg-white/[0.008]">
+              <div className="flex gap-1.5">
+                {[0, 1, 2].map((i) => (
+                  <div key={i} className="w-2 h-2 rounded-full bg-white/[0.07]" />
                 ))}
               </div>
               <div className="flex-1 mx-8 flex justify-center">
-                <div className="h-7 w-64 rounded-lg bg-white/[0.04] flex items-center px-3 gap-2 border border-white/[0.06]">
-                  <div className="w-2 h-2 rounded-full bg-emerald-400/60" />
-                  <span className="text-[11px] text-white/25 font-mono">valisearch.app/report</span>
+                <div className="h-5 w-52 rounded-md bg-white/[0.035] flex items-center px-2.5 gap-1.5">
+                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-400/50" />
+                  <span className="text-[10px] text-white/15 font-mono">app.valisearch.io/report</span>
                 </div>
               </div>
             </div>
 
-            {/* App content */}
-            <div className="grid sm:grid-cols-[200px_1fr] h-[400px] md:h-[500px]">
+            {/* App */}
+            <div className="grid sm:grid-cols-[180px_1fr] h-[380px] md:h-[460px]">
               {/* Sidebar */}
-              <div className="hidden sm:flex flex-col border-r border-white/[0.06] p-4 bg-white/[0.01]">
-                <div className="mb-4 px-2">
-                  <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-white/30">
-                    Analysis Report
+              <div className="hidden sm:flex flex-col border-r border-white/[0.04] p-3.5">
+                <div className="mb-3.5 px-1">
+                  <span className="text-[9px] font-semibold uppercase tracking-[0.14em] text-white/15">
+                    Report
                   </span>
                 </div>
-                <nav className="flex flex-col gap-1">
+                <nav className="flex flex-col gap-px">
                   {REPORT.nav.map((item, i) => (
                     <div
                       key={item}
-                      className={`flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-default select-none transition-all text-[13px] font-medium ${
+                      className={`flex items-center gap-2 px-2.5 py-[7px] rounded-md cursor-default select-none transition-colors text-[11.5px] font-medium ${
                         i === 0
-                          ? "bg-white/[0.06] text-white/90 border border-white/[0.08]"
-                          : "text-white/35 hover:text-white/55 hover:bg-white/[0.03]"
+                          ? "bg-white/[0.05] text-white/75"
+                          : "text-white/22 hover:text-white/38 hover:bg-white/[0.02]"
                       }`}
                     >
-                      <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${i === 0 ? "bg-[#818cf8]" : "bg-white/15"}`} />
+                      <div className={`w-1 h-1 rounded-full shrink-0 ${i === 0 ? "bg-primary" : "bg-white/10"}`} />
                       {item}
                     </div>
                   ))}
                 </nav>
 
-                <div ref={scoreRef} className="mt-auto pt-4 border-t border-white/[0.06]">
-                  <div className="text-[10px] font-semibold uppercase tracking-[0.1em] text-white/25 mb-2">
+                <div ref={scoreRef} className="mt-auto pt-3 border-t border-white/[0.04]">
+                  <div className="text-[9px] font-semibold uppercase tracking-[0.12em] text-white/15 mb-1">
                     Validation Score
                   </div>
-                  <div className="flex items-baseline gap-2 mb-2">
-                    <span className="text-4xl font-bold text-white/90 leading-none tabular-nums tracking-tight">
+                  <div className="flex items-baseline gap-1 mb-1.5">
+                    <span className="text-[28px] font-black text-white/85 leading-none tabular-nums">
                       {REPORT.score}
                     </span>
-                    <span className="text-sm text-white/30">/100</span>
+                    <span className="text-[11px] text-white/20">/100</span>
                   </div>
-                  <div className="h-1.5 w-full rounded-full bg-white/[0.08] overflow-hidden">
+                  <div className="h-[2.5px] w-full rounded-full bg-white/[0.06] overflow-hidden">
                     <div
-                      className="h-full rounded-full bg-gradient-to-r from-[#818cf8] to-[#c084fc]"
-                      style={{ width: scoreVisible ? `${REPORT.score}%` : "0%", transition: 'width 1s ease-out' }}
+                      className="score-bar h-full rounded-full bg-white/60"
+                      style={{ width: scoreVisible ? `${REPORT.score}%` : "0%" }}
                     />
                   </div>
-                  <div className="mt-2 text-[11px] text-white/30">Strong Opportunity</div>
+                  <div className="mt-1 text-[9.5px] text-white/15">Strong · Recommended</div>
                 </div>
               </div>
 
-              {/* Main content */}
-              <div className="p-6 md:p-8 flex flex-col gap-5 overflow-hidden">
+              {/* Main */}
+              <div className="p-5 md:p-7 flex flex-col gap-4 overflow-hidden">
                 <div>
-                  <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-white/25 mb-2">Idea</div>
-                  <p className="text-base font-medium text-white/85 leading-relaxed">{REPORT.idea}</p>
+                  <div className="text-[9px] font-semibold uppercase tracking-[0.14em] text-white/15 mb-1">Idea</div>
+                  <p className="text-[14px] font-semibold text-white/75 leading-snug">{REPORT.idea}</p>
                 </div>
 
                 <div className="flex-1">
-                  <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-white/25 mb-3">
+                  <div className="text-[9px] font-semibold uppercase tracking-[0.14em] text-white/15 mb-2.5">
                     Key Findings
                   </div>
-                  <div className="grid gap-2">
+                  <div className="divide-y divide-white/[0.035]">
                     {REPORT.rows.map((row) => (
-                      <div 
-                        key={row.label} 
-                        className="flex items-center justify-between py-2.5 px-3 rounded-lg bg-white/[0.02] border border-white/[0.04]"
-                      >
-                        <span className="text-sm text-white/40">{row.label}</span>
-                        <span className={`text-sm font-medium ${row.positive ? "text-emerald-400/80" : "text-amber-400/80"}`}>
+                      <div key={row.label} className="flex items-center justify-between py-2">
+                        <span className="text-[12px] text-white/30">{row.label}</span>
+                        <span className={`text-[12px] font-medium ${row.positive ? "text-white/70" : "text-white/42"}`}>
                           {row.value}
                         </span>
                       </div>
@@ -302,21 +290,21 @@ export function HeroSection() {
                   </div>
                 </div>
 
-                <div className="rounded-xl border border-white/[0.06] bg-gradient-to-br from-white/[0.03] to-white/[0.01] p-4 backdrop-blur-sm">
-                  <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-white/25 mb-2">
+                <div className="rounded-lg border border-white/[0.04] bg-white/[0.015] p-3.5 mt-auto">
+                  <div className="text-[9px] font-semibold uppercase tracking-[0.14em] text-white/15 mb-1.5">
                     AI Summary
                   </div>
-                  <p className="text-[13px] leading-[1.7] text-white/45">
-                    Strong opportunity in a growing segment with measurable demand signals. 
-                    Existing solutions lack modern UX and AI-native features, creating a clear wedge.
+                  <p className="text-[11.5px] leading-[1.7] text-white/25">
+                    Strong opportunity in a growing segment with measurable demand signals. Existing
+                    solutions lack modern UX and AI-native features, creating a clear wedge.
                   </p>
                 </div>
               </div>
             </div>
           </div>
 
-          <p className="mt-4 text-center text-xs text-white/20">
-            Sample report output — Results vary based on your idea complexity
+          <p className="mt-2.5 text-center text-[10.5px] text-white/12">
+            Sample output · Your results will vary based on your idea
           </p>
         </div>
       </div>
