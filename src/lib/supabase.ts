@@ -2,10 +2,13 @@
  * Supabase client — singleton instance for the browser.
  * Works with any Supabase project when env vars are set.
  * Falls back gracefully when not configured.
+ * 
+ * Supports both NEW publishable key (sb_publishable_k_...) and 
+ * LEGACY anon key (eyJhbG... JWT) for backward compatibility.
  */
 
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
-import { ENV, isSupabaseConfigured } from "@/config/env";
+import { ENV, isSupabaseConfigured, getSupabaseKey } from "@/config/env";
 
 let _supabase: SupabaseClient | null = null;
 
@@ -15,7 +18,8 @@ export function getSupabase(): SupabaseClient | null {
   }
 
   if (!_supabase) {
-    _supabase = createClient(ENV.SUPABASE_URL, ENV.SUPABASE_ANON_KEY, {
+    const key = getSupabaseKey();
+    _supabase = createClient(ENV.SUPABASE_URL, key, {
       auth: {
         autoRefreshToken: true,
         persistSession: true,
@@ -35,7 +39,7 @@ export function requireSupabase(): SupabaseClient {
   const client = getSupabase();
   if (!client) {
     throw new Error(
-      "Supabase is not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY."
+      "Supabase is not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY (or VITE_SUPABASE_ANON_KEY)."
     );
   }
   return client;
