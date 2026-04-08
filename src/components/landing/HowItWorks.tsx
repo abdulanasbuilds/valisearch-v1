@@ -1,109 +1,63 @@
-import { useEffect, useRef, useState } from "react";
-
-interface Step {
-  number: string;
-  title: string;
-  description: string;
-}
-
-const STEPS: Step[] = [
-  {
-    number: "01",
-    title: "Describe your idea",
-    description: "Type your startup concept in plain English. No template, no form. Just your idea.",
-  },
-  {
-    number: "02",
-    title: "AI analyzes everything",
-    description: "Our multi-model AI runs 18 simultaneous analysis modules — market, competitors, product, revenue, branding, and more.",
-  },
-  {
-    number: "03",
-    title: "Get your intelligence report",
-    description: "A complete 18-section dashboard appears. Score, strategy, sprint board — ready in 30 seconds.",
-  },
-  {
-    number: "04",
-    title: "Build with confidence",
-    description: "Export to Lovable, Bubble, or 10Web. Or download your PDF report for investors.",
-  },
-];
+import { motion } from "framer-motion";
 
 export function HowItWorks() {
-  const [visible, setVisible] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.2 }
-    );
-
-    if (ref.current) {
-      observer.observe(ref.current);
+  const steps = [
+    {
+      no: "01",
+      title: "Describe your idea",
+      body: "Type your startup concept in plain English. No template, no form. Just your idea."
+    },
+    {
+      no: "02",
+      title: "AI analyzes everything",
+      body: "Our multi-model AI runs 18 simultaneous analysis modules — market, competitors, product, revenue, branding, and more."
+    },
+    {
+      no: "03",
+      title: "Get your report",
+      body: "A complete 18-section dashboard appears. Score, strategy, sprint board — ready in 30 seconds."
+    },
+    {
+      no: "04",
+      title: "Build with confidence",
+      body: "Export to Lovable, Bubble, or 10Web. Or download your PDF report for investors."
     }
-
-    return () => observer.disconnect();
-  }, []);
+  ];
 
   return (
-    <section
-      id="how-it-works"
-      ref={ref}
-      className="py-28 bg-[#0A0A0A]"
-    >
-      <div className="max-w-[1200px] mx-auto px-5">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <div
-            className={`transition-all duration-700 ${
-              visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }`}
-          >
-            <span className="section-label">How it Works</span>
-          </div>
-          <h2
-            className={`mt-4 text-[48px] font-bold text-[#F0F0F0] leading-tight max-w-[600px] mx-auto transition-all duration-700 delay-100 ${
-              visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }`}
-          >
+    <section id="how-it-works" className="py-32">
+      <div className="section-container">
+        <div className="text-center mb-20">
+          <span className="label-allcaps mb-4 block">HOW IT WORKS</span>
+          <h2 className="section-headline text-[#F0F0F0] max-w-[600px] mx-auto">
             From idea to intelligence in 3 steps
           </h2>
         </div>
 
-        {/* Steps */}
-        <div className="relative">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-4">
-            {STEPS.map((step, index) => (
-              <div
-                key={step.number}
-                className={`relative transition-all duration-700 ${
-                  visible
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-4"
-                }`}
-                style={{ transitionDelay: `${200 + index * 100}ms` }}
-              >
-                {/* Step Number */}
-                <div className="relative mb-3">
-                  <span className="step-number">{step.number}</span>
-                  {/* Connecting line - hidden on mobile */}
-                  {index < STEPS.length - 1 && (
-                    <div className="hidden md:block absolute top-[10px] left-[40px] w-[calc(100%-20px)] h-[1px] bg-white/[0.08]" />
-                  )}
-                </div>
-
-                {/* Content */}
-                <h3 className="step-title">{step.title}</h3>
-                <p className="step-body">{step.description}</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 relative">
+          {/* Connecting line for desktop */}
+          <div className="hidden lg:block absolute top-[13px] left-[100px] right-[100px] h-[1px] bg-white/[0.08]" />
+          
+          {steps.map((step, i) => (
+            <motion.div 
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: i * 0.1 }}
+              className="relative z-10"
+            >
+              <div className="text-[13px] font-bold text-[#6C47FF] bg-[#0A0A0A] inline-block pr-4">
+                {step.no}
               </div>
-            ))}
-          </div>
+              <h3 className="text-[18px] font-semibold text-[#F0F0F0] mt-4 mb-3">
+                {step.title}
+              </h3>
+              <p className="text-[15px] text-[#888888] leading-relaxed">
+                {step.body}
+              </p>
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>

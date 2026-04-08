@@ -1,176 +1,88 @@
-import { useEffect, useRef, useState } from "react";
-import { Check } from "lucide-react";
-
-interface PricingPlan {
-  name: string;
-  price: string;
-  period?: string;
-  description: string;
-  features: string[];
-  cta: string;
-  featured?: boolean;
-}
-
-const PLANS: PricingPlan[] = [
-  {
-    name: "Starter",
-    price: "$0",
-    description: "Forever free, no credit card",
-    features: [
-      "3 analyses per month",
-      "15 analysis sections",
-      "Competitor snapshot",
-      "Market overview",
-      "Shareable score card",
-    ],
-    cta: "Start free",
-  },
-  {
-    name: "Pro",
-    price: "$29",
-    period: "per month, billed monthly",
-    description: "",
-    features: [
-      "20 analyses per month",
-      "All 18 analysis sections",
-      "Full competitor intelligence",
-      "Revenue projections",
-      "Branding generator",
-      "PDF & DOCX export",
-      "Kanban sprint board",
-      "Idea history & memory",
-    ],
-    cta: "Get started",
-    featured: true,
-  },
-  {
-    name: "Premium",
-    price: "$79",
-    period: "per month, billed monthly",
-    description: "",
-    features: [
-      "Everything in Pro",
-      "Unlimited analyses",
-      "Multi-agent AI mode",
-      "Build Mode (dev blueprint)",
-      "API access",
-      "White-label reports",
-      "Priority processing",
-    ],
-    cta: "Get Premium",
-  },
-];
+import { motion } from "framer-motion";
 
 export function Pricing() {
-  const [visible, setVisible] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.2 }
-    );
-
-    if (ref.current) {
-      observer.observe(ref.current);
+  const plans = [
+    {
+      name: "Starter",
+      price: "0",
+      sub: "Forever free, no credit card",
+      features: ["3 analyses per month", "15 analysis sections", "Competitor snapshot", "Market overview", "Shareable score card"],
+      button: "Start free",
+      featured: false
+    },
+    {
+      name: "Pro",
+      price: "29",
+      sub: "per month, billed monthly",
+      features: ["20 analyses per month", "All 18 analysis sections", "Full competitor intelligence", "Revenue projections", "Branding generator", "PDF & DOCX export", "Kanban sprint board", "Idea history & memory"],
+      button: "Get started",
+      featured: true
+    },
+    {
+      name: "Premium",
+      price: "79",
+      sub: "per month, billed monthly",
+      features: ["Unlimited analyses", "Multi-agent AI mode", "Build Mode (dev blueprint)", "API access", "White-label reports", "Priority processing"],
+      button: "Get Premium",
+      featured: false
     }
-
-    return () => observer.disconnect();
-  }, []);
+  ];
 
   return (
-    <section id="pricing" ref={ref} className="py-28 bg-[#0A0A0A]">
-      <div className="max-w-[1200px] mx-auto px-5">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <div
-            className={`transition-all duration-700 ${
-              visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }`}
-          >
-            <span className="section-label">Pricing</span>
-          </div>
-          <h2
-            className={`mt-4 text-[48px] font-bold text-[#F0F0F0] leading-tight transition-all duration-700 delay-100 ${
-              visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }`}
-          >
-            Simple, honest pricing
-          </h2>
+    <section id="pricing" className="py-32 bg-[#0A0A0A]">
+      <div className="section-container">
+        <div className="text-center mb-20">
+          <span className="label-allcaps mb-4 block">PRICING</span>
+          <h2 className="section-headline text-[#F0F0F0]">Simple, honest pricing</h2>
         </div>
 
-        {/* Pricing Cards */}
-        <div className="grid md:grid-cols-3 gap-6">
-          {PLANS.map((plan, index) => (
-            <div
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {plans.map((plan, i) => (
+            <motion.div 
               key={plan.name}
-              className={`relative transition-all duration-700 ${
-                visible
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-4"
-              } ${plan.featured ? "pricing-card-featured pricing-card" : "pricing-card"}`}
-              style={{ transitionDelay: `${200 + index * 100}ms` }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.1 }}
+              className={`relative rounded-2xl p-8 border ${
+                plan.featured 
+                ? 'bg-[#111111] border-[#6C47FF]/40 shadow-[0_20px_40px_rgba(108,71,255,0.1)]' 
+                : 'bg-[#111111] border-white/[0.08]'
+              }`}
             >
-              {/* Featured Badge */}
               {plan.featured && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-[#6C47FF] text-white text-[10px] font-bold uppercase tracking-wide rounded">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#6C47FF] text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full">
                   Most Popular
                 </div>
               )}
 
-              {/* Plan Name */}
-              <div
-                className={`text-[14px] font-semibold uppercase tracking-wide mb-4 ${
-                  plan.featured ? "text-[#6C47FF]" : "text-[#888888]"
-                }`}
-              >
+              <div className={`text-[12px] font-bold uppercase tracking-[0.2em] mb-4 ${plan.featured ? 'text-[#6C47FF]' : 'text-white/30'}`}>
                 {plan.name}
               </div>
-
-              {/* Price */}
               <div className="flex items-baseline gap-1 mb-2">
-                <span className="pricing-price">{plan.price}</span>
+                <span className="text-[48px] font-black text-[#F0F0F0] tracking-tighter">${plan.price}</span>
               </div>
+              <p className="text-[13px] text-[#888888] mb-8">{plan.sub}</p>
+              
+              <div className="h-[1px] w-full bg-white/[0.06] mb-8" />
 
-              {/* Period */}
-              {plan.period && (
-                <div className="text-[14px] text-[#888888] mb-4">{plan.period}</div>
-              )}
-
-              {/* Description */}
-              {plan.description && (
-                <div className="text-[14px] text-[#888888] mb-4">{plan.description}</div>
-              )}
-
-              {/* Divider */}
-              <div className="h-px bg-white/[0.06] my-5" />
-
-              {/* Features */}
-              <ul className="space-y-3 mb-8">
-                {plan.features.map((feature) => (
-                  <li key={feature} className="flex items-start gap-3">
-                    <Check className="w-4 h-4 text-[#22C55E] mt-0.5 shrink-0" />
-                    <span className="text-[14px] text-[#F0F0F0]">{feature}</span>
+              <ul className="space-y-4 mb-10">
+                {plan.features.map((f, j) => (
+                  <li key={j} className="flex items-start gap-3 text-[14px] text-white/60">
+                    <span className="text-[#6C47FF] mt-0.5">✓</span>
+                    <span>{f}</span>
                   </li>
                 ))}
               </ul>
 
-              {/* CTA Button */}
-              <button
-                className={`w-full py-3 rounded-lg font-semibold transition-colors ${
-                  plan.featured
-                    ? "bg-[#6C47FF] text-white hover:bg-[#7C5AFF]"
-                    : "bg-transparent border border-white/[0.15] text-[#F0F0F0] hover:border-white/[0.3]"
-                }`}
-              >
-                {plan.cta}
+              <button className={`w-full py-4 rounded-xl text-[15px] font-bold transition-all ${
+                plan.featured 
+                ? 'bg-[#6C47FF] hover:bg-[#7C5AFF] text-white' 
+                : 'border border-white/10 hover:border-white/20 text-white'
+              }`}>
+                {plan.button}
               </button>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>
