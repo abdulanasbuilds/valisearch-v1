@@ -65,7 +65,7 @@ export function HeroSection() {
             </div>
           </motion.div>
 
-          {/* Right Column: Smart Screenshot / Dashboard Mockup */}
+          {/* Right Column: Real Demo Recording */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9, x: 40 }}
             animate={{ opacity: 1, scale: 1, x: 0 }}
@@ -76,12 +76,28 @@ export function HeroSection() {
             <div className="absolute -top-20 -right-20 w-[400px] h-[400px] bg-[#6C47FF]/10 blur-[120px] rounded-full opacity-50 animate-pulse pointer-events-none" />
             <div className="absolute -bottom-20 -left-20 w-[300px] h-[300px] bg-[#6C47FF]/05 blur-[100px] rounded-full opacity-30 pointer-events-none" />
 
-            <SmartScreenshot
-              src="/screenshots/dashboard-overview.png"
-              alt="ValiSearch dashboard overview showing idea score, market data, and validation metrics"
-              className="w-full rounded-xl border border-white/10 shadow-2xl shadow-black/60 relative z-10"
-              fallback={<DashboardMockup />}
-            />
+            {/* Browser Wrapper for recording */}
+            <div className="relative z-10 rounded-2xl overflow-hidden border border-white/10 shadow-2xl shadow-black/60 bg-[#0D0D0D]">
+              <div className="flex items-center gap-2 px-4 py-3 bg-[#161616] border-b border-white/[0.06]">
+                <div className="flex gap-1.5">
+                  <div className="w-3 h-3 rounded-full bg-[#FF5F57]" />
+                  <div className="w-3 h-3 rounded-full bg-[#FEBC2E]" />
+                  <div className="w-3 h-3 rounded-full bg-[#28C840]" />
+                </div>
+                <div className="flex-1 mx-4 bg-[#1C1C1C] rounded-md px-3 py-1 text-[11px] text-white/30 font-mono">
+                  valisearch.app/dashboard
+                </div>
+              </div>
+              
+              <div className="relative aspect-video">
+                <img 
+                  src="/videos/demo.webp" 
+                  alt="ValiSearch App Demo" 
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A]/40 to-transparent pointer-events-none" />
+              </div>
+            </div>
           </motion.div>
         </div>
       </div>
