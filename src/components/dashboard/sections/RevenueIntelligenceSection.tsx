@@ -38,12 +38,19 @@ function generateMrrProjection(tiers: PricingTier[]): { month: string; conservat
 const STREAM_COLORS = ["#6366f1", "#8b5cf6", "#ec4899", "#f59e0b", "#10b981", "#3b82f6"];
 
 /* ─── Custom tooltip ─────────────────────────────────────── */
-function CustomTooltip({ active, payload, label }: { active?: boolean; payload?: any[]; label?: string }) {
+interface TooltipPayload {
+  dataKey: string;
+  color: string;
+  name: string;
+  value: number;
+}
+
+function CustomTooltip({ active, payload, label }: { active?: boolean; payload?: TooltipPayload[]; label?: string }) {
   if (!active || !payload?.length) return null;
   return (
     <div className="bg-[#111] border border-white/[0.1] rounded-xl px-4 py-3 text-[12px] shadow-xl">
       <p className="text-white/40 mb-1.5">{label}</p>
-      {payload.map((p: any) => (
+      {payload.map((p: TooltipPayload) => (
         <p key={p.dataKey} className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full inline-block" style={{ background: p.color }} />
           <span className="text-white/50">{p.name}:</span>

@@ -29,6 +29,10 @@ import { downloadReport, downloadReportJson, downloadReportMarkdown, downloadRep
 import { useAnalysisStore } from "@/store/useAnalysisStore";
 import { useCreditStore } from "@/store/useCreditStore";
 import { getMockAnalysis } from "@/services/analysis.service";
+import { toast } from "sonner";
+
+import { getSupabase } from "@/lib/supabase";
+import { useUserStore } from "@/store/useUserStore";
 
 function ExportMenu({ onExport }: { onExport: (format: string) => void }) {
   const [open, setOpen] = useState(false);
@@ -84,14 +88,49 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const { analysis, idea, setAnalysis, dataSource } = useAnalysisStore();
   const { showUpgradeModal, setShowUpgradeModal, isAdmin } = useCreditStore();
+  const { user } = useUserStore();
+  const [loading, setLoading] = useState(!analysis);
 
   useEffect(() => {
-    if (!analysis) {
-      setAnalysis(getMockAnalysis(idea || "AI-powered productivity tool"));
+    async function loadAnalysis() {
+      if (analysis) {
+        setLoading(false);
+        return;
+      }
+      
+      const supabase = getSupabase();
+      if (supabase && user) {
+        const { data, error } = await supabase
+          .from('analysis')
+          .select('result_json, data_source, created_at')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false })
+          .limit(1)
+          .single();
+          
+        if (data && data.result_json) {
+          setAnalysis(data.result_json);
+        } else {
+          setAnalysis(getMockAnalysis(idea || "AI-powered productivity tool"));
+        }
+      } else {
+        setAnalysis(getMockAnalysis(idea || "AI-powered productivity tool"));
+      }
+      setLoading(false);
     }
-  }, [analysis, idea, setAnalysis]);
+    
+    loadAnalysis();
+  }, [analysis, idea, setAnalysis, user]);
 
-  if (!analysis) {
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('upgraded') === 'true') {
+      toast.success("Welcome! Your account has been upgraded successfully.");
+      window.history.replaceState({}, '', '/dashboard');
+    }
+  }, []);
+
+  if (loading) {
     return (
       <SidebarProvider>
         <div className="min-h-screen flex w-full">

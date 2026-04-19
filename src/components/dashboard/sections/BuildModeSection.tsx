@@ -85,11 +85,10 @@ function PromptCard({
 
 export function BuildModeSection() {
   const analysis = useAnalysisStore((s) => s.analysis);
+  const idea = useAnalysisStore((s) => s.idea);
   if (!analysis) return null;
 
   const { build_mode, product_strategy, tech_stack } = analysis;
-
-  const idea = useAnalysisStore((s) => s.idea);
   const mvpFeatures = product_strategy.mvp_features.join("\n- ");
   const stack = `Frontend: ${tech_stack.mvp.frontend}\nBackend: ${tech_stack.mvp.backend}\nDatabase: ${tech_stack.mvp.database}`;
 

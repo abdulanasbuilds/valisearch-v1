@@ -57,12 +57,19 @@ function DemandGauge({ score }: { score: number }) {
 }
 
 /* ─── Custom tooltip ────────────────────────────────────── */
-function CustomTooltip({ active, payload, label }: { active?: boolean; payload?: any[]; label?: string }) {
+interface TooltipPayload {
+  dataKey: string;
+  color: string;
+  name: string;
+  value: number | string;
+}
+
+function CustomTooltip({ active, payload, label }: { active?: boolean; payload?: TooltipPayload[]; label?: string }) {
   if (!active || !payload?.length) return null;
   return (
     <div className="bg-[#111] border border-white/[0.1] rounded-xl px-4 py-3 text-[12px] shadow-xl">
       <p className="text-white/40 mb-1">{label}</p>
-      {payload.map((p: any) => (
+      {payload.map((p: TooltipPayload) => (
         <p key={p.dataKey} style={{ color: p.color }}>
           {p.name}: <span className="font-bold">{p.value}</span>
         </p>

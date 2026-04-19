@@ -5,8 +5,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { requireSupabase } from "@/lib/supabase";
 import { isSupabaseConfigured } from "@/config/env";
-import { Mail, Lock, User, ArrowRight, Loader2 } from "lucide-react";
+import { Mail, Lock, User, ArrowRight, Loader2, CheckCircle2 } from "lucide-react";
 import logoImg from "@/assets/logo.png";
+import { toast } from "sonner";
 
 const registerSchema = z.object({
   fullName: z.string().min(2, "Name must be at least 2 characters").max(100),
@@ -24,6 +25,8 @@ export default function Register() {
   const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [registeredEmail, setRegisteredEmail] = useState("");
 
   const {
     register: reg,
@@ -35,7 +38,7 @@ export default function Register() {
 
   const onSubmit = async (data: RegisterForm) => {
     if (!isSupabaseConfigured()) {
-      navigate("/dashboard");
+      navigate("/onboarding");
       return;
     }
 
@@ -49,14 +52,23 @@ export default function Register() {
         password: data.password,
         options: {
           data: { full_name: data.fullName },
-          emailRedirectTo: window.location.origin,
+          emailRedirectTo: window.location.origin + "/auth/callback",
         },
       });
 
       if (authError) {
         setError(authError.message);
       } else {
-        navigate("/dashboard");
+        setRegisteredEmail(data.email);
+        setSuccess(true);
+        
+        // DEVELOPER ACTION REQUIRED:
+        // Go to Supabase Dashboard → Authentication → 
+        // Email Templates → customize your confirmation email
+        // Go to Settings → Auth → SMTP Settings
+        // Add your SMTP provider (Resend.com is free and easy)
+        // Until SMTP is configured, emails go to Supabase's 
+        // default rate-limited sender (2/hour limit)
       }
     } catch (e) {
       setError(e instanceof Error ? e.message : "Registration failed");
@@ -64,6 +76,53 @@ export default function Register() {
       setLoading(false);
     }
   };
+
+  const resendEmail = async () => {
+    try {
+      const supabase = requireSupabase();
+      const { error } = await supabase.auth.resend({ type: 'signup', email: registeredEmail, options: { emailRedirectTo: window.location.origin + "/auth/callback" }});
+      if (error) {
+        toast.error(error.message);
+      } else {
+        toast.success("Confirmation email resent. Check your inbox.");
+      }
+    } catch (e) {
+      toast.error("Failed to resend email.");
+    }
+  };
+
+  if (success) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center px-4">
+        <div className="w-full max-w-md">
+          <Link to="/" className="flex items-center justify-center gap-2.5 mb-10">
+            <img src={logoImg} alt="ValiSearch" className="h-8 w-auto" />
+            <span className="text-lg font-semibold text-white/85">ValiSearch</span>
+          </Link>
+          <div className="rounded-2xl border border-white/[0.08] bg-white/[0.02] backdrop-blur-xl p-8 text-center">
+            <CheckCircle2 className="w-12 h-12 text-primary mx-auto mb-4" />
+            <h1 className="text-2xl font-bold text-white mb-2">Check your email</h1>
+            <p className="text-sm text-white/60 mb-6">
+              We've sent a confirmation link to <span className="text-white font-medium">{registeredEmail}</span>.
+              Please click the link to activate your account.
+            </p>
+            <p className="text-xs text-white/40 mb-8">
+              Don't see it? Check your spam folder or click below to resend.
+            </p>
+            <button
+              onClick={resendEmail}
+              className="w-full mb-4 flex items-center justify-center gap-2 rounded-lg border border-white/10 bg-transparent text-white py-3 text-sm font-semibold hover:bg-white/5 transition-all"
+            >
+              Resend confirmation email
+            </button>
+            <Link to="/login" className="text-xs text-primary hover:text-primary/80 transition-colors">
+              Back to sign in
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-4">

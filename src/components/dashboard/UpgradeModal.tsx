@@ -10,31 +10,34 @@ interface UpgradeModalProps {
   onClose: () => void;
 }
 
+import { LS_STORE_URL, LS_PRO_VARIANT_ID } from "@/lib/constants";
+import { useUserStore } from "@/store/useUserStore";
+
 export function UpgradeModal({ open, onClose }: UpgradeModalProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { user } = useUserStore();
 
   const handleCheckout = async () => {
-    const supabase = getSupabase();
-    if (!supabase) {
-      setError("Payment system not configured yet.");
-      return;
-    }
-
     setLoading(true);
     setError(null);
 
     try {
-      const { data, error: fnError } = await supabase.functions.invoke("create-checkout", {
-        body: { priceId: "price_pro_monthly" }, // Replace with actual Stripe price ID
-      });
-
-      if (fnError) throw new Error(fnError.message);
-      if (data?.url) {
-        window.location.href = data.url;
-      } else {
-        throw new Error("No checkout URL returned");
+      if (!LS_STORE_URL || !LS_PRO_VARIANT_ID || LS_PRO_VARIANT_ID === 'REPLACE_WITH_YOUR_PRO_ID') {
+        setError("Payment system is not yet configured with real Variant IDs.");
+        setLoading(false);
+        return;
       }
+      
+      let checkoutUrl = `${LS_STORE_URL}/checkout/buy/${LS_PRO_VARIANT_ID}?embed=1`;
+      
+      if (user) {
+        checkoutUrl += `&checkout[email]=${encodeURIComponent(user.email)}`;
+        checkoutUrl += `&checkout[custom][user_id]=${user.id}`;
+      }
+      
+      window.open(checkoutUrl, '_blank');
+      onClose(); // Close modal immediately after popping open the new tab
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to start checkout");
     } finally {

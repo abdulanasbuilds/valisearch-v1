@@ -2,6 +2,8 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getSupabase } from "@/lib/supabase";
 import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
+import { useAnalysisStore } from "@/store/useAnalysisStore";
 
 /**
  * Handles Supabase auth callback (email confirmation, OAuth redirect).
@@ -9,6 +11,7 @@ import { Loader2 } from "lucide-react";
  */
 export default function AuthCallback() {
   const navigate = useNavigate();
+  const runAnalysis = useAnalysisStore((s) => s.runAnalysis);
 
   useEffect(() => {
     const supabase = getSupabase();
@@ -17,25 +20,34 @@ export default function AuthCallback() {
       return;
     }
 
-    // Supabase auto-processes the URL hash tokens via detectSessionInUrl
-    // Just wait briefly then check session
     const timer = setTimeout(async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
-        navigate("/dashboard", { replace: true });
+        toast.success("Email confirmed! Welcome to ValiSearch.");
+        
+        const pendingIdea = sessionStorage.getItem("pending-idea");
+        
+        if (pendingIdea) {
+          sessionStorage.removeItem("pending-idea");
+          navigate("/analyze", { replace: true });
+          runAnalysis(pendingIdea);
+        } else {
+          // Ideally check onboarding status, defaulting to onboarding
+          navigate("/onboarding", { replace: true });
+        }
       } else {
         navigate("/login", { replace: true });
       }
-    }, 1000);
+    }, 1500);
 
     return () => clearTimeout(timer);
-  }, [navigate]);
+  }, [navigate, runAnalysis]);
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center">
       <div className="text-center">
         <Loader2 className="h-8 w-8 animate-spin text-white/40 mx-auto mb-4" />
-        <p className="text-sm text-white/40">Confirming your account…</p>
+        <p className="text-sm text-white/40">Confirming your account...</p>
       </div>
     </div>
   );

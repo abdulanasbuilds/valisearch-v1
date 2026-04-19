@@ -4,54 +4,65 @@ import { useAnalysisStore } from "@/store/useAnalysisStore";
 import { Button } from "@/components/ui/button";
 
 const steps = [
-  "Analyzing your idea…",
-  "Scanning market trends…",
-  "Identifying competitors…",
-  "Building your strategy…",
+  "Reading your idea...",
+  "Analysing market size...",
+  "Researching competitors...",
+  "Building product strategy...",
+  "Calculating revenue models...",
+  "Generating branding ideas...",
+  "Creating sprint board...",
+  "Finalising your report..."
 ];
 
 export default function Analyze() {
   const navigate = useNavigate();
   const { idea, isAnalyzing, analysis, error, runAnalysis } = useAnalysisStore();
+  const [step, setStep] = useState(0);
+  const [progress, setProgress] = useState(0);
 
   // Start analysis on mount if we have an idea
   useEffect(() => {
-    if (idea && !analysis && !isAnalyzing) {
+    if (idea && !analysis && !isAnalyzing && !error) {
       runAnalysis(idea);
     }
-  }, []);
+  }, [idea, analysis, isAnalyzing, error, runAnalysis]);
 
   // Navigate to dashboard when analysis is complete
   useEffect(() => {
     if (analysis && !isAnalyzing) {
+      setProgress(100);
       const timer = setTimeout(() => navigate("/dashboard"), 800);
       return () => clearTimeout(timer);
     }
   }, [analysis, isAnalyzing, navigate]);
 
-  // Animated step index
-  const [step, setStep] = useState(0);
-  const [progress, setProgress] = useState(0);
+  useEffect(() => {
+    if (error) {
+      setProgress(100);
+      const timer = setTimeout(() => navigate("/dashboard"), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [error, navigate]);
 
   useEffect(() => {
+    if (analysis || error) return;
+    
     const stepInterval = setInterval(() => {
       setStep((s) => (s >= steps.length - 1 ? s : s + 1));
-    }, 1800);
+    }, 2000);
 
     const progressInterval = setInterval(() => {
       setProgress((p) => {
-        // If analysis is done, jump to 100
         if (analysis) return 100;
-        // Otherwise cap at 90 until done
         return p >= 90 ? 90 : p + 1;
       });
-    }, 72);
+    }, 150);
 
     return () => {
       clearInterval(stepInterval);
       clearInterval(progressInterval);
     };
-  }, [analysis]);
+  }, [analysis, error]);
 
   if (error) {
     return (
@@ -61,13 +72,13 @@ export default function Analyze() {
             <span className="text-2xl">⚠</span>
           </div>
           <h2 className="text-lg font-semibold mb-2">Analysis Failed</h2>
-          <p className="text-[13px] text-muted-foreground mb-6">{error}</p>
+          <p className="text-[13px] text-muted-foreground mb-6">AI analysis failed. Showing sample report.</p>
           <div className="flex gap-3 justify-center">
             <Button variant="outline" onClick={() => navigate("/")}>
               Back to Home
             </Button>
-            <Button onClick={() => runAnalysis(idea)}>
-              Try Again
+            <Button onClick={() => navigate("/dashboard")}>
+              Go to Dashboard
             </Button>
           </div>
         </div>

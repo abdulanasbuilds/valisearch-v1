@@ -42,5 +42,5 @@ export function useRevealAll(selector = ".reveal") {
 
     elements.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
-  }, []);
+  }, [selector]);
 }

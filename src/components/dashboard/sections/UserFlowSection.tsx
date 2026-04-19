@@ -94,7 +94,9 @@ export function UserFlowSection() {
   return <UserFlowSectionInner analysis={analysis} />;
 }
 
-function UserFlowSectionInner({ analysis }: { analysis: any }) {
+import { type ValiSearchAnalysis } from "@/types/analysis";
+
+function UserFlowSectionInner({ analysis }: { analysis: ValiSearchAnalysis }) {
   const { user_flow, product_strategy } = analysis;
 
   const initial = useMemo(
