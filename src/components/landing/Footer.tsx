@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { Twitter, Linkedin, Github, Youtube, Instagram, TrendingUp } from "lucide-react";
 
+const ABDUL_PHOTO = "https://p16-common-sign.tiktokcdn.com/tos-maliva-avt-0068/5bdbb67e8b05c8e5e58697d616ab66ad~tplv-tiktokx-cropcenter:1080:1080.jpeg";
+
 const SOCIALS = [
   { icon: Twitter, label: "Twitter/X", href: "https://x.com/abdulanasbuilds" },
   { icon: Linkedin, label: "LinkedIn", href: "https://linkedin.com/in/abdulanasbuilds" },
@@ -24,10 +26,12 @@ export function Footer() {
       <div className="max-w-[1200px] mx-auto px-5">
         {/* Built By Section */}
         <div className="flex flex-col items-center justify-center mb-20">
-          <div className="w-16 h-16 rounded-full bg-white/[0.03] border border-white/10 flex items-center justify-center mb-6">
-            <span className="text-2xl">👤</span>
-          </div>
-          <h3 className="text-lg font-bold text-white mb-2">Built by Abdul Anas</h3>
+          <img 
+            src={ABDUL_PHOTO} 
+            alt="Abdul Anas" 
+            className="w-20 h-20 rounded-full object-cover mb-5 border-2 border-white/20"
+          />
+          <h3 className="text-lg font-bold text-white mb-2">Abdul Anas</h3>
           <p className="text-sm text-white/40 mb-6 text-center max-w-md">
             Founder & maker behind ValiSearch. Building tools for the next generation of founders.
           </p>
