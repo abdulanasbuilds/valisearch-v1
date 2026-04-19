@@ -3,35 +3,32 @@ import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowRight, PlayCircle } from "lucide-react";
 import { DashboardMockup } from "./DashboardMockup";
+import { AuthGateModal } from '@/components/auth/AuthGateModal'
 import { useAnalysisStore } from '@/store/useAnalysisStore';
 import { useUserStore } from '@/store/useUserStore';
 import { sanitizeIdea } from '@/lib/sanitize';
 import { MAX_IDEA_LENGTH } from '@/lib/constants';
 import { toast } from 'sonner';
 
-import { SmartScreenshot } from "./SmartScreenshot";
-
 export function HeroSection() {
   const [idea, setIdea] = useState('');
   const [isFocused, setIsFocused] = useState(false);
+  const [showAuthGate, setShowAuthGate] = useState(false);
   const navigate = useNavigate();
   const { runAnalysis, isAnalyzing } = useAnalysisStore();
   const { isAuthenticated } = useUserStore();
 
   const handleSubmit = async () => {
     if (idea.trim().length < 20) {
-      toast.error('Please describe your idea in at least 20 characters.');
+      toast.error('Please describe your idea in more detail.');
       return;
     }
-    
+
     if (!isAuthenticated) {
-      // Store idea in sessionStorage so we can restore it after login
-      sessionStorage.setItem('pending-idea', idea);
-      toast.info('Please sign in to validate your idea.');
-      navigate('/login');
+      setShowAuthGate(true);
       return;
     }
-    
+
     const sanitized = sanitizeIdea(idea);
     navigate('/analyze');
     await runAnalysis(sanitized);
@@ -161,6 +158,14 @@ export function HeroSection() {
           </motion.div>
         </div>
       </div>
+
+      {showAuthGate && (
+        <AuthGateModal
+          idea={idea}
+          onClose={() => setShowAuthGate(false)}
+          onAuthSuccess={() => {}}
+        />
+      )}
     </section>
   );
 }

@@ -1,54 +1,59 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { getSupabase } from "@/lib/supabase";
-import { Loader2 } from "lucide-react";
-import { toast } from "sonner";
-import { useAnalysisStore } from "@/store/useAnalysisStore";
+import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { getSupabase } from '@/lib/supabase'
+import { useAnalysisStore } from '@/store/useAnalysisStore'
+import { toast } from 'sonner'
 
-/**
- * Handles Supabase auth callback (email confirmation, OAuth redirect).
- * Redirects to /dashboard on success, /login on failure.
- */
+const PENDING_IDEA_KEY = 'valisearch_pending_idea'
+
 export default function AuthCallback() {
-  const navigate = useNavigate();
-  const runAnalysis = useAnalysisStore((s) => s.runAnalysis);
+  const navigate = useNavigate()
+  const { runAnalysis } = useAnalysisStore()
 
   useEffect(() => {
-    const supabase = getSupabase();
-    if (!supabase) {
-      navigate("/login");
-      return;
+    const handleCallback = async () => {
+      try {
+        const supabase = getSupabase()
+        if (!supabase) throw new Error('Supabase not configured')
+        
+        const { data, error } = await supabase.auth.exchangeCodeForSession(window.location.search)
+
+        if (error) {
+          console.error('Auth callback error:', error)
+          navigate('/login?error=confirmation_failed')
+          return
+        }
+
+        if (!data.session) {
+          navigate('/login')
+          return
+        }
+
+        const pendingIdea = localStorage.getItem(PENDING_IDEA_KEY)
+
+        if (pendingIdea && pendingIdea.trim().length > 0) {
+          localStorage.removeItem(PENDING_IDEA_KEY)
+          toast.success('Analysis ready!')
+          navigate('/analyze')
+          setTimeout(async () => {
+            await runAnalysis(pendingIdea.trim())
+          }, 300)
+        } else {
+          navigate('/workspace')
+        }
+      } catch (err) {
+        console.error('Callback error:', err)
+        navigate('/login')
+      }
     }
 
-    const timer = setTimeout(async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        toast.success("Email confirmed! Welcome to ValiSearch.");
-        
-        const pendingIdea = sessionStorage.getItem("pending-idea");
-        
-        if (pendingIdea) {
-          sessionStorage.removeItem("pending-idea");
-          navigate("/analyze", { replace: true });
-          runAnalysis(pendingIdea);
-        } else {
-          // Ideally check onboarding status, defaulting to onboarding
-          navigate("/onboarding", { replace: true });
-        }
-      } else {
-        navigate("/login", { replace: true });
-      }
-    }, 1500);
-
-    return () => clearTimeout(timer);
-  }, [navigate, runAnalysis]);
+    handleCallback()
+  }, [navigate, runAnalysis])
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center">
-      <div className="text-center">
-        <Loader2 className="h-8 w-8 animate-spin text-white/40 mx-auto mb-4" />
-        <p className="text-sm text-white/40">Confirming your account...</p>
-      </div>
+    <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-4">
+      <div className="w-8 h-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
+      <p className="text-muted-foreground text-sm">Confirming your account...</p>
     </div>
-  );
+  )
 }
