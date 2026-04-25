@@ -195,6 +195,15 @@ const PILLAR_NOTES: Record<string, string> = {
   execution_complexity:    "Higher = harder to build (caution)",
 };
 
+const LEGACY_QUICK_LINKS = [
+  { label: "Competitors", path: "competitors" },
+  { label: "Market sizing", path: "market" },
+  { label: "Pricing tiers", path: "monetization" },
+  { label: "Sprint board", path: "kanban" },
+  { label: "Tech stack", path: "tech-stack" },
+  { label: "Build mode", path: "build-mode" },
+];
+
 function LegacyOverviewSection() {
   const analysis = useAnalysisStore((s) => s.analysis) as ValiSearchAnalysis;
   const navigate = useNavigate();
@@ -256,6 +265,24 @@ function LegacyOverviewSection() {
           )
         )}
       </div>
+
+      {/* Quick nav */}
+      <SectionCard title="Explore Report">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+          {LEGACY_QUICK_LINKS.map(({ label, path }) => (
+            <button
+              key={path}
+              onClick={() => navigate(`/dashboard/${path}`)}
+              className="group flex items-center justify-between px-3.5 py-2.5 rounded-lg border border-white/[0.07] bg-white/[0.02] hover:bg-white/[0.05] hover:border-white/[0.12] transition-all text-left"
+            >
+              <span className="text-[12.5px] font-medium text-muted-foreground group-hover:text-foreground transition-colors">
+                {label}
+              </span>
+              <ArrowRight className="h-3 w-3 text-muted-foreground/30 group-hover:text-muted-foreground group-hover:translate-x-0.5 transition-all" />
+            </button>
+          ))}
+        </div>
+      </SectionCard>
 
       <SectionCard title="Final Verdict">
         <p className="text-[13px] leading-relaxed text-muted-foreground">{final_verdict.quick_summary}</p>

@@ -33,36 +33,37 @@ export default function Workspace() {
       navigate('/login?returnUrl=/workspace')
       return
     }
+    const supabase = getSupabase()
+    
+    const fetchAnalyses = async () => {
+      setIsLoading(true)
+      try {
+        if (!supabase) throw new Error('Supabase not configured')
+        
+        const { data, error } = await supabase
+          .from('analysis')
+          .select('id, created_at, overall_score, data_source, ideas(idea_text, title)')
+          .eq('user_id', user!.id)
+          .order('created_at', { ascending: false })
+
+        if (error) throw error
+        setAnalyses(data ?? [])
+      } catch (err) {
+        console.error('Failed to fetch analyses:', err)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    const fetchCredits = async () => {
+      if (!supabase) return
+      const { data } = await supabase.from('credits').select('balance').eq('user_id', user!.id).single()
+      if (data) setCredits(data.balance)
+    }
+
     fetchAnalyses()
     fetchCredits()
-  }, [isAuthenticated])
-
-  const supabase = getSupabase()
-  const fetchAnalyses = async () => {
-    setIsLoading(true)
-    try {
-      if (!supabase) throw new Error('Supabase not configured')
-      
-      const { data, error } = await supabase
-        .from('analysis')
-        .select('id, created_at, overall_score, data_source, ideas(idea_text, title)')
-        .eq('user_id', user!.id)
-        .order('created_at', { ascending: false })
-
-      if (error) throw error
-      setAnalyses(data ?? [])
-    } catch (err) {
-      console.error('Failed to fetch analyses:', err)
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const fetchCredits = async () => {
-    if (!supabase) return
-    const { data } = await supabase.from('credits').select('balance').eq('user_id', user!.id).single()
-    if (data) setCredits(data.balance)
-  }
+  }, [isAuthenticated, navigate, user])
 
   const handleValidate = async (type: 'quick' | 'full') => {
     if (idea.trim().length < 20) {

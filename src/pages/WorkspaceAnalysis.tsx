@@ -16,34 +16,35 @@ export default function WorkspaceAnalysis() {
 
   useEffect(() => {
     if (!id || !user) return
-    loadAnalysis()
-  }, [id, user])
 
-  const loadAnalysis = async () => {
-    setIsLoading(true)
-    try {
-      const supabase = getSupabase()
-      if (!supabase) throw new Error('Supabase not configured')
-      
-      const { data, error } = await supabase
-        .from('analysis')
-        .select('*, ideas(idea_text, title)')
-        .eq('id', id)
-        .eq('user_id', user!.id)
-        .single()
+    const loadAnalysis = async () => {
+      setIsLoading(true)
+      try {
+        const supabase = getSupabase()
+        if (!supabase) throw new Error('Supabase not configured')
+        
+        const { data, error } = await supabase
+          .from('analysis')
+          .select('*, ideas(idea_text, title)')
+          .eq('id', id)
+          .eq('user_id', user.id)
+          .single()
 
-      if (error || !data) {
+        if (error || !data) {
+          setNotFound(true)
+          return
+        }
+
+        setAnalysis(data.result_json)
+      } catch (err) {
         setNotFound(true)
-        return
+      } finally {
+        setIsLoading(false)
       }
-
-      setAnalysis(data.result_json)
-    } catch (err) {
-      setNotFound(true)
-    } finally {
-      setIsLoading(false)
     }
-  }
+    
+    loadAnalysis()
+  }, [id, user, setAnalysis])
 
   if (isLoading) return <DashboardSkeleton />
 

@@ -180,10 +180,10 @@ export default function Dashboard() {
     }
     
     // Legacy export
-    if (format === "json") return downloadReportJson(analysis as any);
-    if (format === "md")   return downloadReportMarkdown(analysis as any);
-    if (format === "pdf")  return downloadReportPdf(analysis as any);
-    return downloadReport(analysis as any);
+    if (format === "json") return downloadReportJson(analysis as import("@/types/analysis").ValiSearchAnalysis);
+    if (format === "md")   return downloadReportMarkdown(analysis as import("@/types/analysis").ValiSearchAnalysis);
+    if (format === "pdf")  return downloadReportPdf(analysis as import("@/types/analysis").ValiSearchAnalysis);
+    return downloadReport(analysis as import("@/types/analysis").ValiSearchAnalysis);
   };
 
   return (

@@ -67,10 +67,8 @@ export const useAnalysisStore = create<AnalysisState>((set) => ({
 
     toast.info(`${creditCost} credit${creditCost > 1 ? "s" : ""} will be used for this analysis`);
     
-    // deduct the correct amount
-    for(let i=0; i<creditCost; i++) {
-        useCreditStore.getState().deductCredit();
-    }
+    // deduct locally (edge function deducts from DB)
+    useCreditStore.getState().deductCredit(creditCost);
 
     // Record attempt for rate limiting
     recordAnalysisAttempt();

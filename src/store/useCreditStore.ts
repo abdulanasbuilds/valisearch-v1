@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { getUserCredits, deductCredit as dbDeductCredit } from "@/services/database.service";
+import { getUserCredits } from "@/services/database.service";
 import { useUserStore } from "@/store/useUserStore";
 
 interface CreditState {
@@ -8,9 +8,9 @@ interface CreditState {
   isAdmin: boolean;
   showUpgradeModal: boolean;
 
-  deductCredit: () => boolean;
+  deductCredit: (amount?: number) => boolean;
   setShowUpgradeModal: (v: boolean) => void;
-  hasCredits: () => boolean;
+  hasCredits: (amount?: number) => boolean;
   loadCreditsFromDB: () => Promise<void>;
 }
 
@@ -23,22 +23,17 @@ export const useCreditStore = create<CreditState>((set, get) => ({
   isAdmin: false,
   showUpgradeModal: false,
 
-  hasCredits: () => get().credits > 0,
+  hasCredits: (amount = 1) => get().credits >= amount,
 
-  deductCredit: () => {
+  deductCredit: (amount = 1) => {
     const { credits } = get();
-    if (credits <= 0) {
+    if (credits < amount) {
       set({ showUpgradeModal: true });
       return false;
     }
-    set({ credits: credits - 1 });
-
-    // Also deduct from DB asynchronously
-    const user = useUserStore.getState().user;
-    if (user) {
-      dbDeductCredit(user.id).catch(console.warn);
-    }
-
+    set({ credits: credits - amount });
+    // Note: Actual DB deduction happens in the Edge Function (analyze / analyze-v2) 
+    // to prevent double-deduction and ensure atomic transactions.
     return true;
   },
 
