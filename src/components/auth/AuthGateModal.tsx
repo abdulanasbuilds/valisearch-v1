@@ -38,14 +38,17 @@ export function AuthGateModal({
 
   const schema = tab === 'signup' ? signupSchema : signinSchema
 
+  type FormData = z.infer<typeof signupSchema> & z.infer<typeof signinSchema>;
+
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm({ resolver: zodResolver(schema) })
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } = useForm<FormData>({ resolver: zodResolver(schema) as any })
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: FormData) => {
     setIsLoading(true)
     try {
       const supabase = getSupabase()
@@ -121,16 +124,16 @@ export function AuthGateModal({
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
           <div>
             <input {...register('email')} type="email" placeholder="Email address" className="w-full px-4 py-3 bg-white/[0.04] border border-white/[0.08] rounded-xl text-foreground text-sm placeholder:text-muted-foreground/50 outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition-colors" />
-            {(errors as any).email && <p className="text-red-400 text-xs mt-1">{(errors as any).email.message}</p>}
+            {errors.email && <p className="text-red-400 text-xs mt-1">{errors.email.message as string}</p>}
           </div>
           <div>
             <input {...register('password')} type="password" placeholder="Password" className="w-full px-4 py-3 bg-white/[0.04] border border-white/[0.08] rounded-xl text-foreground text-sm placeholder:text-muted-foreground/50 outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition-colors" />
-            {(errors as any).password && <p className="text-red-400 text-xs mt-1">{(errors as any).password.message}</p>}
+            {errors.password && <p className="text-red-400 text-xs mt-1">{errors.password.message as string}</p>}
           </div>
           {tab === 'signup' && (
             <div>
               <input {...register('confirm')} type="password" placeholder="Confirm password" className="w-full px-4 py-3 bg-white/[0.04] border border-white/[0.08] rounded-xl text-foreground text-sm placeholder:text-muted-foreground/50 outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition-colors" />
-              {(errors as any).confirm && <p className="text-red-400 text-xs mt-1">{(errors as any).confirm.message}</p>}
+              {errors.confirm && <p className="text-red-400 text-xs mt-1">{errors.confirm.message as string}</p>}
             </div>
           )}
           <button type="submit" disabled={isLoading} className="w-full py-3 bg-primary text-white font-semibold rounded-xl text-sm hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-1">

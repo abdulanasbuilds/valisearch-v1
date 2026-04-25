@@ -164,7 +164,7 @@ export default function Workspace() {
       </div>
 
       {showAuthGate && (
-        <AuthGateModal idea={idea} onClose={() => setShowAuthGate(false)} onAuthSuccess={() => {}} />
+        <AuthGateModal idea={idea} onClose={() => setShowAuthGate(false)} onAuthSuccess={() => setShowAuthGate(false)} />
       )}
     </div>
   )

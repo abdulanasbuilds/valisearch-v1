@@ -51,7 +51,7 @@ const App = () => (
                 <Route path="/workspace" element={<ProtectedRoute><Workspace /></ProtectedRoute>} />
                 <Route path="/workspace/:id" element={<ProtectedRoute><WorkspaceAnalysis /></ProtectedRoute>} />
                 
-                <Route path="/dashboard/*" element={<ProtectedRoute><ErrorBoundary section="Dashboard"><Dashboard /></ErrorBoundary></ProtectedRoute>} />
+                <Route path="/dashboard/*" element={<ProtectedRoute><Navigate to="/workspace" replace /></ProtectedRoute>} />
 
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>

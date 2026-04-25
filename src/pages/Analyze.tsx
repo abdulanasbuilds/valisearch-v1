@@ -27,11 +27,11 @@ export default function Analyze() {
     }
   }, [idea, analysis, isAnalyzing, error, runAnalysis]);
 
-  // Navigate to dashboard when analysis is complete
+  // Navigate to workspace when analysis is complete
   useEffect(() => {
     if (analysis && !isAnalyzing) {
       setProgress(100);
-      const timer = setTimeout(() => navigate("/dashboard"), 800);
+      const timer = setTimeout(() => navigate("/workspace"), 800);
       return () => clearTimeout(timer);
     }
   }, [analysis, isAnalyzing, navigate]);
@@ -39,7 +39,7 @@ export default function Analyze() {
   useEffect(() => {
     if (error) {
       setProgress(100);
-      const timer = setTimeout(() => navigate("/dashboard"), 3000);
+      const timer = setTimeout(() => navigate("/workspace"), 3000);
       return () => clearTimeout(timer);
     }
   }, [error, navigate]);
@@ -83,8 +83,8 @@ export default function Analyze() {
             <Button variant="outline" onClick={() => navigate("/")}>
               Back to Home
             </Button>
-            <Button onClick={() => navigate("/dashboard")}>
-              Go to Dashboard
+            <Button onClick={() => navigate("/workspace")}>
+              Go to Workspace
             </Button>
           </div>
         </div>
@@ -139,7 +139,7 @@ export default function Analyze() {
         variant="ghost"
         size="sm"
         className="mt-8 text-[12px] text-muted-foreground/40 hover:text-muted-foreground h-7"
-        onClick={() => navigate("/dashboard")}
+        onClick={() => navigate("/workspace")}
       >
         Skip to results →
       </Button>

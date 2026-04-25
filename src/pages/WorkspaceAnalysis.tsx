@@ -3,6 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { getSupabase } from '@/lib/supabase'
 import { useUserStore } from '@/store/useUserStore'
 import { useAnalysisStore } from '@/store/useAnalysisStore'
+import Dashboard from '@/pages/Dashboard'
+import { DashboardSkeleton } from '@/components/dashboard/DashboardSkeleton'
 
 export default function WorkspaceAnalysis() {
   const { id } = useParams<{ id: string }>()
@@ -43,7 +45,7 @@ export default function WorkspaceAnalysis() {
     }
   }
 
-  if (isLoading) return <div className="min-h-screen bg-background flex items-center justify-center"><div className="w-8 h-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin" /></div>
+  if (isLoading) return <DashboardSkeleton />
 
   if (notFound) {
     return (
@@ -61,11 +63,7 @@ export default function WorkspaceAnalysis() {
       <div className="border-b border-white/[0.06] px-4 py-3 bg-[#0A0A0A]">
         <button onClick={() => navigate('/workspace')} className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1.5">← Back to workspace</button>
       </div>
-      <div className="p-8 text-center">
-        <h2 className="text-xl font-bold mb-2">Analysis Dashboard</h2>
-        <p className="text-muted-foreground">Full 18-section report would load here.</p>
-        <p className="text-sm text-primary mt-4">ID: {id}</p>
-      </div>
+      <Dashboard />
     </div>
   )
 }

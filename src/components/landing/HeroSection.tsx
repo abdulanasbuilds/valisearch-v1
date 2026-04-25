@@ -163,7 +163,7 @@ export function HeroSection() {
         <AuthGateModal
           idea={idea}
           onClose={() => setShowAuthGate(false)}
-          onAuthSuccess={() => {}}
+          onAuthSuccess={() => setShowAuthGate(false)}
         />
       )}
     </section>
