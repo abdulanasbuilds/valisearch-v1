@@ -12,22 +12,26 @@ const Blog = () => {
       
       <main className="pt-32 pb-24">
         <div className="section-container max-w-5xl mx-auto px-6">
-          <header className="mb-16">
+          <header className="mb-24 relative">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
-                Insights for <span className="text-zinc-500">Builders.</span>
+              <h1 className="text-5xl md:text-7xl font-bold tracking-tighter mb-8">
+                The <span className="text-zinc-600">Builder's</span> Diary.
               </h1>
-              <p className="text-lg text-zinc-400 max-w-2xl leading-relaxed">
-                Practical guides, market deep-dives, and founder stories to help you build with more certainty and less noise.
+              <p className="text-xl text-zinc-400 max-w-xl leading-relaxed font-medium">
+                Hard truths about validation, building, and scaling in public. No fluff, just the "dirty" reality.
               </p>
             </motion.div>
+            {/* Hand-drawn accent */}
+            <svg className="absolute -bottom-8 left-0 opacity-10" width="200" height="20" viewBox="0 0 200 20">
+              <path d="M0 10 Q 50 0, 100 10 T 200 10" fill="none" stroke="white" strokeWidth="2" />
+            </svg>
           </header>
 
-          <div className="grid gap-12 md:grid-cols-2">
+          <div className="grid gap-16 md:grid-cols-2">
             {BLOG_POSTS.map((post, i) => (
               <motion.article
                 key={post.slug}
@@ -38,62 +42,65 @@ const Blog = () => {
               >
                 <Link to={`/blog/${post.slug}`} className="absolute inset-0 z-10" />
                 
-                <div className="relative aspect-[16/9] mb-6 overflow-hidden rounded-2xl border border-white/5 bg-zinc-900 group-hover:border-white/10 transition-colors">
+                <div className="relative aspect-[4/3] mb-8 overflow-hidden rounded-[32px] border border-white/5 bg-zinc-900 group-hover:border-white/10 transition-all duration-500">
                   <div className="absolute inset-0 bg-gradient-to-br from-zinc-800 to-zinc-950 flex items-center justify-center">
-                    <span className="text-zinc-700 font-bold text-xl uppercase tracking-[0.2em]">{post.category}</span>
+                    <div className="text-zinc-700/50 font-black text-6xl uppercase tracking-tighter select-none rotate-12">
+                      {post.category}
+                    </div>
                   </div>
-                  {/* Subtle hover glow */}
-                  <div className="absolute inset-0 bg-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  {/* Grainy texture or organic overlay */}
+                  <div className="absolute inset-0 bg-white/[0.02] mix-blend-overlay" />
+                  <div className="absolute inset-0 bg-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                 </div>
 
-                <div className="flex items-center gap-4 text-xs font-medium text-zinc-500 mb-4">
-                  <span className="px-2.5 py-0.5 rounded-full border border-white/10 bg-white/5 text-zinc-300">
+                <div className="flex items-center gap-6 text-[10px] font-bold text-zinc-500 mb-6 uppercase tracking-[0.2em]">
+                  <span className="text-white px-2 py-1 bg-white/5 rounded">
                     {post.category}
                   </span>
-                  <div className="flex items-center gap-1.5">
-                    <Calendar className="w-3.5 h-3.5" />
+                  <div className="flex items-center gap-2">
                     {new Date(post.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                   </div>
-                  <div className="flex items-center gap-1.5">
-                    <Clock className="w-3.5 h-3.5" />
+                  <div className="flex items-center gap-2">
                     {post.readTime}
                   </div>
                 </div>
 
-                <h2 className="text-2xl font-bold text-white mb-4 group-hover:text-zinc-300 transition-colors leading-tight">
+                <h2 className="text-3xl font-bold text-white mb-6 group-hover:text-zinc-300 transition-colors leading-[1.1] tracking-tight">
                   {post.title}
                 </h2>
                 
-                <p className="text-zinc-400 text-sm leading-relaxed mb-6 line-clamp-3">
+                <p className="text-zinc-500 text-lg leading-relaxed mb-8 line-clamp-2 font-medium">
                   {post.excerpt}
                 </p>
 
-                <div className="mt-auto flex items-center gap-2 text-sm font-bold text-white">
-                  Read article 
-                  <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
+                <div className="mt-auto flex items-center gap-3 text-sm font-bold text-white uppercase tracking-widest">
+                  Read story 
+                  <div className="w-10 h-[1px] bg-white group-hover:w-16 transition-all duration-500" />
                 </div>
               </motion.article>
             ))}
           </div>
 
           {/* Newsletter / CTA */}
-          <div className="mt-32 p-8 md:p-12 rounded-[32px] border border-white/5 bg-zinc-900/40 backdrop-blur-sm relative overflow-hidden">
-            <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-64 h-64 bg-blue-500/10 blur-[100px] rounded-full" />
+          <div className="mt-40 p-12 md:p-20 rounded-[48px] border border-white/5 bg-zinc-900/20 backdrop-blur-sm relative overflow-hidden text-center md:text-left">
+            <div className="absolute top-0 right-0 -translate-y-1/3 translate-x-1/3 w-96 h-96 bg-zinc-800/20 blur-[120px] rounded-full" />
             
-            <div className="relative z-10 max-w-xl">
-              <h3 className="text-2xl font-bold mb-4">Never miss an insight.</h3>
-              <p className="text-zinc-400 mb-8 leading-relaxed">
-                Join 2,000+ founders who get our weekly teardowns of successful startups and validation frameworks.
-              </p>
+            <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-12">
+              <div className="max-w-xl">
+                <h3 className="text-4xl md:text-5xl font-bold mb-6 tracking-tighter">Build in public.</h3>
+                <p className="text-xl text-zinc-500 mb-0 leading-relaxed font-medium">
+                  Join 2,000+ humans who get our unfiltered weekly letters on strategy and growth.
+                </p>
+              </div>
               
-              <div className="flex flex-col sm:flex-row gap-3">
+              <div className="w-full md:w-auto flex flex-col sm:flex-row gap-4">
                 <input 
                   type="email" 
-                  placeholder="Enter your email" 
-                  className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 outline-none focus:border-white/20 transition-colors"
+                  placeholder="Your personal email" 
+                  className="w-full sm:w-64 bg-white/5 border border-white/10 rounded-2xl px-6 py-4 outline-none focus:border-white/20 transition-colors font-medium"
                 />
-                <button className="bg-white text-black font-bold px-6 py-3 rounded-xl hover:bg-zinc-200 transition-all">
-                  Subscribe
+                <button className="bg-white text-black font-black px-10 py-4 rounded-2xl hover:bg-zinc-200 transition-all uppercase tracking-widest text-xs">
+                  Join us
                 </button>
               </div>
             </div>
