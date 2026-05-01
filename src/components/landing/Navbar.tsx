@@ -13,9 +13,10 @@ export function Navbar() {
   }, [scrollY]);
 
   const navLinks = [
-    { name: "Features", href: "#features" },
-    { name: "Methodology", href: "#how-it-works" },
-    { name: "Pricing", href: "#pricing" },
+    { name: "Features", href: "/#features" },
+    { name: "Methodology", href: "/#how-it-works" },
+    { name: "Pricing", href: "/#pricing" },
+    { name: "Insights", href: "/blog" },
   ];
 
   return (

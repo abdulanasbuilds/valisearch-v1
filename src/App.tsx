@@ -20,6 +20,8 @@ const WorkspaceAnalysis = lazy(() => import("./pages/WorkspaceAnalysis"))
 const Analyze = lazy(() => import("./pages/Analyze"))
 const Onboarding = lazy(() => import("./pages/Onboarding"))
 const Dashboard = lazy(() => import("./pages/Dashboard"))
+const Blog = lazy(() => import("./pages/Blog"))
+const BlogPost = lazy(() => import("./pages/BlogPost"))
 
 const queryClient = new QueryClient();
 
@@ -49,6 +51,8 @@ const App = () => (
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/auth/callback" element={<AuthCallback />} />
+                <Route path="/blog" element={<Blog />} />
+                <Route path="/blog/:slug" element={<BlogPost />} />
 
                 <Route path="/analyze" element={<ProtectedRoute><Analyze /></ProtectedRoute>} />
                 <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
