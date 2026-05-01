@@ -42,13 +42,23 @@ export function Navbar() {
             
             <div className="hidden md:flex items-center gap-8">
               {navLinks.map((link) => (
-                <a 
-                  key={link.name}
-                  href={link.href} 
-                  className="text-[13px] font-semibold text-zinc-400 hover:text-white transition-colors duration-300"
-                >
-                  {link.name}
-                </a>
+                link.href.startsWith('/') && !link.href.includes('#') ? (
+                  <Link 
+                    key={link.name}
+                    to={link.href} 
+                    className="text-[13px] font-semibold text-zinc-400 hover:text-white transition-colors duration-300"
+                  >
+                    {link.name}
+                  </Link>
+                ) : (
+                  <a 
+                    key={link.name}
+                    href={link.href} 
+                    className="text-[13px] font-semibold text-zinc-400 hover:text-white transition-colors duration-300"
+                  >
+                    {link.name}
+                  </a>
+                )
               ))}
               <a 
                 href="https://github.com/abdulanasbuilds/valisearch" 
@@ -99,14 +109,25 @@ export function Navbar() {
           >
             <div className="flex flex-col gap-8">
               {navLinks.map((link) => (
-                <a 
-                  key={link.name}
-                  href={link.href} 
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="text-2xl font-bold text-white hover:text-zinc-400 transition-colors"
-                >
-                  {link.name}
-                </a>
+                link.href.startsWith('/') && !link.href.includes('#') ? (
+                  <Link 
+                    key={link.name}
+                    to={link.href} 
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="text-2xl font-bold text-white hover:text-zinc-400 transition-colors"
+                  >
+                    {link.name}
+                  </Link>
+                ) : (
+                  <a 
+                    key={link.name}
+                    href={link.href} 
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="text-2xl font-bold text-white hover:text-zinc-400 transition-colors"
+                  >
+                    {link.name}
+                  </a>
+                )
               ))}
               <div className="h-px w-full bg-white/10 my-2" />
               <Link 
