@@ -1,97 +1,48 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=DM+Serif+Display:italic&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --background: #0A0A0A;
-  --foreground: #F0F0F0;
-  --surface: #111111;
-  --elevated: #161616;
-  --primary: #6C47FF;
-  --primary-glow: rgba(108, 71, 255, 0.15);
-  
-  --text-primary: #F0F0F0;
-  --text-secondary: #888888;
-  --text-muted: #444444;
-  
-  --border-subtle: rgba(255, 255, 255, 0.04);
-  --border-default: rgba(255, 255, 255, 0.08);
+  --background: #09090b;
+  --foreground: #fafafa;
+  --surface: #18181b;
+  --elevated: #27272a;
+  --primary: #18181b;
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-default: rgba(255, 255, 255, 0.1);
 }
 
 @layer base {
   body {
-    @apply bg-[#0A0A0A] text-[#F0F0F0] font-sans antialiased selection:bg-[#6C47FF]/30;
-    background-image: radial-gradient(circle at 50% -20%, #1a152e 0%, #0a0a0a 60%);
-  }
-
-  /* Premium Grain Effect */
-  body::before {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-    opacity: 0.025;
-    pointer-events: none;
-    z-index: 9999;
+    @apply bg-zinc-950 text-zinc-100 font-sans antialiased;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
 }
 
 @layer components {
   .section-container {
-    @apply max-w-[1200px] mx-auto px-6;
+    @apply max-w-5xl mx-auto px-4;
   }
 
   .premium-card {
-    @apply rounded-2xl border border-white/[0.08] bg-[#111111]/80 backdrop-blur-md shadow-[0_8px_32px_rgba(0,0,0,0.4)];
-    background-image: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, transparent 100%);
-  }
-
-  .label-allcaps {
-    @apply text-[11px] font-bold uppercase tracking-[0.2em] text-[#6C47FF] flex items-center gap-2;
-  }
-  
-  .label-allcaps::before {
-    content: "";
-    @apply w-1.5 h-1.5 rounded-full bg-[#6C47FF];
-  }
-
-  .display-headline {
-    @apply text-[64px] lg:text-[88px] font-black leading-[0.95] tracking-[-0.04em] text-white;
-    filter: drop-shadow(0 20px 40px rgba(0,0,0,0.5));
-  }
-
-  .text-serif-italic {
-    font-family: 'DM Serif Display', serif;
-    @apply italic font-normal text-white/90;
-  }
-
-  .glow-purple {
-    background: radial-gradient(600px circle at var(--x, 50%) var(--y, 50%), rgba(108, 71, 255, 0.12), transparent 40%);
-  }
-
-  .mockup-shadow {
-    box-shadow: 0 0 0 1px rgba(255,255,255,0.08), 0 30px 100px -20px rgba(0,0,0,0.8), 0 50px 120px -30px rgba(108,71,255,0.15);
-  }
-
-  .glass-button {
-    @apply relative overflow-hidden transition-all duration-300;
-  }
-  
-  .glass-button::after {
-    content: "";
-    @apply absolute inset-0 bg-white opacity-0 hover:opacity-[0.08] transition-opacity;
+    @apply rounded-xl border border-zinc-800 bg-zinc-900/50;
   }
 }
 
-/* Custom Utilities */
-.bg-grid-white {
-  background-size: 40px 40px;
-  background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+/* Hide scrollbar but allow scrolling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #3f3f46;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #52525b;
 }

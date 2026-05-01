@@ -10,6 +10,8 @@ import { useUserStore } from "@/store/useUserStore";
 import { DashboardSkeleton } from "@/components/dashboard/DashboardSkeleton";
 
 const Index = lazy(() => import("./pages/Index"))
+const Terms = lazy(() => import("./pages/Terms"))
+const Privacy = lazy(() => import("./pages/Privacy"))
 const Login = lazy(() => import("./pages/Login"))
 const Register = lazy(() => import("./pages/Register"))
 const AuthCallback = lazy(() => import("./pages/AuthCallback"))
@@ -42,6 +44,8 @@ const App = () => (
             <Suspense fallback={<DashboardSkeleton />}>
               <Routes>
                 <Route path="/" element={<Index />} />
+                <Route path="/terms" element={<Terms />} />
+                <Route path="/privacy" element={<Privacy />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/auth/callback" element={<AuthCallback />} />
