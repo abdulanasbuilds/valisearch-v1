@@ -1,112 +1,193 @@
-import { motion } from "framer-motion";
-import { Brain, Globe, Layout, ChevronRight } from "lucide-react";
-import { SmartScreenshot } from "./SmartScreenshot";
-import { DashboardMockup } from "./DashboardMockup";
-import { CompetitorMockup } from "./CompetitorMockup";
-import { KanbanMockup } from "./KanbanMockup";
+import { useNavigate } from "react-router-dom";
 
-function FeatureBlock({ label, headline, body, visual, reverse = false, icon: Icon }: { label: string, headline: string, body: React.ReactNode, visual: React.ReactNode, reverse?: boolean, icon: React.ElementType }) {
+function ScoreVisual() {
+  const dims = [
+    { l: "Uniqueness", v: 78 },
+    { l: "Market demand", v: 84 },
+    { l: "Stickiness", v: 65 },
+    { l: "Monetization", v: 71 },
+    { l: "Scalability", v: 80 },
+    { l: "Complexity", v: 58 },
+  ];
+  const r = 64;
+  const c = 2 * Math.PI * r;
+  const offset = c - (72 / 100) * c;
   return (
-    <div className="py-24 md:py-40 relative overflow-hidden group reveal">
-      {/* Dynamic Background Glow */}
-      <div className={`absolute top-1/2 -translate-y-1/2 ${reverse ? 'left-[-10%]' : 'right-[-10%]'} w-[600px] h-[600px] bg-[#6C47FF]/[0.03] blur-[120px] rounded-full pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-1000 hidden md:block`} />
-      
-      {/* Precision Divider */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full md:w-[1200px] h-[1px] bg-gradient-to-r from-transparent via-white/[0.05] to-transparent" />
-      
-      <div className={`section-container grid lg:grid-cols-[1fr_1.1fr] gap-12 lg:gap-24 items-center ${reverse ? 'lg:flex-row-reverse' : ''}`}>
-        <motion.div 
-          initial={{ opacity: 0, x: reverse ? 40 : -40 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className={reverse ? 'lg:order-2' : ''}
-        >
-          <div className="flex items-center gap-4 mb-6 md:mb-8">
-            <div className="w-12 h-12 rounded-2xl bg-[#6C47FF]/10 flex items-center justify-center border border-[#6C47FF]/20">
-               <Icon className="w-6 h-6 text-[#6C47FF]" />
-            </div>
-            <span className="label-allcaps">{label}</span>
+    <div className="w-full">
+      <div className="flex items-center gap-8 mb-8">
+        <div className="relative w-[160px] h-[160px] flex-shrink-0">
+          <svg viewBox="0 0 160 160" className="w-full h-full -rotate-90">
+            <circle cx="80" cy="80" r={r} stroke="rgba(255,255,255,0.06)" strokeWidth="6" fill="none" />
+            <circle
+              cx="80"
+              cy="80"
+              r={r}
+              stroke="#6C47FF"
+              strokeWidth="6"
+              fill="none"
+              strokeLinecap="round"
+              strokeDasharray={c}
+              strokeDashoffset={offset}
+            />
+          </svg>
+          <div className="absolute inset-0 flex flex-col items-center justify-center">
+            <div className="text-[40px] font-extrabold text-[#F0F0F0] leading-none tabular-nums">72</div>
+            <div className="text-[10px] uppercase tracking-wider text-[#888888] mt-1">Score</div>
           </div>
-          
-          <h2 className="text-3xl md:text-[44px] lg:text-[54px] font-bold text-white mb-6 md:mb-8 leading-[1.1] tracking-tight">{headline}</h2>
-          <p className="text-[16px] md:text-[18px] text-[#888888] leading-relaxed max-w-[500px] mb-8 md:mb-10 font-medium">
-            {body}
-          </p>
-          
-          <button 
-            onClick={() => navigate("/register")}
-            className="flex items-center gap-2 text-[14px] font-bold text-white/40 hover:text-[#6C47FF] transition-colors group/btn"
-          >
-             EXPLORE MODULE 
-             <ChevronRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-          </button>
-        </motion.div>
-        
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className={`relative hidden md:block ${reverse ? 'lg:order-1' : ''}`}
-        >
-           {/* High-End Visual Container */}
-           <div className="premium-card p-1 mockup-shadow relative z-10 group/visual">
-              <div className="rounded-[14px] bg-[#0A0A0A] overflow-hidden border border-white/[0.05] p-6 lg:p-10 flex items-center justify-center min-h-[440px]">
-                {visual}
+        </div>
+        <div className="flex-1 space-y-2.5">
+          {dims.map((d) => (
+            <div key={d.l}>
+              <div className="flex justify-between text-[12px] mb-1">
+                <span className="text-[#888888]">{d.l}</span>
+                <span className="text-[#F0F0F0] font-mono tabular-nums">{d.v}</span>
               </div>
-              
-              {/* Corner Accents */}
-              <div className="absolute -top-px -left-px w-8 h-8 border-t border-l border-[#6C47FF]/40 rounded-tl-xl pointer-events-none" />
-              <div className="absolute -bottom-px -right-px w-8 h-8 border-b border-r border-[#6C47FF]/40 rounded-br-xl pointer-events-none" />
-           </div>
-
-           {/* Backdrop Texture */}
-           <div className="absolute inset-[-40px] bg-grid-white opacity-20 pointer-events-none z-0" />
-        </motion.div>
+              <div className="h-1 rounded-full bg-white/[0.05] overflow-hidden">
+                <div className="h-full bg-[#6C47FF] rounded-full" style={{ width: `${d.v}%` }} />
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
+    </div>
+  );
+}
+
+function MarketVisual() {
+  return (
+    <div className="w-full flex items-center justify-center">
+      <div className="relative w-full max-w-[360px] aspect-square">
+        {/* TAM */}
+        <div className="absolute inset-0 rounded-2xl border border-[#6C47FF]/30 bg-[#6C47FF]/[0.04] flex items-start justify-start p-4">
+          <div>
+            <div className="text-[10px] uppercase tracking-wider text-[#888888]">TAM</div>
+            <div className="text-[20px] font-bold text-[#F0F0F0]">$24B</div>
+          </div>
+        </div>
+        {/* SAM */}
+        <div className="absolute inset-[18%] rounded-xl border border-[#6C47FF]/40 bg-[#6C47FF]/[0.07] flex items-start justify-start p-4">
+          <div>
+            <div className="text-[10px] uppercase tracking-wider text-[#888888]">SAM</div>
+            <div className="text-[18px] font-bold text-[#F0F0F0]">$6.2B</div>
+          </div>
+        </div>
+        {/* SOM */}
+        <div className="absolute inset-[36%] rounded-lg border border-[#6C47FF]/60 bg-[#6C47FF]/[0.12] flex items-center justify-center">
+          <div className="text-center">
+            <div className="text-[10px] uppercase tracking-wider text-[#888888]">SOM</div>
+            <div className="text-[16px] font-bold text-[#F0F0F0]">$420M</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function KanbanVisual() {
+  const cols = [
+    { t: "Backlog", items: ["Auth flow", "Onboarding", "Payment integration"] },
+    { t: "In Progress", items: ["Dashboard UI", "API spec"] },
+    { t: "Done", items: ["Brand identity", "Landing page"] },
+  ];
+  return (
+    <div className="w-full grid grid-cols-3 gap-3">
+      {cols.map((col) => (
+        <div key={col.t} className="rounded-lg bg-white/[0.02] border border-white/[0.06] p-3">
+          <div className="text-[10px] uppercase tracking-wider text-[#888888] font-semibold mb-3 flex justify-between">
+            <span>{col.t}</span>
+            <span>{col.items.length}</span>
+          </div>
+          <div className="space-y-2">
+            {col.items.map((it) => (
+              <div
+                key={it}
+                className="rounded-md bg-[#161616] border border-white/[0.06] px-3 py-2.5 text-[12px] text-[#F0F0F0]"
+              >
+                {it}
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function FeatureBlock({
+  label,
+  headline,
+  body,
+  visual,
+  reverse = false,
+}: {
+  label: string;
+  headline: string;
+  body: string;
+  visual: React.ReactNode;
+  reverse?: boolean;
+}) {
+  return (
+    <div className="relative py-24">
+      <div className="section-container grid lg:grid-cols-[55%_45%] gap-12 lg:gap-20 items-center">
+        <div className={reverse ? "lg:order-2" : ""}>
+          <div className="text-[11px] font-semibold uppercase tracking-[0.1em] text-[#6C47FF] mb-5">
+            {label}
+          </div>
+          <h2
+            className="text-[36px] md:text-[48px] font-bold text-[#F0F0F0] leading-[1.1] mb-6"
+            style={{ letterSpacing: "-0.02em" }}
+          >
+            {headline}
+          </h2>
+          <p className="text-[17px] text-[#888888] leading-[1.7] max-w-[480px]">{body}</p>
+        </div>
+        <div className={reverse ? "lg:order-1" : ""}>
+          <div className="rounded-xl border border-white/[0.08] bg-[#111111] p-8">
+            {visual}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function GlowDivider() {
+  return (
+    <div className="relative h-px w-full">
+      <div
+        className="absolute left-1/2 -translate-x-1/2 -top-32 w-[800px] h-64 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(ellipse 50% 50% at 50% 50%, rgba(108,71,255,0.10) 0%, transparent 70%)",
+        }}
+      />
     </div>
   );
 }
 
 export function Features() {
   return (
-    <section id="features" className="bg-[#0A0A0A]">
-      <FeatureBlock 
-        icon={Brain}
-        label="ANALYSIS ENGINE"
-        headline="Deep technical validation."
-        body="Our engine evaluates your architecture, market positioning, and growth vectors through 18 specialized modules."
-        visual={
-          <div className="rounded-xl overflow-hidden border border-white/[0.05] bg-white/[0.01] p-2">
-            <DashboardMockup />
-          </div>
-        }
+    <section id="features">
+      <FeatureBlock
+        label="Validation Engine"
+        headline="AI that thinks like a serial founder"
+        body="ValiSearch scores your idea across 6 dimensions — uniqueness, market demand, stickiness, monetization potential, scalability, and technical complexity. Get a 0-100 confidence score with specific reasoning for every dimension."
+        visual={<ScoreVisual />}
       />
-
-      <FeatureBlock 
+      <GlowDivider />
+      <FeatureBlock
         reverse
-        icon={Globe}
-        label="MARKET DATA"
-        headline="Global signal detection."
-        body="Access live TAM/SAM/SOM estimates and competitor signals derived from current market movements."
-        visual={
-          <div className="rounded-xl overflow-hidden border border-white/[0.05] bg-white/[0.01] p-2">
-            <CompetitorMockup />
-          </div>
-        }
+        label="Market Intelligence"
+        headline="Know your market before you spend a dollar"
+        body="Real TAM, SAM, and SOM estimates with sourced reasoning. Google Trends integration shows whether your market is growing or shrinking. Competitor landscape maps show exactly where gaps exist."
+        visual={<MarketVisual />}
       />
-
-      <FeatureBlock 
-        icon={Layout}
-        label="PLANNING"
-        headline="From strategy to sprint."
-        body="Convert your validation report into a functional product backlog ready for your development team."
-        visual={
-          <div className="rounded-xl overflow-hidden border border-white/[0.05] bg-white/[0.01] p-2">
-            <KanbanMockup />
-          </div>
-        }
+      <GlowDivider />
+      <FeatureBlock
+        label="Sprint Planner"
+        headline="Validation to build-ready in one session"
+        body="The only validation platform with a built-in Kanban sprint board. Your validated features become actionable development tasks — drag, prioritize, and export to Linear, Jira, or Notion."
+        visual={<KanbanVisual />}
       />
     </section>
   );
