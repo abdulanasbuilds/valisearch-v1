@@ -23,6 +23,7 @@ import { useAnalysisStore } from "@/store/useAnalysisStore";
 import { Plus, Trash2, RotateCcw, GripVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { KanbanTask } from "@/types/analysis";
+import type { ValiSearchAnalysis } from "@/types/analysis";
 
 const PRIORITY_COLORS: Record<string, string> = {
   high: "bg-red-500/10 text-red-400 border-red-500/20",
