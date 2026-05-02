@@ -75,7 +75,7 @@ export const useAnalysisStore = create<AnalysisState>((set) => ({
 
     set({ idea, isAnalyzing: true, error: null, analysis: null, dataSource: null });
     try {
-      const { result, source } = await analyzeIdeaV2(idea, type);
+      const { result, source } = await analyzeIdea(idea);
       set({
         analysis: result,
         dataSource: source,
