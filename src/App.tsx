@@ -22,6 +22,7 @@ const Onboarding = lazy(() => import("./pages/Onboarding"))
 const Dashboard = lazy(() => import("./pages/Dashboard"))
 const Blog = lazy(() => import("./pages/Blog"))
 const BlogPost = lazy(() => import("./pages/BlogPost"))
+const Settings = lazy(() => import("./pages/Settings"))
 
 const queryClient = new QueryClient();
 
@@ -58,6 +59,7 @@ const App = () => (
                 <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
                 <Route path="/workspace" element={<ProtectedRoute><Workspace /></ProtectedRoute>} />
                 <Route path="/workspace/:id" element={<ProtectedRoute><WorkspaceAnalysis /></ProtectedRoute>} />
+                <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
                 
                 <Route path="/dashboard/*" element={<ProtectedRoute><Navigate to="/workspace" replace /></ProtectedRoute>} />
 
