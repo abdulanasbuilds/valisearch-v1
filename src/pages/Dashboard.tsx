@@ -30,7 +30,6 @@ import { CompetitiveIntelligenceSection } from "@/components/dashboard/sections/
 import { GrowthPlaybookSection } from "@/components/dashboard/sections/GrowthPlaybookSection";
 import { ContentEngineSection } from "@/components/dashboard/sections/ContentEngineSection";
 import { ScaleRoadmapSection } from "@/components/dashboard/sections/ScaleRoadmapSection";
-import { ApiSettings } from "@/components/dashboard/ApiSettings";
 import { UpgradeModal } from "@/components/dashboard/UpgradeModal";
 import { downloadReport, downloadReportJson, downloadReportMarkdown, downloadReportPdf } from "@/utils/exportPdf";
 import { useAnalysisStore } from "@/store/useAnalysisStore";
@@ -123,11 +122,14 @@ export default function Dashboard() {
           
         if (data && data.result_json) {
           setAnalysis(data.result_json);
+          useAnalysisStore.setState({ dataSource: data.data_source as any });
         } else {
           setAnalysis(getMockAnalysis(idea || "AI-powered productivity tool"));
+          useAnalysisStore.setState({ dataSource: 'mock' });
         }
       } else {
         setAnalysis(getMockAnalysis(idea || "AI-powered productivity tool"));
+        useAnalysisStore.setState({ dataSource: 'mock' });
       }
       setLoading(false);
     }
@@ -250,7 +252,6 @@ export default function Dashboard() {
               <Route path="growth-playbook"      element={<GrowthPlaybookSection />} />
               <Route path="content-engine"       element={<ContentEngineSection />} />
               <Route path="scale-roadmap"        element={<ScaleRoadmapSection />} />
-              {isAdmin && <Route path="settings" element={<ApiSettings />} />}
               <Route path="settings" element={<Navigate to="/dashboard/overview" replace />} />
             </Routes>
           </main>

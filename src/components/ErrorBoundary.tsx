@@ -1,10 +1,12 @@
-import { Component, type ErrorInfo, type ReactNode } from "react";
-import { AlertTriangle, RefreshCw } from "lucide-react";
+"use client";
+
+import React, { Component, ErrorInfo, ReactNode } from "react";
+import { Button } from "@/components/ui/button";
+import { AlertCircle, RefreshCcw } from "lucide-react";
 
 interface Props {
   children: ReactNode;
   fallback?: ReactNode;
-  section?: string;
 }
 
 interface State {
@@ -13,45 +15,60 @@ interface State {
 }
 
 export class ErrorBoundary extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = { hasError: false, error: null };
-  }
+  public state: State = {
+    hasError: false,
+    error: null,
+  };
 
-  static getDerivedStateFromError(error: Error): State {
+  public static getDerivedStateFromError(error: Error): State {
     return { hasError: true, error };
   }
 
-  componentDidCatch(error: Error, info: ErrorInfo) {
-    console.error(`[ErrorBoundary${this.props.section ? `:${this.props.section}` : ""}]`, error, info.componentStack);
+  public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    console.error("Uncaught error:", error, errorInfo);
   }
 
-  handleReset = () => {
+  private handleReset = () => {
     this.setState({ hasError: false, error: null });
+    window.location.reload();
   };
 
-  render() {
+  public render() {
     if (this.state.hasError) {
-      if (this.props.fallback) return this.props.fallback;
+      if (this.props.fallback) {
+        return this.props.fallback;
+      }
 
       return (
-        <div className="flex flex-col items-center justify-center min-h-[200px] p-8 text-center">
-          <div className="w-12 h-12 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center mb-4">
-            <AlertTriangle className="h-6 w-6 text-red-400" />
+        <div className="min-h-[400px] flex flex-col items-center justify-center p-8 text-center animate-in fade-in duration-500">
+          <div className="w-16 h-16 rounded-2xl bg-destructive/10 flex items-center justify-center mb-6">
+            <AlertCircle className="w-8 h-8 text-destructive" />
           </div>
-          <h3 className="text-lg font-semibold text-white mb-2">
-            {this.props.section ? `${this.props.section} failed to load` : "Something went wrong"}
-          </h3>
-          <p className="text-sm text-white/40 max-w-md mb-4">
-            {this.state.error?.message || "An unexpected error occurred."}
+          <h2 className="text-2xl font-bold text-white mb-3">Something went wrong</h2>
+          <p className="text-zinc-400 max-w-md mb-8">
+            An unexpected error occurred. We've been notified and are looking into it.
           </p>
-          <button
-            onClick={this.handleReset}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-white/[0.08] bg-white/[0.03] text-sm text-white/60 hover:text-white/80 hover:bg-white/[0.06] transition-all"
-          >
-            <RefreshCw className="h-4 w-4" />
-            Try again
-          </button>
+          <div className="flex gap-4">
+            <Button 
+              onClick={this.handleReset}
+              className="bg-white text-black hover:bg-zinc-200"
+            >
+              <RefreshCcw className="w-4 h-4 mr-2" />
+              Try Again
+            </Button>
+            <Button 
+              variant="outline"
+              onClick={() => window.location.href = '/'}
+              className="border-white/10 text-white hover:bg-white/5"
+            >
+              Back to Home
+            </Button>
+          </div>
+          {process.env.NODE_ENV === 'development' && (
+            <pre className="mt-8 p-4 bg-black/50 border border-white/5 rounded-lg text-left text-xs text-destructive overflow-auto max-w-full">
+              {this.state.error?.toString()}
+            </pre>
+          )}
         </div>
       );
     }

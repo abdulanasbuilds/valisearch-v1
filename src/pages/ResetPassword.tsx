@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { requireSupabase } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase";
 import { Lock, ArrowRight, Loader2, CheckCircle } from "lucide-react";
 import logoImg from "@/assets/logo.png";
 import { Link } from "react-router-dom";
@@ -40,7 +40,6 @@ export default function ResetPassword() {
     setLoading(true);
     setError(null);
     try {
-      const supabase = requireSupabase();
       const { error: updateError } = await supabase.auth.updateUser({
         password: data.password,
       });

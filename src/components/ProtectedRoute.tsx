@@ -1,7 +1,5 @@
-import { useEffect } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { useUserStore } from "@/store/useUserStore";
-import { isSupabaseConfigured } from "@/config/env";
 import { DashboardSkeleton } from "@/components/dashboard/DashboardSkeleton";
 
 interface ProtectedRouteProps {
@@ -10,19 +8,15 @@ interface ProtectedRouteProps {
 
 export function ProtectedRoute({ children }: ProtectedRouteProps) {
   const { isAuthenticated, isLoading } = useUserStore();
-
-  // If Supabase is not configured, allow access (demo mode)
-  if (!isSupabaseConfigured()) {
-    return <>{children}</>;
-  }
+  const location = useLocation();
 
   if (isLoading) {
     return <DashboardSkeleton />;
   }
 
   if (!isAuthenticated) {
-    // TEMPORARY BYPASS FOR SCREENSHOTS
-    // return <Navigate to="/login" replace />;
+    // Redirect to /login but save the current location they were trying to access
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
   return <>{children}</>;

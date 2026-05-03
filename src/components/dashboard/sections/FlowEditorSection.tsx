@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useRef, useCallback, useEffect } from "react";
 import { useAnalysisStore } from "@/store/useAnalysisStore";
 import { SectionCard } from "../SectionCard";

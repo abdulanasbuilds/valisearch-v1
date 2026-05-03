@@ -1,3 +1,5 @@
+"use client";
+
 import { create } from "zustand";
 import type { ValiSearchAnalysis } from "@/types/analysis";
 import type { AnalysisType } from "@/types/analysis-v2";

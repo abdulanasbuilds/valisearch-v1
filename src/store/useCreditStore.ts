@@ -1,3 +1,5 @@
+"use client";
+
 import { create } from "zustand";
 import { getUserCredits } from "@/services/database.service";
 import { useUserStore } from "@/store/useUserStore";

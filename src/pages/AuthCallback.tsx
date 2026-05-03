@@ -1,59 +1,52 @@
-import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { getSupabase } from '@/lib/supabase'
-import { useAnalysisStore } from '@/store/useAnalysisStore'
-import { toast } from 'sonner'
+"use client";
 
-const PENDING_IDEA_KEY = 'valisearch_pending_idea'
+import { useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { supabase } from "@/lib/supabase";
+import { Loader2 } from "lucide-react";
 
+/**
+ * Handles the redirect from Supabase Auth (email confirmation, OAuth, etc.)
+ */
 export default function AuthCallback() {
-  const navigate = useNavigate()
-  const { runAnalysis } = useAnalysisStore()
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const returnUrl = searchParams.get("returnUrl") || "/dashboard";
 
   useEffect(() => {
-    const handleCallback = async () => {
-      try {
-        const supabase = getSupabase()
-        if (!supabase) throw new Error('Supabase not configured')
-        
-        const { data, error } = await supabase.auth.exchangeCodeForSession(window.location.search)
-
-        if (error) {
-          console.error('Auth callback error:', error)
-          navigate('/login?error=confirmation_failed')
-          return
-        }
-
-        if (!data.session) {
-          navigate('/login')
-          return
-        }
-
-        const pendingIdea = localStorage.getItem(PENDING_IDEA_KEY)
-
-        if (pendingIdea && pendingIdea.trim().length > 0) {
-          localStorage.removeItem(PENDING_IDEA_KEY)
-          toast.success('Analysis ready!')
-          navigate('/analyze')
-          setTimeout(async () => {
-            await runAnalysis(pendingIdea.trim())
-          }, 300)
-        } else {
-          navigate('/workspace')
-        }
-      } catch (err) {
-        console.error('Callback error:', err)
-        navigate('/login')
+    const handleAuthCallback = async () => {
+      // Supabase handles the session exchange automatically if the URL contains the right fragments/queries.
+      // We just need to wait for the session to be established and then redirect.
+      const { data: { session }, error } = await supabase.auth.getSession();
+      
+      if (error) {
+        console.error("Auth callback error:", error.message);
+        navigate("/login");
+        return;
       }
-    }
 
-    handleCallback()
-  }, [navigate, runAnalysis])
+      if (session) {
+        navigate(returnUrl);
+      } else {
+        // If no session yet, we might still be in the middle of a redirect or it failed.
+        // We'll give it a moment or redirect back to login.
+        const timeout = setTimeout(() => {
+          navigate("/login");
+        }, 5000);
+        return () => clearTimeout(timeout);
+      }
+    };
+
+    handleAuthCallback();
+  }, [navigate, returnUrl]);
 
   return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-4">
-      <div className="w-8 h-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
-      <p className="text-muted-foreground text-sm">Confirming your account...</p>
+    <div className="min-h-screen bg-[#0A0A0A] flex flex-col items-center justify-center p-6">
+      <div className="text-center">
+        <Loader2 className="h-10 w-10 animate-spin text-white mx-auto mb-6" />
+        <h1 className="text-xl font-bold text-white mb-2">Authenticating...</h1>
+        <p className="text-zinc-400">Please wait while we secure your session.</p>
+      </div>
     </div>
-  )
+  );
 }

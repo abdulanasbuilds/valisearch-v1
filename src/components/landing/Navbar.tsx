@@ -1,3 +1,5 @@
+"use client";
+
 import { Link } from "react-router-dom";
 import { useScroll, motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";

@@ -1,9 +1,12 @@
+"use client";
+
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Sparkles, Loader2, ExternalLink, Check } from "lucide-react";
 import { useState } from "react";
 import { LS_STORE_URL, LS_PRO_VARIANT_ID, LS_PREMIUM_VARIANT_ID } from "@/lib/constants";
 import { useUserStore } from "@/store/useUserStore";
+import { getSupabase } from "@/lib/supabase";
 
 interface UpgradeModalProps {
   open: boolean;
@@ -15,28 +18,24 @@ export function UpgradeModal({ open, onClose }: UpgradeModalProps) {
   const [error, setError] = useState<string | null>(null);
   const { user } = useUserStore();
 
-  const handleCheckout = async (variantId: string) => {
-    setLoading(variantId);
+  const handleCheckout = async (priceId: string) => {
+    setLoading(priceId);
     setError(null);
 
     try {
-      if (!LS_STORE_URL || !variantId || variantId.includes('REPLACE_WITH_YOUR')) {
-        setError("Payment system is not yet configured with real Variant IDs.");
-        setLoading(null);
-        return;
+      const supabase = getSupabase();
+      const { data, error: invokeError } = await supabase.functions.invoke("create-checkout", {
+        body: { priceId },
+      });
+
+      if (invokeError) throw new Error(invokeError.message || "Failed to start checkout");
+      if (data?.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error("Invalid response from checkout service");
       }
-      
-      let checkoutUrl = `${LS_STORE_URL}/checkout/buy/${variantId}`;
-      
-      if (user) {
-        checkoutUrl += `?checkout[email]=${encodeURIComponent(user.email)}`;
-        checkoutUrl += `&checkout[custom][user_id]=${user.id}`;
-      }
-      
-      window.open(checkoutUrl, '_blank');
-      onClose();
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Failed to start checkout");
+    } catch (e: any) {
+      setError(e.message || "Failed to start checkout");
     } finally {
       setLoading(null);
     }
@@ -145,7 +144,7 @@ export function UpgradeModal({ open, onClose }: UpgradeModalProps) {
 
         <div className="bg-white/[0.03] border-t border-white/5 p-4 text-center">
           <p className="text-[11px] text-white/30 uppercase tracking-[0.2em]">
-            Secure checkout powered by Lemon Squeezy
+            Secure checkout powered by Stripe
           </p>
         </div>
       </DialogContent>
