@@ -219,15 +219,20 @@ serve(async (req: Request) => {
       .select()
       .single();
 
+    let analysisId = null;
     if (savedIdea) {
-      await supabase.from("analysis").insert({
+      const { data: savedAnalysis } = await supabase.from("analysis").insert({
         idea_id: savedIdea.id,
         user_id: user.id,
         status: "completed",
         result_json: frameworks,
         data_source: "ai",
         overall_score: overallScore,
-      });
+      }).select().single();
+      
+      if (savedAnalysis) {
+        analysisId = savedAnalysis.id;
+      }
     }
 
     // Deduct credits
@@ -235,7 +240,7 @@ serve(async (req: Request) => {
     await supabase.from("credit_transactions").insert({ user_id: user.id, amount: -creditCost, reason: `analyze_v2_${analysis_type}` });
 
     return new Response(
-      JSON.stringify({ frameworks, dataSources, overallScore, creditsRemaining: credits.balance - creditCost, analysis_type }),
+      JSON.stringify({ frameworks, dataSources, overallScore, creditsRemaining: credits.balance - creditCost, analysis_type, analysisId }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (error) {

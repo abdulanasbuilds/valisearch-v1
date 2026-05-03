@@ -136,6 +136,7 @@ export async function analyzeIdea(idea: string): Promise<{
 export async function analyzeIdeaV2(idea: string, analysisType: AnalysisType = "full"): Promise<{
   result: ValiSearchAnalysisV2;
   source: "ai" | "mock";
+  analysisId?: string;
 }> {
   const trimmed = validateIdea(idea);
 
@@ -154,7 +155,7 @@ export async function analyzeIdeaV2(idea: string, analysisType: AnalysisType = "
           overall_score: data.overallScore || 65,
           data_sources: data.dataSources || {},
         };
-        return { result: v2Result, source: "ai" };
+        return { result: v2Result, source: "ai", analysisId: data.analysisId };
       }
     } catch (e) {
       console.warn("[valisearch] V2 edge function failed, using fallback:", e);

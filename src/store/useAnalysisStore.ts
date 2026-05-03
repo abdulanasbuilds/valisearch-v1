@@ -3,7 +3,7 @@
 import { create } from "zustand";
 import type { ValiSearchAnalysis } from "@/types/analysis";
 import type { AnalysisType } from "@/types/analysis-v2";
-import { analyzeIdea } from "@/services/api";
+import { analyzeIdea, analyzeIdeaV2 } from "@/services/api";
 import { useCreditStore } from "@/store/useCreditStore";
 import { useUserStore } from "@/store/useUserStore";
 import { saveAnalysis } from "@/services/database.service";
@@ -79,23 +79,16 @@ export const useAnalysisStore = create<AnalysisState>((set) => ({
 
     set({ idea, isAnalyzing: true, error: null, analysis: null, dataSource: null });
     try {
-      const { result, source } = await analyzeIdea(idea);
+      const { result, source, analysisId } = await analyzeIdeaV2(idea, type);
       set({
-        analysis: result,
+        analysis: result as any, // Cast to AnyAnalysis for now if needed, though result is ValiSearchAnalysisV2
         dataSource: source,
         isAnalyzing: false,
         credits: useCreditStore.getState().credits,
+        lastAnalysisId: analysisId || null,
       });
 
-      // Persist to database if user is logged in
-      const user = useUserStore.getState().user;
-      if (user) {
-        saveAnalysis(user.id, idea, result, source)
-          .then((id) => {
-            if (id) set({ lastAnalysisId: id });
-          })
-          .catch((e) => console.warn("[store] Failed to persist analysis:", e));
-      }
+      // No need to call saveAnalysis since Edge Function already saves it securely!
     } catch (e) {
       const message = e instanceof Error ? e.message : "Analysis failed";
       set({ error: message, isAnalyzing: false });
