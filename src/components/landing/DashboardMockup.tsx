@@ -16,7 +16,7 @@ export function DashboardMockup() {
             <div className="w-3 h-3 rounded-full bg-zinc-800 border border-white/5" />
           </div>
           <div className="flex-1 mx-16 max-w-xl bg-[#080808] border border-white/[0.05] rounded-xl px-5 py-2 flex items-center justify-between group cursor-text">
-            <span className="text-[11px] text-zinc-500 font-bold tracking-widest uppercase">vali.search / workspace / alpha-project</span>
+            <span className="text-[11px] text-zinc-500 font-bold tracking-widest uppercase">valisearch / workspace / alpha-project</span>
             <div className="w-4 h-4 rounded bg-zinc-900 border border-white/5" />
           </div>
           <div className="flex gap-5 items-center">

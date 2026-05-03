@@ -16,7 +16,7 @@ const SOCIAL_LINKS = [
   {
     name: "LinkedIn",
     handle: "Abdul Anas",
-    href: "https://linkedin.com/in/abdulanas",
+    href: "https://www.linkedin.com/in/abdul-anas-0161b3370",
     icon: Linkedin,
   },
   {
