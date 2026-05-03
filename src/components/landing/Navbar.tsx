@@ -36,7 +36,7 @@ export function Navbar() {
                 <div className="relative w-3.5 h-3.5 bg-black rounded-sm rotate-45" />
               </div>
               <span className="text-lg font-black tracking-tighter text-white">
-                vali.search
+                ValiSearch
               </span>
             </Link>
             

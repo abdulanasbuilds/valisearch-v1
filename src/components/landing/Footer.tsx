@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 const SOCIALS = [
   { label: "Twitter", href: "https://x.com/abdulanasbuilds" },
-  { label: "LinkedIn", href: "https://linkedin.com/in/abdulanas" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/abdul-anas-0161b3370" },
   { label: "GitHub", href: "https://github.com/abdulanasbuilds" },
 ];
 
@@ -18,7 +18,7 @@ export function Footer() {
                 <div className="relative w-3 h-3 bg-white group-hover:bg-black rounded-sm rotate-45 transition-colors" />
               </div>
               <span className="text-lg font-black tracking-tighter text-white">
-                vali.search
+                ValiSearch
               </span>
             </Link>
             <p className="text-[14px] text-zinc-600 leading-relaxed font-medium">

@@ -3,109 +3,163 @@ import { BLOG_POSTS } from "@/content/blog";
 import { Navbar } from "@/components/landing/Navbar";
 import { Footer } from "@/components/landing/Footer";
 import { motion } from "framer-motion";
-import { Calendar, Clock, ArrowRight } from "lucide-react";
+import { ArrowUpRight, Clock } from "lucide-react";
+
+const formatDate = (d: string) =>
+  new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 
 const Blog = () => {
-  return (
-    <div className="bg-[#0A0A0A] min-h-screen text-white font-sans selection:bg-zinc-800">
-      <Navbar />
-      
-      <main className="pt-32 pb-24">
-        <div className="section-container max-w-5xl mx-auto px-6">
-          <header className="mb-24 relative">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              <h1 className="text-5xl md:text-7xl font-bold tracking-tighter mb-8">
-                The <span className="text-zinc-600">Builder's</span> Diary.
-              </h1>
-              <p className="text-xl text-zinc-400 max-w-xl leading-relaxed font-medium">
-                Hard truths about validation, building, and scaling in public. No fluff, just the "dirty" reality.
-              </p>
-            </motion.div>
-            {/* Hand-drawn accent */}
-            <svg className="absolute -bottom-8 left-0 opacity-10" width="200" height="20" viewBox="0 0 200 20">
-              <path d="M0 10 Q 50 0, 100 10 T 200 10" fill="none" stroke="white" strokeWidth="2" />
-            </svg>
-          </header>
+  const sorted = [...BLOG_POSTS].sort((a, b) => +new Date(b.date) - +new Date(a.date));
+  const featured = sorted[0];
+  const rest = sorted.slice(1);
 
-          <div className="grid gap-16 md:grid-cols-2">
-            {BLOG_POSTS.map((post, i) => (
-              <motion.article
-                key={post.slug}
-                initial={{ opacity: 0, y: 20 }}
+  return (
+    <div className="bg-[#0A0A0A] min-h-screen text-white selection:bg-zinc-800">
+      <Navbar />
+
+      <main className="pt-28 pb-24">
+        {/* Editorial header */}
+        <section className="border-b border-white/5">
+          <div className="max-w-[1240px] mx-auto px-6 lg:px-10 py-10 flex items-end justify-between gap-6 flex-wrap">
+            <div>
+              <p className="text-[11px] font-bold tracking-[0.25em] text-zinc-500 uppercase mb-3">
+                ValiSearch · Insights
+              </p>
+              <h1 className="text-4xl md:text-6xl font-bold tracking-tight leading-[1.05]">
+                The Builder's Journal
+              </h1>
+            </div>
+            <p className="text-zinc-400 max-w-md text-[15px] leading-relaxed">
+              Frameworks, teardowns and field notes on validating, launching and growing
+              software businesses — written for operators, not influencers.
+            </p>
+          </div>
+        </section>
+
+        {/* Featured */}
+        {featured && (
+          <section className="border-b border-white/5">
+            <Link
+              to={`/blog/${featured.slug}`}
+              className="block max-w-[1240px] mx-auto px-6 lg:px-10 py-14 group"
+            >
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: i * 0.1 }}
-                className="group relative flex flex-col"
+                transition={{ duration: 0.5 }}
+                className="grid lg:grid-cols-12 gap-10 items-center"
               >
-                <Link to={`/blog/${post.slug}`} className="absolute inset-0 z-10" />
-                
-                <div className="relative aspect-[4/3] mb-8 overflow-hidden rounded-[32px] border border-white/5 bg-zinc-900 group-hover:border-white/10 transition-all duration-500">
-                  <div className="absolute inset-0 bg-gradient-to-br from-zinc-800 to-zinc-950 flex items-center justify-center">
-                    <div className="text-zinc-700/50 font-black text-6xl uppercase tracking-tighter select-none rotate-12">
-                      {post.category}
+                <div className="lg:col-span-7 relative">
+                  <div className="aspect-[16/10] rounded-[12px] overflow-hidden bg-gradient-to-br from-zinc-800 via-zinc-900 to-black border border-white/10 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.8)] relative">
+                    <div className="absolute inset-0 opacity-[0.04] mix-blend-overlay"
+                      style={{ backgroundImage: "radial-gradient(circle at 30% 30%, white 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
+                    <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between">
+                      <span className="text-[10px] font-bold tracking-[0.25em] uppercase text-white/80 bg-white/10 backdrop-blur px-3 py-1.5 rounded-full border border-white/10">
+                        Featured · {featured.category}
+                      </span>
                     </div>
                   </div>
-                  {/* Grainy texture or organic overlay */}
-                  <div className="absolute inset-0 bg-white/[0.02] mix-blend-overlay" />
-                  <div className="absolute inset-0 bg-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                 </div>
-
-                <div className="flex items-center gap-6 text-[10px] font-bold text-zinc-500 mb-6 uppercase tracking-[0.2em]">
-                  <span className="text-white px-2 py-1 bg-white/5 rounded">
-                    {post.category}
-                  </span>
-                  <div className="flex items-center gap-2">
-                    {new Date(post.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                <div className="lg:col-span-5">
+                  <div className="flex items-center gap-3 text-[11px] font-semibold text-zinc-500 uppercase tracking-[0.2em] mb-5">
+                    <span>{formatDate(featured.date)}</span>
+                    <span className="w-1 h-1 rounded-full bg-zinc-700" />
+                    <span className="inline-flex items-center gap-1.5"><Clock className="w-3 h-3" />{featured.readTime}</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    {post.readTime}
+                  <h2 className="text-3xl md:text-[40px] font-bold leading-[1.1] tracking-tight mb-5 group-hover:text-zinc-300 transition-colors">
+                    {featured.title}
+                  </h2>
+                  <p className="text-zinc-400 text-[17px] leading-[1.7] mb-7" style={{ fontFamily: "'Source Serif 4', serif" }}>
+                    {featured.excerpt}
+                  </p>
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-full bg-gradient-to-br from-zinc-700 to-zinc-900 border border-white/10 flex items-center justify-center text-[11px] font-bold">
+                      AA
+                    </div>
+                    <div>
+                      <div className="text-sm font-semibold text-white">{featured.author}</div>
+                      <div className="text-xs text-zinc-500">Founder, ValiSearch</div>
+                    </div>
+                    <span className="ml-auto inline-flex items-center gap-1.5 text-sm font-semibold text-white">
+                      Read article <ArrowUpRight className="w-4 h-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                    </span>
                   </div>
                 </div>
+              </motion.div>
+            </Link>
+          </section>
+        )}
 
-                <h2 className="text-3xl font-bold text-white mb-6 group-hover:text-zinc-300 transition-colors leading-[1.1] tracking-tight">
-                  {post.title}
-                </h2>
-                
-                <p className="text-zinc-500 text-lg leading-relaxed mb-8 line-clamp-2 font-medium">
-                  {post.excerpt}
-                </p>
+        {/* Feed */}
+        <section className="max-w-[1240px] mx-auto px-6 lg:px-10 pt-16">
+          <div className="flex items-end justify-between mb-10">
+            <h3 className="text-xl font-semibold tracking-tight">Latest articles</h3>
+            <span className="text-[11px] font-bold tracking-[0.25em] uppercase text-zinc-500">{rest.length} posts</span>
+          </div>
 
-                <div className="mt-auto flex items-center gap-3 text-sm font-bold text-white uppercase tracking-widest">
-                  Read story 
-                  <div className="w-10 h-[1px] bg-white group-hover:w-16 transition-all duration-500" />
-                </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-14">
+            {rest.map((post, i) => (
+              <motion.article
+                key={post.slug}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.45, delay: Math.min(i * 0.05, 0.3) }}
+                className="group"
+              >
+                <Link to={`/blog/${post.slug}`} className="block">
+                  <div className="aspect-[16/10] rounded-[10px] overflow-hidden bg-gradient-to-br from-zinc-800 to-zinc-950 border border-white/5 mb-5 relative shadow-[0_10px_30px_-12px_rgba(0,0,0,0.6)]">
+                    <div className="absolute inset-0 opacity-[0.05]"
+                      style={{ backgroundImage: "linear-gradient(135deg, transparent 49%, rgba(255,255,255,0.4) 50%, transparent 51%)", backgroundSize: "8px 8px" }} />
+                    <div className="absolute top-3 left-3">
+                      <span className="text-[9px] font-bold tracking-[0.2em] uppercase text-white/90 bg-black/40 backdrop-blur px-2 py-1 rounded border border-white/10">
+                        {post.category}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 text-[11px] font-medium text-zinc-500 mb-3">
+                    <span>{formatDate(post.date)}</span>
+                    <span className="w-1 h-1 rounded-full bg-zinc-700" />
+                    <span>{post.readTime}</span>
+                  </div>
+                  <h4 className="text-[19px] font-semibold leading-snug tracking-tight text-white mb-3 group-hover:text-zinc-300 transition-colors line-clamp-2">
+                    {post.title}
+                  </h4>
+                  <p className="text-zinc-500 text-sm leading-relaxed line-clamp-2 mb-5" style={{ fontFamily: "'Source Serif 4', serif" }}>
+                    {post.excerpt}
+                  </p>
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-7 h-7 rounded-full bg-zinc-800 border border-white/10 flex items-center justify-center text-[10px] font-bold">AA</div>
+                    <span className="text-xs text-zinc-400 font-medium">{post.author}</span>
+                  </div>
+                </Link>
               </motion.article>
             ))}
           </div>
 
-          {/* Newsletter / CTA */}
-          <div className="mt-40 p-12 md:p-20 rounded-[48px] border border-white/5 bg-zinc-900/20 backdrop-blur-sm relative overflow-hidden text-center md:text-left">
-            <div className="absolute top-0 right-0 -translate-y-1/3 translate-x-1/3 w-96 h-96 bg-zinc-800/20 blur-[120px] rounded-full" />
-            
-            <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-12">
-              <div className="max-w-xl">
-                <h3 className="text-4xl md:text-5xl font-bold mb-6 tracking-tighter">Build in public.</h3>
-                <p className="text-xl text-zinc-500 mb-0 leading-relaxed font-medium">
-                  Join 2,000+ humans who get our unfiltered weekly letters on strategy and growth.
-                </p>
-              </div>
-              
-              <div className="w-full md:w-auto flex flex-col sm:flex-row gap-4">
-                <input 
-                  type="email" 
-                  placeholder="Your personal email" 
-                  className="w-full sm:w-64 bg-white/5 border border-white/10 rounded-2xl px-6 py-4 outline-none focus:border-white/20 transition-colors font-medium"
-                />
-                <button className="bg-white text-black font-black px-10 py-4 rounded-2xl hover:bg-zinc-200 transition-all uppercase tracking-widest text-xs">
-                  Join us
-                </button>
-              </div>
+          {/* Newsletter */}
+          <div className="mt-24 rounded-2xl border border-white/10 bg-gradient-to-br from-zinc-900/60 to-zinc-950 p-10 md:p-14 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+            <div className="max-w-lg">
+              <p className="text-[11px] font-bold tracking-[0.25em] uppercase text-zinc-500 mb-3">Newsletter</p>
+              <h3 className="text-2xl md:text-3xl font-semibold tracking-tight mb-3">
+                Get the next teardown in your inbox.
+              </h3>
+              <p className="text-zinc-400 text-[15px] leading-relaxed">
+                One sharp essay per week on validation, distribution, and shipping. No fluff. Unsubscribe anytime.
+              </p>
             </div>
+            <form className="flex w-full md:w-auto gap-2" onSubmit={(e) => e.preventDefault()}>
+              <input
+                type="email"
+                required
+                placeholder="you@company.com"
+                className="flex-1 md:w-72 bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-sm outline-none focus:border-white/30 transition-colors"
+              />
+              <button className="px-5 py-3 bg-white text-black text-sm font-semibold rounded-lg hover:bg-zinc-200 transition-colors">
+                Subscribe
+              </button>
+            </form>
           </div>
-        </div>
+        </section>
       </main>
 
       <Footer />
