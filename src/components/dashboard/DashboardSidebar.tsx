@@ -1,6 +1,6 @@
 "use client";
 
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { 
   LayoutDashboard, 
   Search, 
@@ -29,30 +29,33 @@ import { useUserStore } from "@/store/useUserStore";
 export function DashboardSidebar() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
   const { user, signOut } = useUserStore();
+  const { setActiveSection } = useAnalysisStore();
+
+  // If we are in /workspace/:id, we use that as base. Otherwise /dashboard
+  const base = id ? `/workspace/${id}` : "/dashboard";
 
   const handleSignOut = async () => {
     await signOut();
     navigate("/");
   };
 
-  const analysisItems = [
-    { name: "Overview", icon: LayoutDashboard, href: "/dashboard/overview" },
-    { name: "Validation", icon: CheckCircle, href: "/dashboard/validation" },
-    { name: "Market Feasibility", icon: BarChart, href: "/dashboard/market-feasibility" },
-    { name: "Market Research", icon: LineChart, href: "/dashboard/market" },
-    { name: "Competitors", icon: Users, href: "/dashboard/competitors" },
-    { name: "Product", icon: Box, href: "/dashboard/product" },
-    { name: "Branding", icon: Palette, href: "/dashboard/branding" },
-    { name: "Revenue Intelligence", icon: DollarSign, href: "/dashboard/revenue" },
-    { name: "$ Monetization", icon: CreditCard, href: "/dashboard/monetization" },
-    { name: "Go-To-Market", icon: Briefcase, href: "/dashboard/go-to-market" },
+  const intelligenceItems = [
+    { name: "Overview", icon: LayoutDashboard, href: `${base}/overview`, id: "overview" },
+    { name: "Market Intelligence", icon: Search, href: `${base}/market-intelligence`, id: "market-intelligence" },
+    { name: "Problem Landscape", icon: MessageSquare, href: `${base}/problem-landscape`, id: "problem-landscape" },
+    { name: "Offer Builder", icon: Zap, href: `${base}/offer-builder`, id: "offer-builder" },
+    { name: "Growth Playbook", icon: LineChart, href: `${base}/growth-playbook`, id: "growth-playbook" },
+    { name: "Content Engine", icon: FileText, href: `${base}/content-engine`, id: "content-engine" },
+    { name: "Competitive Intel", icon: Users, href: `${base}/competitive-intel`, id: "competitive-intel" },
+    { name: "Scale Roadmap", icon: BarChart, href: `${base}/scale-roadmap`, id: "scale-roadmap" },
   ];
 
   const buildItems = [
-    { name: "Idea Evolution", icon: GitPullRequest, href: "/dashboard/evolution" },
-    { name: "Flow Editor", icon: Workflow, href: "/dashboard/flow-editor" },
-    { name: "API Settings", icon: Settings, href: "/dashboard/settings" },
+    { name: "Idea Evolution", icon: GitPullRequest, href: `${base}/evolution`, id: "evolution" },
+    { name: "Flow Editor", icon: Workflow, href: `${base}/flow-editor`, id: "flow-editor" },
+    { name: "Kanban Board", icon: Box, href: `${base}/kanban`, id: "kanban" },
   ];
 
   const isActive = (path: string) => location.pathname === path || location.pathname.startsWith(path + '/');
@@ -76,10 +79,10 @@ export function DashboardSidebar() {
       <nav className="flex-1 overflow-y-auto px-4 py-4 space-y-6">
         <div>
           <div className="text-[10px] font-bold text-zinc-600 uppercase tracking-[0.2em] px-3 mb-3">
-            Analysis
+            Intelligence Suite
           </div>
           <div className="space-y-0.5">
-            {analysisItems.map((item) => (
+            {intelligenceItems.map((item) => (
               <Link
                 key={item.name}
                 to={item.href}

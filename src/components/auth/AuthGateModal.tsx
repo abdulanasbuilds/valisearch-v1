@@ -78,7 +78,14 @@ export function AuthGateModal({
         if (error) throw error
 
         toast.success('Welcome back!')
-        onAuthSuccess()
+        const pending = localStorage.getItem(PENDING_IDEA_KEY)
+        if (pending) {
+          onAuthSuccess() // This will close modal
+          // We can't navigate here easily without useNavigate, 
+          // so let's let the parent handle it or add useNavigate here.
+        } else {
+          onAuthSuccess()
+        }
       }
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Something went wrong')

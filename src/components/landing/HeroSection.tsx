@@ -188,7 +188,15 @@ export function HeroSection() {
         <AuthGateModal
           idea={idea}
           onClose={() => setShowAuthGate(false)}
-          onAuthSuccess={() => setShowAuthGate(false)}
+          onAuthSuccess={async () => {
+            setShowAuthGate(false);
+            if (idea.trim().length >= 15) {
+              const sanitized = sanitizeIdea(idea);
+              setStoreIdea(sanitized);
+              navigate('/analyze');
+              await runAnalysis(sanitized);
+            }
+          }}
         />
       )}
     </section>

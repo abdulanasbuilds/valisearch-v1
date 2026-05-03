@@ -7,38 +7,70 @@ interface UserState {
   session: Session | null;
   isLoading: boolean;
   isAuthenticated: boolean;
+  initialized: boolean;
   setUser: (user: User | null) => void;
   setSession: (session: Session | null) => void;
   signOut: () => Promise<void>;
   initialize: () => Promise<void>;
 }
 
-export const useUserStore = create<UserState>((set) => ({
+let authListenerRegistered = false;
+
+export const useUserStore = create<UserState>((set, get) => ({
   user: null,
   session: null,
   isLoading: true,
   isAuthenticated: false,
+  initialized: false,
 
   setUser: (user) => set({ user, isAuthenticated: !!user }),
   setSession: (session) => set({ session, user: session?.user ?? null, isAuthenticated: !!session?.user }),
 
   signOut: async () => {
-    await supabase.auth.signOut();
-    set({ user: null, session: null, isAuthenticated: false });
+    try {
+      await supabase.auth.signOut();
+    } catch (error) {
+      console.error("Sign out error", error);
+    } finally {
+      set({ user: null, session: null, isAuthenticated: false });
+    }
   },
 
   initialize: async () => {
+    // Only initialize once
+    if (get().initialized) return;
+
     set({ isLoading: true });
 
-    // Get current session
-    const { data: { session } } = await supabase.auth.getSession();
-    set({ session, user: session?.user ?? null, isAuthenticated: !!session?.user });
+    try {
+      // Get current session
+      const { data: { session }, error } = await supabase.auth.getSession();
+      
+      if (error) throw error;
+      
+      set({ 
+        session, 
+        user: session?.user ?? null, 
+        isAuthenticated: !!session?.user,
+      });
 
-    // Listen for auth changes
-    supabase.auth.onAuthStateChange((_event, session) => {
-      set({ session, user: session?.user ?? null, isAuthenticated: !!session?.user });
-    });
-
-    set({ isLoading: false });
+      // Listen for auth changes, ensuring we only register once
+      if (!authListenerRegistered) {
+        authListenerRegistered = true;
+        supabase.auth.onAuthStateChange((_event, session) => {
+          // Ignore INITIAL_SESSION if we already set it to avoid race conditions
+          set({ 
+            session, 
+            user: session?.user ?? null, 
+            isAuthenticated: !!session?.user 
+          });
+        });
+      }
+    } catch (e) {
+      console.error("Auth initialization error:", e);
+      set({ session: null, user: null, isAuthenticated: false });
+    } finally {
+      set({ isLoading: false, initialized: true });
+    }
   },
 }));

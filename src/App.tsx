@@ -24,6 +24,7 @@ const Onboarding = lazy(() => import("./pages/Onboarding"))
 const Blog = lazy(() => import("./pages/Blog"))
 const BlogPost = lazy(() => import("./pages/BlogPost"))
 const Settings = lazy(() => import("./pages/Settings"))
+const Dashboard = lazy(() => import("./pages/Dashboard"))
 
 const queryClient = new QueryClient();
 
@@ -31,7 +32,17 @@ function AuthInitializer({ children }: { children: React.ReactNode }) {
   const initialize = useUserStore((s) => s.initialize);
 
   useEffect(() => {
-    initialize();
+    let cleanup: (() => void) | undefined;
+    
+    const setup = async () => {
+      cleanup = await initialize();
+    };
+
+    setup();
+
+    return () => {
+      if (cleanup) cleanup();
+    };
   }, [initialize]);
 
   return <>{children}</>;
@@ -61,10 +72,10 @@ const App = () => (
                 <Route path="/analyze" element={<ProtectedRoute><Analyze /></ProtectedRoute>} />
                 <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
                 <Route path="/workspace" element={<ProtectedRoute><Workspace /></ProtectedRoute>} />
-                <Route path="/workspace/:id" element={<ProtectedRoute><WorkspaceAnalysis /></ProtectedRoute>} />
+                <Route path="/workspace/:id/*" element={<ProtectedRoute><WorkspaceAnalysis /></ProtectedRoute>} />
                 <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
                 
-                <Route path="/dashboard/*" element={<ProtectedRoute><Navigate to="/workspace" replace /></ProtectedRoute>} />
+                <Route path="/dashboard/*" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
 
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>

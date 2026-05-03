@@ -20,6 +20,7 @@ type AnalysisState = {
   dataSource: "ai" | "mock" | null;
   error: string | null;
   credits: number;
+  lastAnalysisId: string | null;
 
   setIdea: (idea: string) => void;
   setAnalysis: (a: AnyAnalysis | null) => void;
@@ -38,6 +39,7 @@ export const useAnalysisStore = create<AnalysisState>((set) => ({
   dataSource: null,
   error: null,
   credits: useCreditStore.getState().credits,
+  lastAnalysisId: null,
 
   setIdea: (idea) => set({ idea }),
   setAnalysis: (analysis) => set({ analysis }),
@@ -88,9 +90,11 @@ export const useAnalysisStore = create<AnalysisState>((set) => ({
       // Persist to database if user is logged in
       const user = useUserStore.getState().user;
       if (user) {
-        saveAnalysis(user.id, idea, result, source).catch((e) =>
-          console.warn("[store] Failed to persist analysis:", e)
-        );
+        saveAnalysis(user.id, idea, result, source)
+          .then((id) => {
+            if (id) set({ lastAnalysisId: id });
+          })
+          .catch((e) => console.warn("[store] Failed to persist analysis:", e));
       }
     } catch (e) {
       const message = e instanceof Error ? e.message : "Analysis failed";

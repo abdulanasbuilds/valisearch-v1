@@ -61,12 +61,19 @@ export default function Analyze() {
   }, [analysis, isAnalyzing]);
 
   // Navigate after done
+  const { lastAnalysisId } = useAnalysisStore();
   useEffect(() => {
     if (allDone) {
-      const timer = setTimeout(() => navigate("/workspace"), 1000);
+      const timer = setTimeout(() => {
+        if (lastAnalysisId) {
+          navigate(`/workspace/${lastAnalysisId}`);
+        } else {
+          navigate("/workspace");
+        }
+      }, 1000);
       return () => clearTimeout(timer);
     }
-  }, [allDone, navigate]);
+  }, [allDone, navigate, lastAnalysisId]);
 
   // Error handling
   useEffect(() => {

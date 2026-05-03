@@ -50,6 +50,30 @@ export async function saveAnalysis(
   return analysis?.id ?? null;
 }
 
+export async function updateAnalysis(
+  id: string,
+  result: ValiSearchAnalysis
+): Promise<boolean> {
+  const supabase = getSupabase();
+  if (!supabase) return false;
+
+  const { error } = await supabase
+    .from("analysis")
+    .update({
+      result_json: result,
+      overall_score: (result as any).scoring?.weighted_final_score || (result as any).overall_score || (result as any).final_verdict?.score || 0,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", id);
+
+  if (error) {
+    console.error("[db] Failed to update analysis:", error);
+    return false;
+  }
+
+  return true;
+}
+
 export async function getUserAnalyses(userId: string) {
   const supabase = getSupabase();
   if (!supabase) return [];

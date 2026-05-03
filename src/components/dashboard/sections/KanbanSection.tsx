@@ -24,6 +24,8 @@ import { CSS } from "@dnd-kit/utilities";
 import { useAnalysisStore } from "@/store/useAnalysisStore";
 import { Plus, Trash2, RotateCcw, GripVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useParams } from "react-router-dom";
+import { updateAnalysis } from "@/services/database.service";
 import type { KanbanTask } from "@/types/analysis";
 import type { ValiSearchAnalysis } from "@/types/analysis";
 
@@ -192,9 +194,16 @@ export function KanbanSection() {
 
   const currentBoard: Board = board ?? initial;
 
-  const persistBoard = (newBoard: Board) => {
+  const { id: analysisId } = useParams<{ id: string }>();
+
+  const persistBoard = async (newBoard: Board) => {
     if (analysis) {
-      setAnalysis({ ...(analysis as ValiSearchAnalysis), kanban: newBoard });
+      const updated = { ...(analysis as ValiSearchAnalysis), kanban: newBoard };
+      setAnalysis(updated);
+      
+      if (analysisId) {
+        await updateAnalysis(analysisId, updated);
+      }
     }
   };
 
