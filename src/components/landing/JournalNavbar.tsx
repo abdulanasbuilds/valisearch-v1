@@ -49,7 +49,7 @@ export function JournalNavbar() {
           </Link>
           <Link to="/register">
             <button className="px-4 py-1.5 bg-zinc-900 text-white text-[12px] font-bold rounded-full hover:bg-zinc-800 transition-all">
-              Try ValiSearch
+              Try VALISEARCH
             </button>
           </Link>
         </div>

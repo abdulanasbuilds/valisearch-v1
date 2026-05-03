@@ -61,8 +61,8 @@ export default function Login() {
       <div className="w-full max-w-md">
         {/* Logo */}
         <Link to="/" className="flex items-center justify-center gap-2.5 mb-10">
-          <img src={logoImg} alt="ValiSearch" className="h-8 w-auto" />
-          <span className="text-lg font-semibold text-white/85">ValiSearch</span>
+          <img src={logoImg} alt="VALISEARCH" className="h-8 w-auto" />
+          <span className="text-lg font-black tracking-tighter text-white uppercase">VALISEARCH</span>
         </Link>
 
         {/* Card */}

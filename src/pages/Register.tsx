@@ -96,8 +96,8 @@ export default function Register() {
       <div className="min-h-screen bg-background flex items-center justify-center px-4">
         <div className="w-full max-w-md">
           <Link to="/" className="flex items-center justify-center gap-2.5 mb-10">
-            <img src={logoImg} alt="ValiSearch" className="h-8 w-auto" />
-            <span className="text-lg font-semibold text-white/85">ValiSearch</span>
+            <img src={logoImg} alt="VALISEARCH" className="h-8 w-auto" />
+            <span className="text-lg font-black tracking-tighter text-white uppercase">VALISEARCH</span>
           </Link>
           <div className="rounded-2xl border border-white/[0.08] bg-white/[0.02] backdrop-blur-xl p-8 text-center">
             <CheckCircle2 className="w-12 h-12 text-primary mx-auto mb-4" />
@@ -107,7 +107,7 @@ export default function Register() {
               Please click the link to activate your account.
             </p>
             <div className="mb-6 rounded-lg border border-yellow-500/20 bg-yellow-500/10 px-4 py-3 text-xs text-yellow-200/80 text-left">
-              <strong>Note:</strong> If you don't receive the email within a few minutes, it might be due to Supabase's default email rate limits (2 per hour). You can try resending or check back later.
+              <strong>Note:</strong> If you don't receive the email within a few minutes, it might be due to VALISEARCH's backend email rate limits (2 per hour). You can try resending or check back later.
             </div>
             <p className="text-xs text-white/40 mb-8">
               Don't see it? Check your spam folder or click below to resend.
@@ -131,8 +131,8 @@ export default function Register() {
     <div className="min-h-screen bg-background flex items-center justify-center px-4">
       <div className="w-full max-w-md">
         <Link to="/" className="flex items-center justify-center gap-2.5 mb-10">
-          <img src={logoImg} alt="ValiSearch" className="h-8 w-auto" />
-          <span className="text-lg font-semibold text-white/85">ValiSearch</span>
+          <img src={logoImg} alt="VALISEARCH" className="h-8 w-auto" />
+          <span className="text-lg font-black tracking-tighter text-white uppercase">VALISEARCH</span>
         </Link>
 
         <div className="rounded-2xl border border-white/[0.08] bg-white/[0.02] backdrop-blur-xl p-8">
