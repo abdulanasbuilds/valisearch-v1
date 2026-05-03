@@ -1,11 +1,11 @@
 // Browser-compatible markdown loader with simple YAML frontmatter parser.
 // Avoids gray-matter (which depends on Node's Buffer).
 
-function parseFrontmatter(raw: string): { data: Record<string, any>; content: string } {
+function parseFrontmatter(raw: string): { data: Record<string, string>; content: string } {
   const match = raw.match(/^---\s*\n([\s\S]*?)\n---\s*\n?([\s\S]*)$/);
   if (!match) return { data: {}, content: raw };
   const [, yaml, content] = match;
-  const data: Record<string, any> = {};
+  const data: Record<string, string> = {};
   for (const line of yaml.split("\n")) {
     const m = line.match(/^([A-Za-z0-9_-]+)\s*:\s*(.*)$/);
     if (!m) continue;

@@ -15,7 +15,7 @@ interface TocItem { id: string; text: string; level: number }
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
-  const [post, setPost] = useState<{ metadata: any; content: string } | null>(null);
+  const [post, setPost] = useState<{ metadata: Record<string, string>; content: string } | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [activeId, setActiveId] = useState<string>("");
   const [showStickyBar, setShowStickyBar] = useState(false);
@@ -70,7 +70,7 @@ const BlogPost = () => {
     if (!post) return;
     const url = window.location.href;
     if (navigator.share) {
-      try { await navigator.share({ title: post.metadata.title, url }); } catch {}
+      try { await navigator.share({ title: post.metadata.title, url }); } catch (e) { console.error(e); }
     } else {
       navigator.clipboard.writeText(url);
     }

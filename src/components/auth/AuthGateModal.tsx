@@ -45,7 +45,7 @@ export function AuthGateModal({
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<FormData>({ resolver: zodResolver(schema) as any })
+  } = useForm<FormData>({ resolver: zodResolver(schema) as Parameters<typeof useForm>[0]['resolver'] })
 
   const onSubmit = async (data: FormData) => {
     setIsLoading(true)
