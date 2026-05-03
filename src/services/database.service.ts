@@ -36,7 +36,7 @@ export async function saveAnalysis(
       idea_id: idea.id,
       user_id: userId,
       result_json: result,
-      overall_score: result.overall_score || 0,
+      overall_score: (result as any).scoring?.weighted_final_score || (result as any).overall_score || (result as any).final_verdict?.score || 0,
       data_source: source,
     })
     .select("id")

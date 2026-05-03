@@ -6,7 +6,7 @@ import { useAnalysisStore } from '@/store/useAnalysisStore'
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout'
 import { sanitizeIdea } from '@/lib/sanitize'
 import { formatDistanceToNow } from 'date-fns'
-import { Zap, ChevronRight, Clock, Loader2, Sparkles, Plus, History, Lightbulb } from 'lucide-react'
+import { Zap, ChevronRight, Clock, Loader2, Sparkles, Plus, History, Lightbulb, Wallet, Search } from 'lucide-react'
 import { toast } from 'sonner'
 import { motion, AnimatePresence } from 'framer-motion'
 
@@ -88,57 +88,82 @@ export default function Workspace() {
 
   return (
     <DashboardLayout credits={credits}>
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-6xl mx-auto px-4 md:px-0">
         {/* Welcome Section */}
-        <section className="mb-12">
+        <section className="mb-14">
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
+            className="flex flex-col md:flex-row md:items-end justify-between gap-6"
           >
-            <h1 className="text-3xl font-bold tracking-tight mb-2">
-              {greeting}, {firstName}.
-            </h1>
-            <p className="text-zinc-500 font-medium">
-              What are we validating today? You have {credits} credits ready for deep analysis.
-            </p>
+            <div>
+              <h1 className="text-4xl font-black tracking-tighter mb-3">
+                {greeting}, {firstName}.
+              </h1>
+              <p className="text-zinc-500 font-medium text-lg">
+                The engine is primed. What idea are we decoding today?
+              </p>
+            </div>
+            <div className="flex items-center gap-3 bg-white/[0.03] border border-white/[0.08] px-5 py-3 rounded-2xl backdrop-blur-md">
+              <Wallet className="w-4 h-4 text-zinc-400" />
+              <span className="text-sm font-bold text-white">{credits} Credits available</span>
+              <button className="ml-2 text-[10px] font-black uppercase tracking-widest text-zinc-400 hover:text-white transition-colors bg-white/5 px-2 py-1 rounded-md border border-white/10">Top up</button>
+            </div>
           </motion.div>
         </section>
 
-        <div className="grid lg:grid-cols-12 gap-10">
+        <div className="grid lg:grid-cols-12 gap-12">
           {/* Left Column: Idea Input */}
-          <div className="lg:col-span-7 space-y-8">
-            <div className="bg-[#0A0A0A] border border-white/[0.05] rounded-3xl p-8 shadow-2xl relative overflow-hidden group">
-              <div className="absolute top-0 right-0 p-8 opacity-20 pointer-events-none group-focus-within:opacity-40 transition-opacity">
-                <Sparkles className="w-20 h-20 text-white" />
+          <div className="lg:col-span-8 space-y-10">
+            <div className="glass-panel rounded-[32px] p-8 md:p-10 shadow-2xl relative overflow-hidden group grain-bg border-white/[0.1]">
+              <div className="absolute top-0 right-0 p-10 opacity-10 pointer-events-none group-focus-within:opacity-30 transition-all duration-700">
+                <Sparkles className="w-32 h-32 text-white" />
               </div>
               
               <div className="relative z-10">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center">
-                    <Lightbulb className="w-5 h-5 text-zinc-400" />
+                <div className="flex items-center gap-4 mb-8">
+                  <div className="w-12 h-12 rounded-2xl bg-zinc-900 border border-white/10 flex items-center justify-center shadow-2xl shadow-zinc-900/50">
+                    <Search className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h2 className="text-lg font-bold text-white">The Intelligence Box</h2>
-                    <p className="text-xs text-zinc-500 font-medium uppercase tracking-wider">Start a new validation</p>
+                    <h2 className="text-xl font-black text-white tracking-tight">Intelligence Box</h2>
+                    <p className="text-[10px] text-zinc-500 font-black uppercase tracking-[0.2em]">Neural Processing active</p>
                   </div>
                 </div>
 
-                <textarea
-                  value={idea}
-                  onChange={e => setIdea(e.target.value.slice(0, 2000))}
-                  placeholder="Paste your raw idea here... Be as detailed as you want."
-                  rows={6}
-                  className="w-full bg-white/[0.02] border border-white/[0.08] rounded-2xl px-6 py-5 text-white text-[15px] placeholder:text-zinc-600 resize-none outline-none focus:border-white/20 focus:bg-white/[0.04] transition-all mb-4"
-                />
+                <div className="relative">
+                  <textarea
+                    value={idea}
+                    onChange={e => setIdea(e.target.value.slice(0, 2000))}
+                    placeholder="Paste your raw startup idea here... Be as detailed as possible. Mention your target audience, revenue model, and core feature set for deeper analysis."
+                    rows={8}
+                    className="w-full bg-black/40 border border-white/[0.08] rounded-3xl px-8 py-7 text-white text-lg placeholder:text-zinc-700 resize-none outline-none focus:border-white/20 focus:bg-black/60 transition-all mb-6 font-medium leading-relaxed"
+                  />
+                  {idea.length > 0 && (
+                    <div className="absolute top-4 right-4 flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-full">
+                       <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                       <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest">Draft Saved</span>
+                    </div>
+                  )}
+                </div>
 
-                <div className="flex items-center justify-between gap-4">
-                  <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest">{idea.length} / 2000 characters</span>
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
+                  <div className="flex items-center gap-6">
+                    <span className="text-[11px] font-black text-zinc-600 uppercase tracking-[0.2em]">{idea.length} <span className="opacity-40">/</span> 2000</span>
+                    <div className="h-1 w-24 bg-zinc-900 rounded-full overflow-hidden">
+                       <motion.div 
+                        className="h-full bg-zinc-500"
+                        initial={{ width: 0 }}
+                        animate={{ width: `${(idea.length / 2000) * 100}%` }}
+                       />
+                    </div>
+                  </div>
                   
-                  <div className="flex gap-3">
+                  <div className="flex gap-4 w-full sm:w-auto">
                     <button 
                       onClick={() => handleValidate('quick')} 
                       disabled={idea.trim().length < 15 || isAnalyzing || credits < 1} 
-                      className="px-6 py-3 bg-zinc-900 border border-white/10 text-white text-sm font-bold rounded-xl hover:bg-zinc-800 transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-2"
+                      className="flex-1 sm:flex-none px-8 py-4 bg-zinc-900 border border-white/10 text-white text-sm font-black rounded-2xl hover:bg-zinc-800 transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-3 kinetic-hover"
                     >
                       {isAnalyzing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Zap className="w-4 h-4" />}
                       Quick Scan
@@ -146,7 +171,7 @@ export default function Workspace() {
                     <button 
                       onClick={() => handleValidate('full')} 
                       disabled={idea.trim().length < 15 || isAnalyzing || credits < 2} 
-                      className="px-8 py-3 bg-white text-black text-sm font-black rounded-xl hover:bg-zinc-200 transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-2 shadow-[0_10px_30px_rgba(255,255,255,0.1)] active:scale-95"
+                      className="flex-1 sm:flex-none px-10 py-4 bg-white text-black text-sm font-black rounded-2xl hover:bg-zinc-200 transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-3 shadow-2xl shadow-white/5 active:scale-95 kinetic-hover"
                     >
                       {isAnalyzing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
                       Deep Intelligence
@@ -157,70 +182,70 @@ export default function Workspace() {
             </div>
 
             {/* Empty State / Tips */}
-            <div className="grid grid-cols-2 gap-4">
-              <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/[0.05]">
-                <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-3">Expert Tip</h3>
-                <p className="text-sm text-zinc-400 leading-relaxed">
-                  Mention your target audience and revenue model for 2x more accurate market sizing.
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="p-8 rounded-3xl bg-white/[0.02] border border-white/[0.05] grain-bg">
+                <h3 className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.3em] mb-4">Market Signal</h3>
+                <p className="text-zinc-400 leading-relaxed font-medium">
+                  Adding specific data points like "Targeting Gen Z designers in NY" increases engine precision by 42%.
                 </p>
               </div>
-              <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/[0.05]">
-                <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-3">Latest Update</h3>
-                <p className="text-sm text-zinc-400 leading-relaxed">
-                  VALISEARCH now supports multi-engine GTM analysis for every report.
+              <div className="p-8 rounded-3xl bg-white/[0.02] border border-white/[0.05] grain-bg">
+                <h3 className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.3em] mb-4">Framework Update</h3>
+                <p className="text-zinc-400 leading-relaxed font-medium">
+                  v2.4 engine now supports viral coefficient analysis for B2C consumer products.
                 </p>
               </div>
             </div>
           </div>
 
           {/* Right Column: History */}
-          <div className="lg:col-span-5">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-sm font-bold text-zinc-400 uppercase tracking-[0.2em] flex items-center gap-2">
-                <History className="w-4 h-4" /> Past Intelligence
+          <div className="lg:col-span-4">
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="text-[11px] font-black text-zinc-500 uppercase tracking-[0.3em] flex items-center gap-2">
+                <History className="w-4 h-4" /> Intelligence History
               </h2>
-              <span className="text-[10px] font-bold text-zinc-600 bg-white/5 px-2 py-0.5 rounded-full border border-white/10">{analyses.length} Total</span>
+              <span className="text-[10px] font-black text-zinc-500 bg-white/5 px-3 py-1 rounded-full border border-white/10">{analyses.length} Reports</span>
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-4">
               {isLoading ? (
-                <div className="space-y-3">
-                  {[1, 2, 3, 4].map(i => (
-                    <div key={i} className="h-20 bg-white/5 rounded-2xl animate-pulse border border-white/5" />
+                <div className="space-y-4">
+                  {[1, 2, 3, 4, 5].map(i => (
+                    <div key={i} className="h-24 bg-white/[0.02] rounded-[24px] animate-pulse border border-white/[0.05]" />
                   ))}
                 </div>
               ) : analyses.length === 0 ? (
-                <div className="text-center py-20 bg-white/[0.01] border border-dashed border-white/10 rounded-3xl">
-                  <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center mx-auto mb-4">
-                    <History className="w-6 h-6 text-zinc-700" />
+                <div className="text-center py-24 bg-white/[0.01] border border-dashed border-white/10 rounded-[32px] grain-bg">
+                  <div className="w-16 h-16 rounded-[24px] bg-white/5 flex items-center justify-center mx-auto mb-6">
+                    <History className="w-8 h-8 text-zinc-800" />
                   </div>
-                  <h3 className="text-base font-bold text-zinc-400 mb-1">Clean slate</h3>
-                  <p className="text-sm text-zinc-600 px-10">Your validation history will appear here once you start your first project.</p>
+                  <h3 className="text-lg font-black text-zinc-400 mb-2">Neural Cache Empty</h3>
+                  <p className="text-sm text-zinc-600 px-12 leading-relaxed">Your validation history will appear here once you run your first analysis.</p>
                 </div>
               ) : (
-                <div className="space-y-3">
+                <div className="space-y-4">
                   {analyses.map(analysis => (
                     <motion.button 
                       initial={{ opacity: 0, x: 10 }}
                       animate={{ opacity: 1, x: 0 }}
                       key={analysis.id} 
                       onClick={() => navigate(`/workspace/${analysis.id}`)} 
-                      className="w-full flex items-center gap-4 p-4 bg-white/[0.02] border border-white/[0.05] rounded-2xl hover:border-white/20 hover:bg-white/[0.04] transition-all text-left group relative overflow-hidden"
+                      className="w-full flex items-center gap-5 p-5 bg-white/[0.02] border border-white/[0.05] rounded-[24px] hover:border-white/20 hover:bg-white/[0.04] transition-all text-left group relative overflow-hidden"
                     >
-                      <div className={`w-12 h-12 rounded-xl flex flex-col items-center justify-center flex-shrink-0 border ${getScoreBg(analysis.overall_score)}`}>
-                        <span className="text-[9px] font-bold uppercase opacity-60">Score</span>
-                        <span className="text-base font-black tracking-tighter leading-none">{analysis.overall_score ?? '-'}</span>
+                      <div className={`w-14 h-14 rounded-2xl flex flex-col items-center justify-center flex-shrink-0 border ${getScoreBg(analysis.overall_score)} shadow-2xl`}>
+                        <span className="text-[9px] font-black uppercase opacity-60">Score</span>
+                        <span className="text-xl font-black tracking-tighter leading-none">{analysis.overall_score ?? '-'}</span>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-[15px] font-bold text-white truncate group-hover:text-white transition-colors">
+                        <p className="text-[16px] font-black text-white truncate group-hover:text-white transition-colors tracking-tight">
                           {analysis.ideas?.title || analysis.ideas?.idea_text?.slice(0, 50) || 'Untitled Analysis'}
                         </p>
-                        <p className="text-[11px] font-medium text-zinc-500 mt-1 flex items-center gap-2">
-                          <Clock className="w-3 h-3" />
+                        <p className="text-[11px] font-bold text-zinc-600 mt-1.5 flex items-center gap-2">
+                          <Clock className="w-3.5 h-3.5" />
                           {formatDistanceToNow(new Date(analysis.created_at), { addSuffix: true })}
                         </p>
                       </div>
-                      <ChevronRight className="w-5 h-5 text-zinc-700 group-hover:text-white group-hover:translate-x-1 transition-all flex-shrink-0" />
+                      <ChevronRight className="w-5 h-5 text-zinc-800 group-hover:text-white group-hover:translate-x-1 transition-all flex-shrink-0" />
                     </motion.button>
                   ))}
                 </div>
