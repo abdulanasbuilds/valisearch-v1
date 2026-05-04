@@ -470,7 +470,7 @@ export async function downloadReportDocx(data: ValiSearchAnalysis) {
             heading: HeadingLevel.HEADING_2,
             alignment: AlignmentType.CENTER,
           }),
-          new Paragraph({ text: data.idea_analysis.one_liner, italics: true }),
+          new Paragraph({ children: [new TextRun({ text: data.idea_analysis.one_liner, italics: true })] }),
           new Paragraph({ text: data.idea_analysis.summary }),
           
           new Paragraph({ text: "Market Research", heading: HeadingLevel.HEADING_2 }),

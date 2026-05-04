@@ -127,7 +127,7 @@ export function FlowEditorSection() {
 
   const onNodesChange = useCallback((changes: NodeChange[]) => setNodes((nds) => applyNodeChanges(changes, nds)), []);
   const onEdgesChange = useCallback((changes: EdgeChange[]) => setEdges((eds) => applyEdgeChanges(changes, eds)), []);
-  const onConnect = useCallback((params: Connection | Edge) => setEdges((eds) => addEdge({ ...params, animated: true, style: { stroke: "rgba(255,255,255,0.3)", strokeWidth: 2, strokeDasharray: "4 4" } }, eds)), []);
+  const onConnect = useCallback((params: Connection | Edge) => setEdges((eds) => addEdge({ ...(params as Edge), animated: true, style: { stroke: "rgba(255,255,255,0.3)", strokeWidth: 2, strokeDasharray: "4 4" } } as Edge, eds)), []);
 
   const addNode = () => {
     const id = `n${Date.now()}`;
