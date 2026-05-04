@@ -1,14 +1,15 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getSupabase } from '@/lib/supabase'
 import { useUserStore } from '@/store/useUserStore'
 import { useAnalysisStore } from '@/store/useAnalysisStore'
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout'
+import { GettingStartedChecklist } from '@/components/dashboard/GettingStartedChecklist'
 import { sanitizeIdea } from '@/lib/sanitize'
 import { formatDistanceToNow } from 'date-fns'
-import { Zap, ChevronRight, Clock, Loader2, Sparkles, Plus, History, Lightbulb, Wallet, Search } from 'lucide-react'
+import { Zap, ChevronRight, Clock, Loader2, Sparkles, Plus, History, Wallet, Search } from 'lucide-react'
 import { toast } from 'sonner'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 
 interface AnalysisRecord {
   id: string
@@ -20,12 +21,26 @@ interface AnalysisRecord {
 
 export default function Workspace() {
   const navigate = useNavigate()
-  const { user, isAuthenticated } = useUserStore()
+  const { user, isAuthenticated, profile } = useUserStore()
   const { runAnalysis, isAnalyzing, setIdea: setStoreIdea } = useAnalysisStore()
   const [analyses, setAnalyses] = useState<AnalysisRecord[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [idea, setIdea] = useState('')
   const [credits, setCredits] = useState(15)
+  const ideaRef = useRef<HTMLTextAreaElement>(null)
+
+  const STARTER_TEMPLATES = [
+    { title: "AI tool for solo founders", text: "An AI assistant that helps solo SaaS founders write marketing copy, run customer interviews, and prioritize their roadmap." },
+    { title: "Niche marketplace", text: "A marketplace connecting independent ceramic artists with interior designers looking for one-of-a-kind pieces for client projects." },
+    { title: "B2B vertical SaaS", text: "An all-in-one operations platform for independent dental practices: scheduling, billing, patient records, and insurance claims." },
+  ]
+
+  // Redirect to onboarding if user hasn't completed it
+  useEffect(() => {
+    if (profile && !profile.onboarding_completed) {
+      navigate('/onboarding', { replace: true })
+    }
+  }, [profile, navigate])
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -112,6 +127,12 @@ export default function Workspace() {
           </motion.div>
         </section>
 
+        {/* Getting Started Checklist */}
+        <GettingStartedChecklist
+          hasAnalyzed={analyses.length > 0}
+          onFocusInput={() => ideaRef.current?.focus()}
+        />
+
         <div className="grid lg:grid-cols-12 gap-12">
           {/* Left Column: Idea Input */}
           <div className="lg:col-span-8 space-y-10">
@@ -133,6 +154,7 @@ export default function Workspace() {
 
                 <div className="relative">
                   <textarea
+                    ref={ideaRef}
                     value={idea}
                     onChange={e => setIdea(e.target.value.slice(0, 2000))}
                     placeholder="Paste your raw startup idea here... Be as detailed as possible. Mention your target audience, revenue model, and core feature set for deeper analysis."
@@ -181,19 +203,23 @@ export default function Workspace() {
               </div>
             </div>
 
-            {/* Empty State / Tips */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="p-8 rounded-3xl bg-white/[0.02] border border-white/[0.05] grain-bg">
-                <h3 className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.3em] mb-4">Market Signal</h3>
-                <p className="text-zinc-400 leading-relaxed font-medium">
-                  Adding specific data points like "Targeting Gen Z designers in NY" increases engine precision by 42%.
-                </p>
+            {/* Starter Templates */}
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.3em]">Starter Templates</h3>
+                <span className="text-[10px] font-bold text-zinc-600">Click to fill</span>
               </div>
-              <div className="p-8 rounded-3xl bg-white/[0.02] border border-white/[0.05] grain-bg">
-                <h3 className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.3em] mb-4">Framework Update</h3>
-                <p className="text-zinc-400 leading-relaxed font-medium">
-                  v2.4 engine now supports viral coefficient analysis for B2C consumer products.
-                </p>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {STARTER_TEMPLATES.map((tpl) => (
+                  <button
+                    key={tpl.title}
+                    onClick={() => { setIdea(tpl.text); ideaRef.current?.focus(); }}
+                    className="text-left p-5 rounded-2xl bg-white/[0.02] border border-white/[0.05] hover:border-white/20 hover:bg-white/[0.05] transition-all group"
+                  >
+                    <h4 className="text-sm font-black text-white mb-2 tracking-tight">{tpl.title}</h4>
+                    <p className="text-xs text-zinc-500 leading-relaxed line-clamp-3 group-hover:text-zinc-400 transition-colors">{tpl.text}</p>
+                  </button>
+                ))}
               </div>
             </div>
           </div>

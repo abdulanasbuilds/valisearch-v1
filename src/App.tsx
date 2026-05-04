@@ -32,17 +32,7 @@ function AuthInitializer({ children }: { children: React.ReactNode }) {
   const initialize = useUserStore((s) => s.initialize);
 
   useEffect(() => {
-    let cleanup: (() => void) | undefined;
-    
-    const setup = async () => {
-      cleanup = await initialize();
-    };
-
-    setup();
-
-    return () => {
-      if (cleanup) cleanup();
-    };
+    initialize();
   }, [initialize]);
 
   return <>{children}</>;
@@ -61,8 +51,8 @@ const App = () => (
                 <Route path="/" element={<Index />} />
                 <Route path="/terms" element={<Terms />} />
                 <Route path="/privacy" element={<Privacy />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
+                <Route path="/login" element={<ProtectedRoute guestOnly><Login /></ProtectedRoute>} />
+                <Route path="/register" element={<ProtectedRoute guestOnly><Register /></ProtectedRoute>} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/reset-password" element={<ResetPassword />} />
                 <Route path="/auth/callback" element={<AuthCallback />} />

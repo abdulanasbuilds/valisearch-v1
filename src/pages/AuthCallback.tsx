@@ -11,7 +11,7 @@ import { Loader2 } from "lucide-react";
 export default function AuthCallback() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const returnUrl = searchParams.get("returnUrl") || "/dashboard";
+  const returnUrl = searchParams.get("returnUrl") || "/workspace";
 
   useEffect(() => {
     const handleAuthCallback = async () => {

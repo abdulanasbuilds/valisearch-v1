@@ -29,11 +29,11 @@ export default function Settings() {
     (async () => {
       const { data: profile } = await supabase
         .from("profiles")
-        .select("display_name, plan")
+        .select("full_name, plan")
         .eq("id", user.id)
         .maybeSingle();
       if (profile) {
-        setDisplayName(profile.display_name ?? "");
+        setDisplayName(profile.full_name ?? "");
         if (profile.plan) setPlan(profile.plan);
       }
       const { data: c } = await supabase
@@ -51,7 +51,7 @@ export default function Settings() {
     setSavingProfile(true);
     const { error } = await supabase
       .from("profiles")
-      .update({ display_name: displayName })
+      .update({ full_name: displayName })
       .eq("id", user.id);
     setSavingProfile(false);
     if (error) toast.error(error.message);

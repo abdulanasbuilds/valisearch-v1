@@ -31,7 +31,6 @@ export function DashboardSidebar() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const { user, signOut } = useUserStore();
-  const { setActiveSection } = useAnalysisStore();
 
   // If we are in /workspace/:id, we use that as base. Otherwise /dashboard
   const base = id ? `/workspace/${id}` : "/dashboard";

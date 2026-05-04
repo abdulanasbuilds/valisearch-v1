@@ -4,19 +4,22 @@ import { DashboardSkeleton } from "@/components/dashboard/DashboardSkeleton";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
+  /** When true, this route is only accessible to NON-authenticated users (e.g. /login). */
+  guestOnly?: boolean;
 }
 
-export function ProtectedRoute({ children }: ProtectedRouteProps) {
+export function ProtectedRoute({ children, guestOnly = false }: ProtectedRouteProps) {
   const { isAuthenticated, isLoading } = useUserStore();
   const location = useLocation();
 
-  if (isLoading) {
-    return <DashboardSkeleton />;
+  if (isLoading) return <DashboardSkeleton />;
+
+  if (guestOnly && isAuthenticated) {
+    return <Navigate to="/workspace" replace />;
   }
 
-  if (!isAuthenticated) {
-    // Redirect to /login but save the current location they were trying to access
-    return <Navigate to="/login" state={{ from: location }} replace />;
+  if (!guestOnly && !isAuthenticated) {
+    return <Navigate to={`/login?returnUrl=${encodeURIComponent(location.pathname)}`} replace />;
   }
 
   return <>{children}</>;
