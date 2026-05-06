@@ -38,15 +38,13 @@ async function fetchProfile(userId: string): Promise<ProfileData | null> {
   });
 
   try {
-    const { data: authData } = await supabase.auth.getUser();
-    const completed = authData.user?.user_metadata?.onboarding_completed ?? authData.user?.user_metadata?.onboarded_at ? true : true;
     const { data, error } = await supabase
       .from("profiles")
       .select("id, email, full_name, avatar_url, plan")
       .eq("id", userId)
       .maybeSingle();
     if (error) throw error;
-    return data ? defaultProfile({ ...(data as ProfileData), onboarding_completed: completed }) : defaultProfile({ onboarding_completed: completed });
+    return data ? defaultProfile(data as ProfileData) : defaultProfile();
   } catch (e) {
     const message = e instanceof Error ? e.message : String(e);
     if (message.includes("onboarding_completed") || (e as { code?: string })?.code === "42703") {
