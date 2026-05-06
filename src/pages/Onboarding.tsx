@@ -28,7 +28,7 @@ export default function Onboarding() {
   const [idea, setIdea] = useState("");
   const navigate = useNavigate();
   const { user, refreshProfile } = useUserStore();
-  const { runAnalysis, setIdea } = useAnalysisStore();
+  const { runAnalysis, setIdea: setStoreIdea } = useAnalysisStore();
 
   const totalSteps = 3;
   const progress = ((step - 1) / totalSteps) * 100 + 33;
@@ -62,7 +62,7 @@ export default function Onboarding() {
     if (idea.trim().length < 20) return;
     await persistOnboarding();
     const sanitized = sanitizeIdea(idea);
-    setIdea(sanitized);
+    setStoreIdea(sanitized);
     await runAnalysis(sanitized, "full");
     const id = useAnalysisStore.getState().lastAnalysisId;
     navigate(id ? `/workspace/${id}` : "/dashboard/overview", { replace: true });
