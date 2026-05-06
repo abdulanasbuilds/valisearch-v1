@@ -9,10 +9,10 @@ interface ProtectedRouteProps {
 }
 
 export function ProtectedRoute({ children, guestOnly = false }: ProtectedRouteProps) {
-  const { isAuthenticated, isLoading } = useUserStore();
+  const { isAuthenticated, isLoading, initialized } = useUserStore();
   const location = useLocation();
 
-  if (isLoading) return <DashboardSkeleton />;
+  if (isLoading || !initialized) return <DashboardSkeleton />;
 
   if (guestOnly && isAuthenticated) {
     return <Navigate to="/workspace" replace />;
