@@ -78,7 +78,7 @@ export const useAnalysisStore = create<AnalysisState>((set) => ({
     // Record attempt for rate limiting
     recordAnalysisAttempt();
 
-    set({ idea, isAnalyzing: true, error: null, analysis: null, dataSource: null });
+    set({ idea, isAnalyzing: true, error: null, analysis: null, dataSource: null, lastAnalysisId: null });
     try {
       const { result, source, analysisId } = await analyzeIdeaV2(idea, type);
       set({
