@@ -37,15 +37,8 @@ export default function Onboarding() {
     const supabase = getSupabase();
     if (!supabase || !user) return;
     try {
-      await supabase
-        .from("profiles")
-        .update({
-          onboarding_completed: true,
-        })
-        .eq("id", user.id);
-      // Persist segmentation as user metadata (no schema change required)
       await supabase.auth.updateUser({
-        data: { role, goal, onboarded_at: new Date().toISOString() },
+        data: { role, goal, onboarding_completed: true, onboarded_at: new Date().toISOString() },
       });
       await refreshProfile();
     } catch (e) {
