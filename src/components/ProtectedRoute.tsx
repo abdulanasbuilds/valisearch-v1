@@ -12,7 +12,13 @@ export function ProtectedRoute({ children, guestOnly = false }: ProtectedRoutePr
   const { isAuthenticated, isLoading, initialized } = useUserStore();
   const location = useLocation();
 
-  if (isLoading || !initialized) return <DashboardSkeleton />;
+  if (isLoading || !initialized) {
+    return (
+      <div className="min-h-screen bg-background p-4 sm:p-6 md:p-8">
+        <DashboardSkeleton />
+      </div>
+    );
+  }
 
   if (guestOnly && isAuthenticated) {
     return <Navigate to="/workspace" replace />;
