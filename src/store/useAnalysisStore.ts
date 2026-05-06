@@ -8,6 +8,7 @@ import { useCreditStore } from "@/store/useCreditStore";
 import { useUserStore } from "@/store/useUserStore";
 import { saveAnalysis } from "@/services/database.service";
 import { canAttemptAnalysis, recordAnalysisAttempt, getRemainingAttempts, getTimeUntilNextAttempt } from "@/lib/rate-limit";
+import { normalizeAnalysis } from "@/lib/analysis-normalizer";
 import { toast } from "sonner";
 
 export type AnyAnalysis = ValiSearchAnalysis;
@@ -81,7 +82,7 @@ export const useAnalysisStore = create<AnalysisState>((set) => ({
     try {
       const { result, source, analysisId } = await analyzeIdeaV2(idea, type);
       set({
-        analysis: result as any, // Cast to AnyAnalysis for now if needed, though result is ValiSearchAnalysisV2
+        analysis: normalizeAnalysis(result, idea) as any,
         dataSource: source,
         isAnalyzing: false,
         credits: useCreditStore.getState().credits,
@@ -91,7 +92,9 @@ export const useAnalysisStore = create<AnalysisState>((set) => ({
       // No need to call saveAnalysis since Edge Function already saves it securely!
     } catch (e) {
       const message = e instanceof Error ? e.message : "Analysis failed";
-      set({ error: message, isAnalyzing: false });
+      const fallback = normalizeAnalysis(null, idea) as any;
+      set({ analysis: fallback, dataSource: "mock", error: null, isAnalyzing: false });
+      toast.error(`${message}. Loaded a demo validation report so you can continue.`);
     }
   },
 }));
