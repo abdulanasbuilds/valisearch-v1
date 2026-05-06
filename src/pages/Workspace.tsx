@@ -5,6 +5,7 @@ import { useUserStore } from '@/store/useUserStore'
 import { useAnalysisStore } from '@/store/useAnalysisStore'
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout'
 import { GettingStartedChecklist } from '@/components/dashboard/GettingStartedChecklist'
+import { DashboardSkeleton } from '@/components/dashboard/DashboardSkeleton'
 import { sanitizeIdea } from '@/lib/sanitize'
 import { formatDistanceToNow } from 'date-fns'
 import { Zap, ChevronRight, Clock, Loader2, Sparkles, Plus, History, Wallet, Search, TrendingUp, Target, BookOpen } from 'lucide-react'
@@ -21,7 +22,7 @@ interface AnalysisRecord {
 
 export default function Workspace() {
   const navigate = useNavigate()
-  const { user, isAuthenticated, profile } = useUserStore()
+  const { user, isAuthenticated, isLoading: authLoading, profile } = useUserStore()
   const { runAnalysis, isAnalyzing, setIdea: setStoreIdea } = useAnalysisStore()
   const [analyses, setAnalyses] = useState<AnalysisRecord[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -47,6 +48,7 @@ export default function Workspace() {
       navigate('/login?returnUrl=/workspace')
       return
     }
+    if (!user) return
     const supabase = getSupabase()
     
     const fetchAnalyses = async () => {
@@ -86,8 +88,9 @@ export default function Workspace() {
     }
     const sanitized = sanitizeIdea(idea)
     setStoreIdea(sanitized)
-    navigate('/analyze')
     await runAnalysis(sanitized, type)
+    const id = useAnalysisStore.getState().lastAnalysisId
+    navigate(id ? `/workspace/${id}` : '/dashboard/overview')
   }
 
   const getScoreBg = (score: number | null) => {
@@ -101,25 +104,29 @@ export default function Workspace() {
   const hour = new Date().getHours()
   const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening'
 
+  if (authLoading || !user) {
+    return <DashboardLayout><DashboardSkeleton /></DashboardLayout>
+  }
+
   return (
     <DashboardLayout credits={credits}>
-      <div className="max-w-6xl mx-auto px-4 md:px-0">
+      <div className="max-w-6xl mx-auto w-full">
         {/* Welcome Section */}
-        <section className="mb-14">
+        <section className="mb-8 sm:mb-14">
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             className="flex flex-col md:flex-row md:items-end justify-between gap-6"
           >
             <div>
-              <h1 className="text-4xl font-black tracking-tighter mb-3">
+              <h1 className="text-3xl sm:text-4xl font-black tracking-tight mb-3 break-words">
                 {greeting}, {firstName}.
               </h1>
-              <p className="text-zinc-500 font-medium text-lg">
+              <p className="text-muted-foreground font-medium text-base sm:text-lg">
                 The engine is primed. What idea are we decoding today?
               </p>
             </div>
-            <div className="flex items-center gap-3 bg-white/[0.03] border border-white/[0.08] px-5 py-3 rounded-2xl backdrop-blur-md">
+            <div className="flex flex-wrap items-center gap-3 bg-card/70 border border-border/60 px-4 sm:px-5 py-3 rounded-2xl backdrop-blur-md w-full md:w-auto">
               <Wallet className="w-4 h-4 text-zinc-400" />
               <span className="text-sm font-bold text-white">{credits} Credits available</span>
               <button className="ml-2 text-[10px] font-black uppercase tracking-widest text-zinc-400 hover:text-white transition-colors bg-white/5 px-2 py-1 rounded-md border border-white/10">Top up</button>
@@ -128,7 +135,7 @@ export default function Workspace() {
         </section>
 
         {/* Bento stats grid */}
-        <section className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-10">
+        <section className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-3 mb-8 sm:mb-10">
           <BentoStat label="Reports" value={analyses.length} icon={History} accent="text-white" />
           <BentoStat
             label="Avg Score"
@@ -157,16 +164,16 @@ export default function Workspace() {
           onFocusInput={() => ideaRef.current?.focus()}
         />
 
-        <div className="grid lg:grid-cols-12 gap-12">
+        <div className="grid lg:grid-cols-12 gap-8 lg:gap-12">
           {/* Left Column: Idea Input */}
           <div className="lg:col-span-8 space-y-10">
-            <div className="glass-panel rounded-[32px] p-8 md:p-10 shadow-2xl relative overflow-hidden group grain-bg border-white/[0.1]">
+            <div className="glass-panel rounded-3xl p-5 sm:p-8 md:p-10 shadow-2xl relative overflow-hidden group grain-bg border-white/[0.1]">
               <div className="absolute top-0 right-0 p-10 opacity-10 pointer-events-none group-focus-within:opacity-30 transition-all duration-700">
                 <Sparkles className="w-32 h-32 text-white" />
               </div>
               
               <div className="relative z-10">
-                <div className="flex items-center gap-4 mb-8">
+                <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
                   <div className="w-12 h-12 rounded-2xl bg-zinc-900 border border-white/10 flex items-center justify-center shadow-2xl shadow-zinc-900/50">
                     <Search className="w-6 h-6 text-white" />
                   </div>
@@ -182,8 +189,8 @@ export default function Workspace() {
                     value={idea}
                     onChange={e => setIdea(e.target.value.slice(0, 2000))}
                     placeholder="Paste your raw startup idea here... Be as detailed as possible. Mention your target audience, revenue model, and core feature set for deeper analysis."
-                    rows={8}
-                    className="w-full bg-black/40 border border-white/[0.08] rounded-3xl px-8 py-7 text-white text-lg placeholder:text-zinc-700 resize-none outline-none focus:border-white/20 focus:bg-black/60 transition-all mb-6 font-medium leading-relaxed"
+                    rows={7}
+                    className="w-full bg-black/40 border border-white/[0.08] rounded-2xl sm:rounded-3xl px-4 sm:px-8 py-5 sm:py-7 text-white text-base sm:text-lg placeholder:text-zinc-700 resize-none outline-none focus:border-white/20 focus:bg-black/60 transition-all mb-6 font-medium leading-relaxed"
                   />
                   {idea.length > 0 && (
                     <div className="absolute top-4 right-4 flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-full">
@@ -193,10 +200,10 @@ export default function Workspace() {
                   )}
                 </div>
 
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
-                  <div className="flex items-center gap-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5 sm:gap-6">
+                  <div className="flex items-center gap-4 sm:gap-6 w-full sm:w-auto">
                     <span className="text-[11px] font-black text-zinc-600 uppercase tracking-[0.2em]">{idea.length} <span className="opacity-40">/</span> 2000</span>
-                    <div className="h-1 w-24 bg-zinc-900 rounded-full overflow-hidden">
+                    <div className="h-1 flex-1 sm:w-24 bg-zinc-900 rounded-full overflow-hidden">
                        <motion.div 
                         className="h-full bg-zinc-500"
                         initial={{ width: 0 }}
@@ -205,11 +212,11 @@ export default function Workspace() {
                     </div>
                   </div>
                   
-                  <div className="flex gap-4 w-full sm:w-auto">
+                  <div className="grid grid-cols-1 xs:grid-cols-2 sm:flex gap-3 sm:gap-4 w-full sm:w-auto">
                     <button 
                       onClick={() => handleValidate('quick')} 
                       disabled={idea.trim().length < 15 || isAnalyzing || credits < 1} 
-                      className="flex-1 sm:flex-none px-8 py-4 bg-zinc-900 border border-white/10 text-white text-sm font-black rounded-2xl hover:bg-zinc-800 transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-3 kinetic-hover"
+                      className="w-full sm:w-auto px-6 sm:px-8 py-4 bg-zinc-900 border border-white/10 text-white text-sm font-black rounded-2xl hover:bg-zinc-800 transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-3 kinetic-hover"
                     >
                       {isAnalyzing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Zap className="w-4 h-4" />}
                       Quick Scan
@@ -217,7 +224,7 @@ export default function Workspace() {
                     <button 
                       onClick={() => handleValidate('full')} 
                       disabled={idea.trim().length < 15 || isAnalyzing || credits < 2} 
-                      className="flex-1 sm:flex-none px-10 py-4 bg-white text-black text-sm font-black rounded-2xl hover:bg-zinc-200 transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-3 shadow-2xl shadow-white/5 active:scale-95 kinetic-hover"
+                      className="w-full sm:w-auto px-6 sm:px-10 py-4 bg-white text-black text-sm font-black rounded-2xl hover:bg-zinc-200 transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-3 shadow-2xl shadow-white/5 active:scale-95 kinetic-hover"
                     >
                       {isAnalyzing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
                       Deep Intelligence
