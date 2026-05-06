@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { useAnalysisStore } from "@/store/useAnalysisStore";
 import { SectionCard } from "../SectionCard";
 import { ScoreDisplay } from "../ScoreDisplay";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ArrowRight, AlertTriangle, Lightbulb, Zap, Crosshair } from "lucide-react";
 import type { ValiSearchAnalysisV2 } from "@/types/analysis-v2";
 import type { ValiSearchAnalysis } from "@/types/analysis";
@@ -42,6 +42,8 @@ const QUICK_LINKS = [
 export function OverviewSection() {
   const analysis = useAnalysisStore((s) => s.analysis);
   const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
+  const base = id ? `/workspace/${id}` : "/dashboard";
   if (!analysis) return null;
 
   // Render V1 overview if this is a legacy analysis
@@ -162,7 +164,7 @@ export function OverviewSection() {
           {QUICK_LINKS.map(({ label, path }) => (
             <button
               key={path}
-              onClick={() => navigate(`/dashboard/${path}`)}
+              onClick={() => navigate(`${base}/${path}`)}
               className="group flex items-center justify-between px-3.5 py-2.5 rounded-lg border border-white/[0.07] bg-white/[0.02] hover:bg-white/[0.05] hover:border-white/[0.12] transition-all text-left"
             >
               <span className="text-[12.5px] font-medium text-muted-foreground group-hover:text-foreground transition-colors">
@@ -207,6 +209,8 @@ const LEGACY_QUICK_LINKS = [
 function LegacyOverviewSection() {
   const analysis = useAnalysisStore((s) => s.analysis) as ValiSearchAnalysis;
   const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
+  const base = id ? `/workspace/${id}` : "/dashboard";
   if (!analysis) return null;
 
   const { idea_analysis, final_verdict, scoring } = analysis;
@@ -272,7 +276,7 @@ function LegacyOverviewSection() {
           {LEGACY_QUICK_LINKS.map(({ label, path }) => (
             <button
               key={path}
-              onClick={() => navigate(`/dashboard/${path}`)}
+                onClick={() => navigate(`${base}/${path}`)}
               className="group flex items-center justify-between px-3.5 py-2.5 rounded-lg border border-white/[0.07] bg-white/[0.02] hover:bg-white/[0.05] hover:border-white/[0.12] transition-all text-left"
             >
               <span className="text-[12.5px] font-medium text-muted-foreground group-hover:text-foreground transition-colors">
