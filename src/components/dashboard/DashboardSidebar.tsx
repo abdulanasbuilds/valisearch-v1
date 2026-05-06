@@ -51,7 +51,7 @@ export function DashboardSidebar({ mobileOpen = false, onMobileClose }: Dashboar
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
 
-  const base = id ? `/workspace/${id}` : location.pathname.startsWith("/workspace") ? "/workspace" : "/dashboard";
+  const base = id ? `/workspace/${id}` : "/dashboard";
   const hasAnalysisContext = !!id || location.pathname.startsWith("/dashboard");
 
   const handleSignOut = async () => {
