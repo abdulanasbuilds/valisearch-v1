@@ -52,6 +52,7 @@ export function DashboardSidebar({ mobileOpen = false, onMobileClose }: Dashboar
   }, [location.pathname]);
 
   const base = id ? `/workspace/${id}` : "/dashboard";
+  const hasAnalysisContext = !!id || location.pathname.startsWith("/dashboard");
 
   const handleSignOut = async () => {
     await signOut();
@@ -59,6 +60,7 @@ export function DashboardSidebar({ mobileOpen = false, onMobileClose }: Dashboar
   };
 
   const intelligenceItems = [
+    ...(hasAnalysisContext ? [] : [{ name: "Workspace", icon: LayoutDashboard, href: "/workspace" }]),
     { name: "Overview", icon: LayoutDashboard, href: `${base}/overview` },
     { name: "Market Intelligence", icon: Search, href: `${base}/market-intelligence` },
     { name: "Problem Landscape", icon: MessageSquare, href: `${base}/problem-landscape` },
@@ -100,7 +102,7 @@ export function DashboardSidebar({ mobileOpen = false, onMobileClose }: Dashboar
       )}
 
       <aside
-        className={`${widthClass} ${translate} h-screen bg-[#0A0A0A] border-r border-white/[0.05] flex flex-col fixed left-0 top-0 z-[60] transition-[transform,width] duration-300 ease-out`}
+          className={`${widthClass} ${translate} h-[100dvh] bg-background border-r border-border/40 flex flex-col fixed left-0 top-0 z-[60] transition-[transform,width] duration-300 ease-out`}
       >
         {/* Logo + collapse */}
         <div className="px-4 pt-5 pb-3 flex items-center justify-between gap-2">
@@ -148,7 +150,7 @@ export function DashboardSidebar({ mobileOpen = false, onMobileClose }: Dashboar
         </div>
 
         {/* Nav */}
-        <nav className="flex-1 overflow-y-auto px-3 py-3 space-y-5">
+        <nav className="flex-1 overflow-y-auto overscroll-contain px-3 py-3 space-y-5">
           <NavGroup title="Intelligence" items={intelligenceItems} isActive={isActive} showFull={showFull} />
           <NavGroup title="Build" items={buildItems} isActive={isActive} showFull={showFull} />
         </nav>

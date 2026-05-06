@@ -28,17 +28,39 @@ interface UserState {
 let authListenerRegistered = false;
 
 async function fetchProfile(userId: string): Promise<ProfileData | null> {
+  const defaultProfile = (row?: Partial<ProfileData> | null): ProfileData => ({
+    id: row?.id ?? userId,
+    email: row?.email ?? "",
+    full_name: row?.full_name ?? null,
+    avatar_url: row?.avatar_url ?? null,
+    plan: row?.plan ?? "free",
+    onboarding_completed: row?.onboarding_completed ?? true,
+  });
+
   try {
     const { data, error } = await supabase
       .from("profiles")
-      .select("id, email, full_name, avatar_url, plan, onboarding_completed")
+      .select("id, email, full_name, avatar_url, plan")
       .eq("id", userId)
       .maybeSingle();
     if (error) throw error;
-    return data as ProfileData | null;
+    return data ? defaultProfile(data as ProfileData) : defaultProfile();
   } catch (e) {
+    const message = e instanceof Error ? e.message : String(e);
+    if (message.includes("onboarding_completed") || (e as { code?: string })?.code === "42703") {
+      try {
+        const { data } = await supabase
+          .from("profiles")
+          .select("id, email, full_name, avatar_url, plan")
+          .eq("id", userId)
+          .maybeSingle();
+        return defaultProfile(data as Partial<ProfileData> | null);
+      } catch {
+        return defaultProfile();
+      }
+    }
     console.warn("fetchProfile failed", e);
-    return null;
+    return defaultProfile();
   }
 }
 
@@ -76,18 +98,6 @@ export const useUserStore = create<UserState>((set, get) => ({
     set({ isLoading: true });
 
     try {
-      const { data: { session }, error } = await supabase.auth.getSession();
-      if (error) throw error;
-
-      const profile = session?.user ? await fetchProfile(session.user.id) : null;
-
-      set({
-        session,
-        user: session?.user ?? null,
-        profile,
-        isAuthenticated: !!session?.user,
-      });
-
       if (!authListenerRegistered) {
         authListenerRegistered = true;
         supabase.auth.onAuthStateChange(async (_event, newSession) => {
@@ -95,6 +105,8 @@ export const useUserStore = create<UserState>((set, get) => ({
             session: newSession,
             user: newSession?.user ?? null,
             isAuthenticated: !!newSession?.user,
+            isLoading: false,
+            initialized: true,
           });
           // Defer profile fetch to avoid blocking the auth callback
           if (newSession?.user) {
@@ -107,6 +119,19 @@ export const useUserStore = create<UserState>((set, get) => ({
           }
         });
       }
+
+      const { data: { session }, error } = await supabase.auth.getSession();
+      if (error) throw error;
+
+      const profile = session?.user ? await fetchProfile(session.user.id) : null;
+
+      set({
+        session,
+        user: session?.user ?? null,
+        profile,
+        isAuthenticated: !!session?.user,
+      });
+
     } catch (e) {
       console.error("Auth initialization error:", e);
       set({ session: null, user: null, profile: null, isAuthenticated: false });

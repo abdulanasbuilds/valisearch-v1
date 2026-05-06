@@ -34,6 +34,7 @@ import { downloadReport, downloadReportJson, downloadReportMarkdown, downloadRep
 import { useAnalysisStore } from "@/store/useAnalysisStore";
 import { useCreditStore } from "@/store/useCreditStore";
 import { getMockAnalysis } from "@/services/analysis.service";
+import { normalizeAnalysis } from "@/lib/analysis-normalizer";
 import { toast } from "sonner";
 
 import { getSupabase } from "@/lib/supabase";
@@ -121,7 +122,7 @@ export default function Dashboard() {
           .single();
           
         if (data && data.result_json) {
-          setAnalysis(data.result_json);
+          setAnalysis(normalizeAnalysis(data.result_json, idea || "AI-powered productivity tool") as any);
           useAnalysisStore.setState({ dataSource: data.data_source as any });
         } else {
           setAnalysis(getMockAnalysis(idea || "AI-powered productivity tool"));
@@ -192,11 +193,11 @@ export default function Dashboard() {
             </span>
           )}
         </div>
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-2 shrink-0 w-full sm:w-auto justify-end">
           <Button
             variant="ghost"
             size="sm"
-            className="h-8 text-[12px] text-muted-foreground hover:text-foreground"
+            className="h-8 text-[12px] text-muted-foreground hover:text-foreground flex-1 sm:flex-none"
             onClick={() => navigate("/workspace")}
           >
             + New analysis

@@ -5,6 +5,8 @@ import { useUserStore } from '@/store/useUserStore'
 import { useAnalysisStore } from '@/store/useAnalysisStore'
 import Dashboard from '@/pages/Dashboard'
 import { DashboardSkeleton } from '@/components/dashboard/DashboardSkeleton'
+import { DashboardLayout } from '@/components/dashboard/DashboardLayout'
+import { normalizeAnalysis } from '@/lib/analysis-normalizer'
 
 export default function WorkspaceAnalysis() {
   const { id } = useParams<{ id: string }>()
@@ -35,7 +37,7 @@ export default function WorkspaceAnalysis() {
           return
         }
 
-        setAnalysis(data.result_json)
+        setAnalysis(normalizeAnalysis(data.result_json, data.ideas?.idea_text || data.ideas?.title) as any)
       } catch (err) {
         setNotFound(true)
       } finally {
@@ -46,7 +48,7 @@ export default function WorkspaceAnalysis() {
     loadAnalysis()
   }, [id, user, setAnalysis])
 
-  if (isLoading) return <DashboardSkeleton />
+  if (isLoading) return <DashboardLayout><DashboardSkeleton /></DashboardLayout>
 
   if (notFound) {
     return (
@@ -60,11 +62,6 @@ export default function WorkspaceAnalysis() {
   }
 
   return (
-    <div>
-      <div className="border-b border-white/[0.06] px-4 py-3 bg-[#0A0A0A]">
-        <button onClick={() => navigate('/workspace')} className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1.5">← Back to workspace</button>
-      </div>
-      <Dashboard />
-    </div>
+    <Dashboard />
   )
 }

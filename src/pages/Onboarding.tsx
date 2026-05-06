@@ -28,7 +28,7 @@ export default function Onboarding() {
   const [idea, setIdea] = useState("");
   const navigate = useNavigate();
   const { user, refreshProfile } = useUserStore();
-  const { runAnalysis } = useAnalysisStore();
+  const { runAnalysis, setIdea: setStoreIdea } = useAnalysisStore();
 
   const totalSteps = 3;
   const progress = ((step - 1) / totalSteps) * 100 + 33;
@@ -37,15 +37,8 @@ export default function Onboarding() {
     const supabase = getSupabase();
     if (!supabase || !user) return;
     try {
-      await supabase
-        .from("profiles")
-        .update({
-          onboarding_completed: true,
-        })
-        .eq("id", user.id);
-      // Persist segmentation as user metadata (no schema change required)
       await supabase.auth.updateUser({
-        data: { role, goal, onboarded_at: new Date().toISOString() },
+        data: { role, goal, onboarding_completed: true, onboarded_at: new Date().toISOString() },
       });
       await refreshProfile();
     } catch (e) {
@@ -61,8 +54,11 @@ export default function Onboarding() {
   const handleValidate = async () => {
     if (idea.trim().length < 20) return;
     await persistOnboarding();
-    navigate("/analyze");
-    await runAnalysis(sanitizeIdea(idea), "full");
+    const sanitized = sanitizeIdea(idea);
+    setStoreIdea(sanitized);
+    await runAnalysis(sanitized, "full");
+    const id = useAnalysisStore.getState().lastAnalysisId;
+    navigate(id ? `/workspace/${id}` : "/dashboard/overview", { replace: true });
   };
 
   const firstName = user?.user_metadata?.full_name?.split(" ")[0] || user?.email?.split("@")[0] || "Founder";

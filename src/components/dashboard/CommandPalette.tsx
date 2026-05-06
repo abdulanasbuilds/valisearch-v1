@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   CommandDialog,
   CommandEmpty,
@@ -40,7 +40,10 @@ interface Cmd {
 export function CommandPalette() {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const { id } = useParams<{ id: string }>();
   const { signOut } = useUserStore();
+  const base = id ? `/workspace/${id}` : location.pathname.startsWith("/dashboard") ? "/dashboard" : "/dashboard";
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -65,17 +68,17 @@ export function CommandPalette() {
   ];
 
   const dashCommands: Cmd[] = [
-    { label: "Overview", icon: LayoutDashboard, action: () => go("/dashboard/overview"), group: "Dashboard" },
-    { label: "Market Intelligence", icon: Search, action: () => go("/dashboard/market-intelligence"), group: "Dashboard" },
-    { label: "Problem Landscape", icon: MessageSquare, action: () => go("/dashboard/problem-landscape"), group: "Dashboard" },
-    { label: "Offer Builder", icon: Zap, action: () => go("/dashboard/offer-builder"), group: "Dashboard" },
-    { label: "Growth Playbook", icon: LineChart, action: () => go("/dashboard/growth-playbook"), group: "Dashboard" },
-    { label: "Content Engine", icon: FileText, action: () => go("/dashboard/content-engine"), group: "Dashboard" },
-    { label: "Competitive Intel", icon: Users, action: () => go("/dashboard/competitive-intel"), group: "Dashboard" },
-    { label: "Scale Roadmap", icon: BarChart, action: () => go("/dashboard/scale-roadmap"), group: "Dashboard" },
-    { label: "Idea Evolution", icon: GitPullRequest, action: () => go("/dashboard/evolution"), group: "Build" },
-    { label: "Flow Editor", icon: Workflow, action: () => go("/dashboard/flow-editor"), group: "Build" },
-    { label: "Kanban Board", icon: Box, action: () => go("/dashboard/kanban"), group: "Build" },
+    { label: "Overview", icon: LayoutDashboard, action: () => go(`${base}/overview`), group: "Dashboard" },
+    { label: "Market Intelligence", icon: Search, action: () => go(`${base}/market-intelligence`), group: "Dashboard" },
+    { label: "Problem Landscape", icon: MessageSquare, action: () => go(`${base}/problem-landscape`), group: "Dashboard" },
+    { label: "Offer Builder", icon: Zap, action: () => go(`${base}/offer-builder`), group: "Dashboard" },
+    { label: "Growth Playbook", icon: LineChart, action: () => go(`${base}/growth-playbook`), group: "Dashboard" },
+    { label: "Content Engine", icon: FileText, action: () => go(`${base}/content-engine`), group: "Dashboard" },
+    { label: "Competitive Intel", icon: Users, action: () => go(`${base}/competitive-intel`), group: "Dashboard" },
+    { label: "Scale Roadmap", icon: BarChart, action: () => go(`${base}/scale-roadmap`), group: "Dashboard" },
+    { label: "Idea Evolution", icon: GitPullRequest, action: () => go(`${base}/evolution`), group: "Build" },
+    { label: "Flow Editor", icon: Workflow, action: () => go(`${base}/flow-editor`), group: "Build" },
+    { label: "Kanban Board", icon: Box, action: () => go(`${base}/kanban`), group: "Build" },
   ];
 
   const accountCommands: Cmd[] = [
