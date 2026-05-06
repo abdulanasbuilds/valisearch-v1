@@ -52,7 +52,7 @@ export function OverviewSection() {
   }
 
   // Cast to V2
-  const v2 = analysis as ValiSearchAnalysisV2;
+  const v2 = analysis as unknown as ValiSearchAnalysisV2;
 
   const topProblem = v2.problem_prioritization?.problems?.[0];
   const topGap = v2.competitor_weakness?.gap_analysis?.[0];
